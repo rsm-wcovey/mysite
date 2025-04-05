@@ -5,23 +5,25 @@
       "metadata": {},
       "source": [
         "---\n",
-        "title: hw1\n",
+        "title: hw2\n",
         "---\n",
         "\n",
-        "# Question 1"
+        "Test plot below:"
       ],
-      "id": "afe98968"
+      "id": "a21ab41c"
     },
     {
       "cell_type": "code",
       "metadata": {},
       "source": [
-        "x = 3\n",
-        "y = 5\n",
-        "z = x + y\n",
-        "print(f'hello world {z}')"
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "x = np.random.rand(100)\n",
+        "plt.hist(x)\n",
+        "plt.show()"
       ],
-      "id": "48b05502",
+      "id": "a204cf22",
       "execution_count": null,
       "outputs": []
     }

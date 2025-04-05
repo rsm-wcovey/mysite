@@ -16,5 +16,11 @@
   },
   "projects/hw2/index.qmd": {
     "index.html": "fd265c04"
+  },
+  "code/code_test.ipynb": {
+    "code_test.html": "e945ca05"
+  },
+  "projects/hw3/index.qmd": {
+    "index.html": "e18e3de2"
   }
 }
