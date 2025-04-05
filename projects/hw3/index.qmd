@@ -1,8 +1,27 @@
 ---
 title: hw3
+format: html
 ---
 
-Test hw3
+```{=html}
+<script>
+  const password = prompt("Enter password:");
+  const correct = "bigbear";
+  window.onload = () => {
+    if (password === correct) {
+      document.getElementById("protected-content").style.display = "block";
+    } else {
+      document.body.innerHTML = "<h1>Access Denied</h1>";
+    }
+  }
+</script>
+```
+
+<div id="protected-content" style="display: none;">
+
+## Test hw3
+
+This is a protected section. Here's a Python-generated histogram:
 
 ```{python}
 import numpy as np
@@ -12,3 +31,5 @@ x = np.random.rand(100)
 plt.hist(x)
 plt.show()
 ```
+
+</div>

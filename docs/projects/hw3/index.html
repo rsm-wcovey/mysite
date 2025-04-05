@@ -145,8 +145,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#test-hw3" id="toc-test-hw3" class="nav-link active" data-scroll-target="#test-hw3">Test hw3</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -170,8 +176,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Test hw3</p>
-<div id="a12fa93d" class="cell" data-execution_count="1">
+<script>
+  const password = prompt("Enter password:");
+  const correct = "bluepineapple";
+  window.onload = () => {
+    if (password === correct) {
+      document.getElementById("protected-content").style.display = "block";
+    } else {
+      document.body.innerHTML = "<h1>Access Denied</h1>";
+    }
+  }
+</script>
+<div id="protected-content" style="display: none;">
+<section id="test-hw3" class="level2">
+<h2 class="anchored" data-anchor-id="test-hw3">Test hw3</h2>
+<p>This is a protected section. Here’s a Python-generated histogram:</p>
+<div id="115918dc" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -185,6 +205,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
+</div>
+</section>
 </div>
 
 
