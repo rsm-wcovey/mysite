@@ -1,0 +1,7 @@
+---
+title: "Resume"
+---
+
+_Last updated 04/05/2025_
+
+{{< pdf content/covey_resume.pdf width=100% height=900 >}}
