@@ -1,5 +1,19 @@
 [
   {
+    "objectID": "resume.html",
+    "href": "resume.html",
+    "title": "Resume",
+    "section": "",
+    "text": "Last updated 04/05/2025\nDownload PDF file."
+  },
+  {
+    "objectID": "projects/hw1/index.html",
+    "href": "projects/hw1/index.html",
+    "title": "hw1",
+    "section": "",
+    "text": "Test hw1\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"A\": [1, 2, 3],\n    \"B\": [4, 5, 6]\n})\n\nprint(df)\n\n   A  B\n0  1  4\n1  2  5\n2  3  6"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Wesley Covey",
@@ -14,27 +28,6 @@
     "text": "hw3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhw1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "code/code_test.html",
-    "href": "code/code_test.html",
-    "title": "Wesley Covey",
-    "section": "",
-    "text": "import numpy as np \nimport matplotlib.pyplot as plt \n\nx = np.random.rand(100)\nplt.hist(x)\nplt.show()"
-  },
-  {
-    "objectID": "projects/hw2/index.html",
-    "href": "projects/hw2/index.html",
-    "title": "hw2",
-    "section": "",
-    "text": "Test plot below:\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nx = np.random.rand(100)\nplt.hist(x)\nplt.show()"
-  },
-  {
-    "objectID": "resume.html",
-    "href": "resume.html",
-    "title": "Resume",
-    "section": "",
-    "text": "Last updated 04/05/2025\nDownload PDF file."
-  },
-  {
     "objectID": "projects/hw3/index.html",
     "href": "projects/hw3/index.html",
     "title": "hw3",
@@ -42,10 +35,10 @@
     "text": "Test hw3\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nx = np.random.rand(100)\nplt.hist(x)\nplt.show()"
   },
   {
-    "objectID": "projects/hw1/index.html",
-    "href": "projects/hw1/index.html",
-    "title": "hw1",
+    "objectID": "code/code_test.html",
+    "href": "code/code_test.html",
+    "title": "Wesley Covey",
     "section": "",
-    "text": "Test hw1\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"A\": [1, 2, 3],\n    \"B\": [4, 5, 6]\n})\n\nprint(df)\n\n   A  B\n0  1  4\n1  2  5\n2  3  6"
+    "text": "import numpy as np \nimport matplotlib.pyplot as plt \n\nx = np.random.rand(100)\nplt.hist(x)\nplt.show()"
   }
 ]
