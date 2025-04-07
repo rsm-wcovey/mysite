@@ -22,5 +22,8 @@
   },
   "projects/hw3/index.qmd": {
     "index.html": "e18e3de2"
+  },
+  "code/old_code.qmd": {
+    "old_code.html": "48992ead"
   }
 }

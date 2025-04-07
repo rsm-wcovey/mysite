@@ -1,25 +1,17 @@
 ---
-title: hw3
-format: html
+title: Example 2
 ---
 
 ```{=html}
-<script>
-  const password = prompt("Enter password:");
-  const correct = "bigbear";
-  window.onload = () => {
-    if (password === correct) {
-      document.getElementById("protected-content").style.display = "block";
-    } else {
-      document.body.innerHTML = "<h1>Access Denied</h1>";
-    }
-  }
-</script>
+<script src="../../code/hupwc.js" ></script>
 ```
+
 
 <div id="protected-content" style="display: none;">
 
-## Test hw3
+##Example 2
+
+Example histogram below:
 
 This is a protected section. Here's a Python-generated histogram:
 

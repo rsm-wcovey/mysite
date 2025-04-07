@@ -1,5 +1,5 @@
 ---
-title: hw1
+title: Example 1
 ---
 
 ```{=html}
@@ -9,7 +9,7 @@ title: hw1
 
 <div id="protected-content" style="display: none;">
 
-Test hw1
+Example dataframe below:
 
 ```{python}
 import pandas as pd
