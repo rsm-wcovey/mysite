@@ -1,17 +1,12 @@
 /* css styles */
 
-.responsive-iframe-container {
-    position: relative;
-    width: 100%;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
-    overflow: hidden;
-  }
-  
-.responsive-iframe-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
+/* Style all hyperlinks */
+a {
+  color: #189cd0; /* Regular link blue */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #56bfd4; /* Darker blue on hover */
+  text-decoration: underline;
+}
