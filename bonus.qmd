@@ -105,9 +105,11 @@ function moveObstacle() {
 
   // Collision detection
   if (obstacleX < 70 && obstacleX > 40 && dinoY > 95) {
-    alert("Game Over! Your score: " + score);
-    document.location.reload();
-  }
+    score = 0;
+    document.getElementById("score").innerText = score;
+    obstacleX = canvas.width;
+    speed = 2;
+}
 
   drawScene();
   requestAnimationFrame(moveObstacle);
