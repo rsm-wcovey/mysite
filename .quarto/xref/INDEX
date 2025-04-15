@@ -49,5 +49,11 @@
   },
   "projects/work/global_trade.qmd": {
     "global_trade.html": "942d7d52"
+  },
+  "stick.qmd": {
+    "stick.html": "142dcd1c"
+  },
+  "bonus.qmd": {
+    "bonus.html": "44b15726"
   }
 }

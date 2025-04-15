@@ -1,0 +1,119 @@
+---
+title: "Rex"
+---
+
+
+🦕🌵
+
+
+<div style="margin: 40px auto; width: 300px; text-align:center;">
+  <canvas id="gameCanvas" width="300" height="200" style="border:1px solid #ccc;"></canvas><br/>
+  <button onclick="jump()">Jump!</button>
+  <p>Score: <span id="score">0</span></p>
+</div>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+let dinoY = 110;
+let jumping = false;
+let obstacleX = canvas.width;
+let score = 0;
+let speed = 2;
+
+function drawDinosaur(y) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Head
+  ctx.fillRect(55, y - 40, 15, 15);
+
+  // Eye
+  ctx.fillRect(65, y - 35, 3, 3);
+
+  // Body
+  ctx.fillRect(50, y - 25, 25, 20);
+
+  // Legs
+  ctx.fillRect(50, y - 5, 5, 10);
+  ctx.fillRect(70, y - 5, 5, 10);
+
+  // Arms
+  ctx.fillRect(45, y - 20, 5, 5);
+  ctx.fillRect(75, y - 20, 5, 5);
+
+  // Tail
+  ctx.fillRect(35, y - 25, 15, 5);
+}
+
+function drawObstacle(x) {
+  // Main body of cactus
+  ctx.fillRect(x, 100, 10, 35);
+  
+  // Left arm of cactus
+  ctx.fillRect(x - 7, 110, 7, 5);
+  ctx.fillRect(x - 7, 110, 5, 15);
+
+  // Right arm of cactus
+  ctx.fillRect(x + 10, 120, 7, 5);
+  ctx.fillRect(x + 12, 105, 5, 20);
+}
+
+function jump() {
+  if (jumping) return;
+  jumping = true;
+  let initialY = dinoY;
+  let peak = 50;
+  let duration = 400;
+  let start = null;
+
+  function animateJump(timestamp) {
+    if (!start) start = timestamp;
+    let elapsed = timestamp - start;
+    let progress = elapsed / duration;
+
+    if (progress < 0.5) {
+      dinoY = initialY - peak * (progress * 2);
+    } else if (progress < 1) {
+      dinoY = (initialY - peak) + peak * ((progress - 0.5) * 2);
+    } else {
+      dinoY = initialY;
+      jumping = false;
+    }
+  
+    drawScene();
+
+    if (jumping) requestAnimationFrame(animateJump);
+  }
+  requestAnimationFrame(animateJump);
+}
+
+function drawScene() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawDinosaur(dinoY);
+  drawObstacle(obstacleX);
+}
+
+function moveObstacle() {
+  obstacleX -= speed;
+
+  if (obstacleX < -10) {
+    obstacleX = canvas.width;
+    score++;
+    document.getElementById("score").innerText = score;
+    if (score % 5 === 0) speed += 0.5; // increase speed every 5 points
+  }
+
+  // Collision detection
+  if (obstacleX < 70 && obstacleX > 40 && dinoY > 95) {
+    alert("Game Over! Your score: " + score);
+    document.location.reload();
+  }
+
+  drawScene();
+  requestAnimationFrame(moveObstacle);
+}
+
+// Start the game
+drawScene();
+requestAnimationFrame(moveObstacle);
+</script>

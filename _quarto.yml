@@ -15,7 +15,10 @@ website:
         icon: file-text
       - href: projects.qmd
         text: Portfolio
-        icon: folder
+        icon: folder2-open
+      - href: bonus.qmd
+        text: Bonus
+        icon: gem
 
 format:
   html:
