@@ -10,3 +10,8 @@ a:hover {
   color: #56bfd4; /* Darker blue on hover */
   text-decoration: underline;
 }
+
+.quarto-about-trestles .about-links .about-link:hover {
+  background-color: #4aacc7 !important;
+  color: white !important;
+}

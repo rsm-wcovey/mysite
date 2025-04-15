@@ -1,5 +1,6 @@
 ---
 title: San Diego Real Estate Shiny App
+image: ../../images/shiny-solo.png
 format:
   html:
     page-layout: full
@@ -15,7 +16,7 @@ Here is where I will enter my project notes.
 
 <script>
   const isMobile = window.innerWidth <= 768;
-  const iframeHeight = isMobile ? 900 : 700;
+  const iframeHeight = isMobile ? 800 : 700;
 
   document.write(`
     <iframe

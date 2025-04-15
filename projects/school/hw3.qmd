@@ -1,5 +1,6 @@
 ---
 title: Example 2
+image: ../../images/python-logo.png
 ---
 
 ```{=html}

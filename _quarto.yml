@@ -4,16 +4,18 @@ project:
 
 website:
   title: "Wesley Covey"
-  favicon: images/favicon2.ico
+  favicon: images/favicon3.ico
   navbar:
-    logo: images/favicon2.ico
     left:
       - href: index.qmd
         text: Home
+        icon: house
       - href: resume.qmd
         text: Resume
+        icon: file-text
       - href: projects.qmd
         text: Portfolio
+        icon: folder
 
 format:
   html:

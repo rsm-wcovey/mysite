@@ -6,4 +6,16 @@ listing:
     sort: "date desc"
     categories: true
     fields: [image, title]
+    image-height: 150px
+format:
+    html:
+        toc: false
 ---
+
+
+
+<div style="text-align: center; font-size: 0.7em; color: gray;">
+  <small>
+    <em>Logos used on this site are the property of their respective owners. No endorsement or affiliation is implied.</em>
+  </small>
+</div>

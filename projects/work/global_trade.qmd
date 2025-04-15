@@ -1,0 +1,25 @@
+---
+title: Example Power BI Report
+image: ../../images/power_bi_logo.png
+format:
+  html:
+    page-layout: full
+    toc: false
+---
+
+
+<script>
+  const isMobile = window.innerWidth <= 768;
+  const iframeHeight = isMobile ? 800 : 700;
+
+document.write(`
+    <iframe 
+      title="burritos"
+      src="https://app.powerbi.com/view?r=eyJrIjoiMzZkODVhMmYtNzQ4ZS00YWNlLWI5Y2UtZWIyZWUyOTk3ZDViIiwidCI6IjhhMTk4ODczLTRmZWMtNGU3Ni04MTgyLWNhNDc5ZWRiYmQ2MCIsImMiOjZ9"
+      width="100%"
+      height="${iframeHeight}" 
+      frameborder="0" 
+      allowFullScreen="true">
+    </iframe>
+`);
+</script>
