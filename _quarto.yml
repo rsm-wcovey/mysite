@@ -4,9 +4,9 @@ project:
 
 website:
   title: "Wesley Covey"
-  favicon: images/favicon.ico
+  favicon: images/favicon2.ico
   navbar:
-    logo: images/favicon.ico
+    logo: images/favicon2.ico
     left:
       - href: index.qmd
         text: Home

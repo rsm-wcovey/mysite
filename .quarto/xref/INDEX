@@ -28,5 +28,23 @@
   },
   "projects/MGTA/index.qmd": {
     "index.html": "377c0506"
+  },
+  "projects/work/MGTA/index.qmd": {
+    "index.html": "a0ca0aca"
+  },
+  "projects/school/hw3/index.qmd": {
+    "index.html": "62acd1ed"
+  },
+  "projects/school/hw1/index.qmd": {
+    "index.html": "a09c0bcb"
+  },
+  "projects/work/shiny_real_estate.qmd": {
+    "shiny_real_estate.html": "8bbea790"
+  },
+  "projects/school/hw3.qmd": {
+    "hw3.html": "97da4465"
+  },
+  "projects/school/hw1.qmd": {
+    "hw1.html": "79afa80f"
   }
 }
