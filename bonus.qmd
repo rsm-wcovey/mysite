@@ -3,13 +3,13 @@ title: "Rex"
 ---
 
 
-🦕🌵
+🦖🌵
 
 
 <div style="margin: 40px auto; width: 300px; text-align:center;">
+  <p>Score: <span id="score">0</span></p>
   <canvas id="gameCanvas" width="300" height="200" style="border:1px solid #ccc;"></canvas><br/>
   <button onclick="jump()">Jump!</button>
-  <p>Score: <span id="score">0</span></p>
 </div>
 
 <script>
@@ -19,30 +19,30 @@ let dinoY = 110;
 let jumping = false;
 let obstacleX = canvas.width;
 let score = 0;
-let speed = 2;
+let speed = 1.5;
 
 function drawDinosaur(y) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Head
-  ctx.fillRect(55, y - 40, 15, 15);
+  ctx.fillRect(65, y - 40, 15, 15);
 
   // Eye
-  ctx.fillRect(65, y - 35, 3, 3);
+  ctx.fillRect(76, y - 35, 10, 10);
 
   // Body
-  ctx.fillRect(50, y - 25, 25, 20);
+  ctx.fillRect(55, y - 25, 20, 20);
 
   // Legs
-  ctx.fillRect(50, y - 5, 5, 10);
+  ctx.fillRect(60, y - 30, 5, 35);
   ctx.fillRect(70, y - 5, 5, 10);
 
   // Arms
-  ctx.fillRect(45, y - 20, 5, 5);
+  ctx.fillRect(50, y - 20, 10, 10);
   ctx.fillRect(75, y - 20, 5, 5);
 
   // Tail
-  ctx.fillRect(35, y - 25, 15, 5);
+  ctx.fillRect(40, y - 10, 15, 5);
 }
 
 function drawObstacle(x) {
@@ -62,8 +62,8 @@ function jump() {
   if (jumping) return;
   jumping = true;
   let initialY = dinoY;
-  let peak = 50;
-  let duration = 400;
+  let peak = 60;
+  let duration = 500;
   let start = null;
 
   function animateJump(timestamp) {
@@ -108,7 +108,7 @@ function moveObstacle() {
     score = 0;
     document.getElementById("score").innerText = score;
     obstacleX = canvas.width;
-    speed = 2;
+    speed = 1.5;
 }
 
   drawScene();

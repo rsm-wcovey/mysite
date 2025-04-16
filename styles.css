@@ -16,3 +16,8 @@ a:hover {
   color: white !important;
 }
 
+@media (max-width: 768px) {
+  .about-image {
+    margin-top: 1em; /* or however much space you want */
+  }
+}

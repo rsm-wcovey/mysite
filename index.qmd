@@ -17,20 +17,20 @@ about:
           href: https://www.linkedin.com/in/wesleycovey/
 ---
 
+
 :::{#hero-heading}
 
 Wesley is a data-driven operations analyst and Marine Corps veteran with a proven record of turning complex data into actionable insights. With experience spanning financial analytics, business intelligence, and process optimization, he brings precision and purpose to every challenge. Outside of work, he enjoys gardening, woodworking, and exploring San Diego’s hiking trails.
 
 ## <i class="bi bi-mortarboard" style="padding-right: 8px;"></i> Education
 
-University of California, San Diego - Rady School of Management | San Diego, CA | M.S. in Business Analytics | 2024 - Present
+University of California, San Diego - Rady School of Management | M.S. in Business Analytics | 2024 - Present
 
-Arizona State University - W.P. Carey School of Business | 
-B.S. in Economics | 2018 - 2023
+Arizona State University - W.P. Carey School of Business | B.S. in Economics | 2018 - 2023
 
 ## <i class="bi bi-briefcase" style="padding-right: 8px;"></i> Experience
 
-Academy Securities | Operation Analyst | 2023 - Present
+Academy Securities | Operations Analyst | 2023 - Present
 
 United States Marine Corps | Chief Force Deployment Analyst | 2015 - 2023
 
