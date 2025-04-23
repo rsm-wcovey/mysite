@@ -1,6 +1,7 @@
 ---
 title: Example 2
 image: ../../images/python-logo.png
+date: 2025-04-05
 ---
 
 ```{=html}

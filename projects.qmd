@@ -1,11 +1,13 @@
 ---
 title: "My Projects"
 listing: 
-    contents: projects
+    contents:
+      - "projects/*/*.qmd"
+      - "projects/*/*/*.qmd"
     type: grid
     sort: "date desc"
     categories: true
-    fields: [image, title]
+    fields: [image, title, date]
     image-height: 150px
 format:
     html:

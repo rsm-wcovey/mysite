@@ -1,7 +1,7 @@
 ---
 title: "A Replication of Karlan and List (2007)"
 author: "Wesley Covey"
-date: today
+date: 2025-04-23
 callout-appearance: minimal # this hides the blue "i" icon on .callout-notes
 ---
 
@@ -22,11 +22,22 @@ This project seeks to replicate their results.
 _todo: Read the data into R/Python and describe the data_
 
 ```{python}
+#| echo: false
 import pandas as pd
 import numpy as np
+from scipy.stats import ttest_ind
+import pyrsm as rsm
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+from cycler import cycler
 
+plt.rcParams['axes.prop_cycle'] = cycler(color=['#375a7f']) 
+```
+
+
+```{python}
 df = pd.read_stata('karlan_list_2007.dta')
-display(df.head())
 ```
 
 :::: {.callout-note collapse="true"}
@@ -95,6 +106,29 @@ As an ad hoc test of the randomization mechanism, I provide a series of tests th
 
 _todo: test a few variables other than the key outcome variables (for example, test months since last donation) to see if the treatment and control groups are statistically significantly different at the 95% confidence level. For at least one variable, perform the test as both t-test (use the formula in the class slides) and separately as a linear regression (regress for example mrm2 on treatment); confirm both methods yield the exact same results. It might be helpful to compare parts of your analysis to Table 1 in the paper. Be sure to comment on your results (hint: why is Table 1 included in the paper)._
 
+```{python}
+test_variables = ['hpa', 'freq', 'female', 'redcty', 'bluecty']
+
+for var in test_variables:
+    control = df.loc[df.treatment == 0, var].dropna()
+    treatment = df.loc[df.treatment == 1, var].dropna()
+
+    t_stat, pval = ttest_ind(control, treatment)
+    print(f'''
+T-test results for {var}:
+t-statistic: {t_stat}
+p-value: {pval}
+
+At the 95% confidence level, we {pval < 0.05 and "reject" or "fail to reject"} the null hypothesis that the mean value from the two samples are equal.''')
+
+    m = rsm.model.regress(data=df,
+                      rvar=var,
+                      evar=['treatment'],
+    )
+    print(f'Linear regression results for {var}:')
+    print(m.summary(main=False))
+```
+
 
 ## Experimental Results
 
@@ -110,6 +144,35 @@ _todo: run a probit regression where the outcome variable is whether any charita
 
 _NOTE: Linear regression results appear replicate Table 3 column 1 in the paper. Probit results do not, despite Table 3 indicating its results come from probit regressions..._
 
+```{python}
+gave_df = df.groupby('treatment')['gave'].mean()
+gave_df.index = gave_df.index.map({0: 'Control', 1: 'Treatment'})
+
+plt.bar(gave_df.index, gave_df.values)
+plt.title('Proportion Who Donated by Group')
+plt.xlabel('Group')
+plt.ylabel('Proportion Who Donated')
+plt.show()
+
+
+control = df.loc[df.treatment == 0, 'gave'].dropna()
+treatment = df.loc[df.treatment == 1, 'gave'].dropna()
+
+t_stat, pval = ttest_ind(control, treatment)
+
+print(f'''
+T-test results:
+t-statistic: {t_stat}
+p-value: {pval}
+
+At the 95% confidence level, we {pval < 0.05 and "reject" or "fail to reject"} the null hypothesis that the response rate of the two samples are equal.''')
+
+probit_model = smf.probit('gave ~ treatment', data=df).fit()
+print('Probit Regression Results:')
+print(probit_model.summary())
+```
+
+
 
 ### Differences between Match Rates
 
@@ -121,6 +184,63 @@ _todo: Assess the same issue using a regression. Specifically, create the variab
 
 _todo: Calculate the response rate difference between the 1:1 and 2:1 match ratios and the 2:1 and 3:1 ratios.  Do this directly from the data, and do it by computing the differences in the fitted coefficients of the previous regression. what do you conclude regarding the effectiveness of different sizes of matched donations?_
 
+```{python}
+df['ratio'] = df['ratio'].astype(str)
+df['ratio'] = pd.Categorical(df['ratio'], categories=['Control', '1', '2', '3'], ordered=True)
+
+ratio_df = df.groupby('ratio')['gave'].mean()
+display(ratio_df)
+
+for ratio in ['1', '2', '3']:
+    g1 = ratio
+    for alt_ratio in ['1', '2', '3']:
+        if g1 == alt_ratio:
+            continue
+        g2 = alt_ratio
+
+        group1 = df.loc[df.ratio == g1, 'gave'].dropna()
+        group2 = df.loc[df.ratio == g2, 'gave'].dropna()
+
+        t_stat, pval = ttest_ind(group1, group2)
+        print(f'''
+Response rate for {g1}:1 - {group1.mean()}
+Response rate for {g2}:1 - {group2.mean()}
+t-statistic: {t_stat}
+p-value: {pval}
+
+At the 95% confidence level, we {pval < 0.05 and "reject" or "fail to reject"} the null hypothesis that the response rate of ratio {g1}:1 and {g2}:1 are equal.''')
+
+
+probit_model2 = smf.probit('gave ~ ratio', data=df).fit()
+print(probit_model2.summary())
+
+
+treatment_df = df.loc[df.treatment == 1].copy()
+treatment_df = treatment_df[['gave', 'ratio']].dropna()
+treatment_df['ratio'] = pd.Categorical(
+    treatment_df['ratio'], 
+    categories=['1', '2', '3'], 
+    ordered=True
+)
+
+probit_model3 = smf.probit('gave ~ ratio', data=treatment_df).fit()
+print(probit_model3.summary())
+
+
+print(f'Difference between 3:1 response rate and 2:1 response rate: {ratio_df['3'] - ratio_df['2']}')
+print(f'Difference between 2:1 response rate and 1:1 response rate: {ratio_df['2'] - ratio_df['1']}')
+
+mfx = probit_model2.get_margeff()
+marginal_effects = mfx.margeff
+diff_3_vs_2 = marginal_effects[2] - marginal_effects[1]
+diff_2_vs_1 = marginal_effects[1] - marginal_effects[0]
+
+
+print(f"Estimated difference between 3:1 response rate and 2:1 response rate:: {diff_3_vs_2:.4f}")
+print(f"Estimated difference between 2:1 response rate and 1:1 response rate: {diff_2_vs_1:.4f}")
+
+```
+
 
 ### Size of Charitable Contribution
 
@@ -131,6 +251,46 @@ _todo: Calculate a t-test or run a bivariate linear regression of the donation a
 _todo: now limit the data to just people who made a donation and repeat the previous analysis. This regression allows you to analyze how much respondents donate conditional on donating some positive amount. Interpret the regression coefficients -- what did we learn? Does the treatment coefficient have a causal interpretation?_ 
 
 _todo: Make two plots: one for the treatment group and one for the control. Each plot should be a histogram of the donation amounts only among people who donated. Add a red vertical bar or some other annotation to indicate the sample average for each plot._
+
+```{python}
+control = df.loc[df.treatment == 0, 'amount'].dropna()
+treatment = df.loc[df.treatment == 1, 'amount'].dropna()
+
+t_stat, pval = ttest_ind(control, treatment)
+
+print(f'''
+T-test results:
+t-statistic: {t_stat}
+p-value: {pval}
+
+At the 95% confidence level, we {pval < 0.05 and "reject" or "fail to reject"} the null hypothesis that the donation amount of the two samples are equal.''')
+
+control = df.loc[(df.treatment == 0) & (df.gave == 1), 'amount'].dropna()
+treatment = df.loc[(df.treatment == 1) & (df.gave == 1), 'amount'].dropna()
+
+t_stat, pval = ttest_ind(control, treatment)
+
+print(f'''
+T-test results:
+t-statistic: {t_stat}
+p-value: {pval}
+
+At the 95% confidence level, we {pval < 0.05 and "reject" or "fail to reject"} the null hypothesis that the donation amount of the two samples are equal.''')
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+axes[0].set_ylabel("Frequency")
+
+for val in [0, 1]:
+    subset = df.loc[(df.gave == 1) & (df.treatment == val)].copy()
+    axes[val].hist(subset['amount'], bins=10)
+    axes[val].axhline(y=subset['amount'].mean(), color='r', linestyle='--', label='Mean')
+    axes[val].legend()
+    axes[val].set_title(f'Amount Donated for {"Treatment" if val == 1 else "Control"} Group')
+    axes[val].set_xlabel("Dollars Donated")
+
+plt.tight_layout()
+plt.show()
+```
 
 
 ## Simulation Experiment
@@ -145,11 +305,56 @@ Further suppose that the true distribution of respondents who do get a charitabl
 
 _to do:  Simulate 10,000 draws from the control distribution and 10,000 draws from the treatment distribution. You'll then calculate a vector of 10,000 differences, and then you'll plot the cumulative average of that vector of differences. This average will likely be "noisey" when only averaging a few numbers, but should "settle down" and approximate the treatment effect (0.004 = 0.022 - 0.018) as the sample size gets large. Explain the chart to the reader._
 
+```{python}
+ctr_p = 0.018
+trt_p = 0.022
+
+np.random.seed(12)
+sim_ctr = np.random.binomial(n=1, p=ctr_p, size=10_000)
+sim_trt = np.random.binomial(n=1, p=trt_p, size=10_000)
+
+sim_diff = sim_trt - sim_ctr
+cumulative_avg = np.cumsum(sim_diff) / np.arange(1, len(sim_diff) + 1)
+
+plt.figure(figsize=(10, 5))
+plt.plot(cumulative_avg)
+plt.axhline(y=trt_p - ctr_p, color='red', linestyle='--', label='True Effect (0.004)')
+plt.title('Cumulative Average of Simulated Treatment Effect')
+plt.xlabel('Number of Simulations')
+plt.ylabel('Cumulative Average Difference (Treatment - Control)')
+plt.legend()
+plt.show()
+```
 
 ### Central Limit Theorem
 
 _to do: Make 4 histograms at sample sizes 50, 200, 500, and 1000.  To do this for a sample size of e.g. 50, take 50 draws from each of the control and treatment distributions, and calculate the average difference between those draws. Then repeat that process 999 more times so that you have 1000 averages. Plot the histogram of those averages. The repeat for the other 3 histograms. Explain this sequence of histograms and its relationship to the central limit theorem to the reader._
 
+```{python}
+fig, axes = plt.subplots(2, 2, figsize=(12, 10), sharey=True, sharex=True)
+axes = axes.flatten()
+axes[0].set_ylabel("Frequency")
+axes[2].set_ylabel("Frequency")
+
+for ax, size in enumerate([50, 200, 500, 1000]):
+    samples = []
+    for i in range(1000):
+        sim_ctr = np.random.binomial(n=1, p=ctr_p, size=size)
+        sim_trt = np.random.binomial(n=1, p=trt_p, size=size)
+
+        sim_diff_mean = sim_trt.mean() - sim_ctr.mean()
+        samples.append(sim_diff_mean)
+    
+    axes[ax].hist(samples, bins=10)
+    axes[ax].axvline(x=trt_p - ctr_p, color='red', linestyle='--', label='True Effect (0.004)')
+    axes[ax].legend()
+    axes[ax].set_title(f'Average Difference from {size} Draws')
+    axes[ax].set_xlabel("Difference in Response Rate")
+
+
+plt.tight_layout()
+plt.show()
+```
 
 
 

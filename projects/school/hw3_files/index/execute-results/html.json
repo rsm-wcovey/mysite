@@ -1,0 +1,12 @@
+{
+  "hash": "adf011ae8e44bf582b645d47c8213e44",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: Example 2\n---\n\n```{=html}\n<script src=\"../../code/hupwc.js\" ></script>\n```\n\n\n<div id=\"protected-content\" style=\"display: none;\">\n\n##Example 2\n\nExample histogram below:\n\nThis is a protected section. Here's a Python-generated histogram:\n\n::: {#9efea9e7 .cell execution_count=1}\n``` {.python .cell-code}\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nx = np.random.rand(100)\nplt.hist(x)\nplt.show()\n```\n\n::: {.cell-output .cell-output-display}\n![](index_files/figure-html/cell-2-output-1.png){width=566 height=411}\n:::\n:::\n\n\n</div>\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
