@@ -19,7 +19,7 @@ let dinoY = 110;
 let jumping = false;
 let obstacleX = canvas.width;
 let score = 0;
-let speed = 1.5;
+let speed = 2;
 
 function drawDinosaur(y) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -108,7 +108,7 @@ function moveObstacle() {
     score = 0;
     document.getElementById("score").innerText = score;
     obstacleX = canvas.width;
-    speed = 1.5;
+    speed = 2;
 }
 
   drawScene();

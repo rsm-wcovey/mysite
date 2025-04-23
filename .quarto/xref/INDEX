@@ -55,5 +55,11 @@
   },
   "bonus.qmd": {
     "bonus.html": "44b15726"
+  },
+  "projects/MGTA495/hw1_questions.qmd": {
+    "hw1_questions.html": "0a54cfb3"
+  },
+  "projects/MGTA495/hw1_nb.ipynb": {
+    "hw1_nb.html": "5641847f"
   }
 }
