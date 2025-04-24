@@ -191,7 +191,8 @@ t-statistic: {t_stat}
 p-value: {pval}''')
 
 probit_model = smf.probit('gave ~ treatment', data=df).fit(disp=False)
-print(f'''Probit Regression Results:
+print(f'''
+Probit Regression Results:
       
 t-statistic: {probit_model.tvalues['treatment']}
 p-value: {probit_model.pvalues['treatment']}
@@ -341,13 +342,13 @@ Assessing only those who made a donation, we in fact see that the mean donation 
 
 
 ```{python}
-fig, axes = plt.subplots(1, 2, figsize=(7, 3.5), sharey=True)
+fig, axes = plt.subplots(1, 2, figsize=(7.8, 3.9), sharey=True)
 axes[0].set_ylabel("Frequency")
 
 for val in [0, 1]:
     subset = df.loc[(df.gave == 1) & (df.treatment == val)].copy()
     axes[val].hist(subset['amount'], bins=10)
-    axes[val].axhline(y=subset['amount'].mean(), color='r', linestyle='--', label=f'Mean: ${subset["amount"].mean():,.2f}')
+    axes[val].axvline(x=subset['amount'].mean(), color='r', linestyle='--', label=f'Mean: ${subset["amount"].mean():,.2f}')
     axes[val].legend()
     axes[val].set_title(f'Amount Donated for {"Treatment" if val == 1 else "Control"} Group')
     axes[val].set_xlabel("Dollars Donated")
@@ -382,7 +383,7 @@ sim_trt = np.random.binomial(n=1, p=trt_p, size=10_000)
 sim_diff = sim_trt - sim_ctr
 cumulative_avg = np.cumsum(sim_diff) / np.arange(1, len(sim_diff) + 1)
 
-plt.figure(figsize=(7, 3.5))
+plt.figure(figsize=(7.8, 3.9))
 plt.plot(cumulative_avg)
 plt.axhline(y=trt_p - ctr_p, color='red', linestyle='--', label=f'True Effect ({trt_p-ctr_p:.3f})')
 plt.title('Cumulative Average of Simulated Treatment Effect')
@@ -398,7 +399,7 @@ plt.show()
 These histograms show the distribution of simulated average differences in response rates between treatment and control groups at sample sizes of 50, 200, 500, and 1000. As the sample size increases, the distributions become tighter and more symmetric, demonstrating the central limit theorem: larger samples yield more stable, normally distributed estimates.
 
 ```{python}
-fig, axes = plt.subplots(2, 2, figsize=(7, 7), sharey=True, sharex=True)
+fig, axes = plt.subplots(2, 2, figsize=(7.8, 7.8), sharey=True, sharex=True)
 axes = axes.flatten()
 axes[0].set_ylabel("Frequency")
 axes[2].set_ylabel("Frequency")
