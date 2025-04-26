@@ -16,8 +16,15 @@ a:hover {
   color: white !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .about-image {
     margin-top: 1em; /* or however much space you want */
   }
+}
+
+.site-footer-text {
+  font-size: 0.8em;  /* smaller text */
+  text-align: center; /* optional, looks nice */
+  margin-top: 4em;   /* pushes it down nicely */
+  color: #6c757d;    /* optional, lighter gray text */
 }

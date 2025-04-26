@@ -70,5 +70,17 @@
   },
   "projects/MGTA495/hw1.qmd": {
     "hw1.html": "c4d49b5a"
+  },
+  "projects/school/burritos_pbi.qmd": {
+    "burritos_pbi.html": "54d70a77"
+  },
+  "projects/school/shiny_real_estate.qmd": {
+    "shiny_real_estate.html": "d74d1d0b"
+  },
+  "projects/school/example2.qmd": {
+    "example2.html": "ef051327"
+  },
+  "projects/school/example1.qmd": {
+    "example1.html": "d0df6fc5"
   }
 }

@@ -483,7 +483,7 @@ Variable Summary
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="06eabd01" class="cell" data-execution_count="2">
+<div id="91c22fd9" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_stata(<span class="st">'data/karlan_list_2007.dta'</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df.describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -1046,7 +1046,7 @@ Variable Summary
 <section id="balance-test" class="level3">
 <h3 class="anchored" data-anchor-id="balance-test">Balance Test</h3>
 <p>As an ad hoc test of the randomization mechanism, I provide a series of tests that compare aspects of the treatment and control groups to assess whether they are statistically significantly different from one another.</p>
-<div id="e455f92e" class="cell" data-execution_count="3">
+<div id="3778a2b8" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>test_variables <span class="op">=</span> [<span class="st">'hpa'</span>, <span class="st">'freq'</span>, <span class="st">'years'</span>, <span class="st">'median_hhincome'</span>]</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> var <span class="kw">in</span> test_variables:</span>
@@ -1180,7 +1180,7 @@ that the mean value from the two samples are equal.
 <section id="charitable-contribution-made" class="level3">
 <h3 class="anchored" data-anchor-id="charitable-contribution-made">Charitable Contribution Made</h3>
 <p>First, I analyze whether matched donations lead to an increased response rate of making a donation.</p>
-<div id="67431ca6" class="cell" data-execution_count="4">
+<div id="678cea2e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gave_df <span class="op">=</span> df.groupby(<span class="st">'treatment'</span>)[<span class="st">'gave'</span>].mean()</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>gave_df.index <span class="op">=</span> gave_df.index.<span class="bu">map</span>({<span class="dv">0</span>: <span class="st">'Control'</span>, <span class="dv">1</span>: <span class="st">'Treatment'</span>})</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1199,7 +1199,7 @@ that the mean value from the two samples are equal.
 </div>
 </div>
 </div>
-<div id="202b50da" class="cell" data-execution_count="5">
+<div id="d3d972a5" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> df.loc[df.treatment <span class="op">==</span> <span class="dv">0</span>, <span class="st">'gave'</span>].dropna()</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>treatment <span class="op">=</span> df.loc[df.treatment <span class="op">==</span> <span class="dv">1</span>, <span class="st">'gave'</span>].dropna()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1249,7 +1249,7 @@ that the mean value from the two samples are equal.
 <section id="differences-between-match-rates" class="level3">
 <h3 class="anchored" data-anchor-id="differences-between-match-rates">Differences between Match Rates</h3>
 <p>Next, I assess the effectiveness of different sizes of matched donations on the response rate.</p>
-<div id="26291646" class="cell" data-execution_count="6">
+<div id="5b6bbaa7" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'ratio'</span>] <span class="op">=</span> df[<span class="st">'ratio'</span>].astype(<span class="bu">str</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'ratio'</span>] <span class="op">=</span> pd.Categorical(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'ratio'</span>], categories<span class="op">=</span>[<span class="st">'Control'</span>, <span class="st">'1'</span>, <span class="st">'2'</span>, <span class="st">'3'</span>], ordered<span class="op">=</span><span class="va">True</span></span>
@@ -1312,7 +1312,7 @@ that the response rate of ratios 3:1 and 1:1 are equal.
 <p>As seen through the above series of t-tests, comparing the mean response rates between varying match ratio samples, increasing match ratios above 1:1 has no significant impact on response rates. This affirms the conclusion made by the authors of the study.</p>
 <section id="response-rate-regressed-on-match-ratio-from-full-dataset" class="level4">
 <h4 class="anchored" data-anchor-id="response-rate-regressed-on-match-ratio-from-full-dataset">Response Rate Regressed on Match Ratio (from full dataset):</h4>
-<div id="516ff55f" class="cell" data-execution_count="7">
+<div id="f9f0ac43" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>probit_model2 <span class="op">=</span> smf.probit(<span class="st">'gave ~ ratio'</span>, data<span class="op">=</span>df).fit(disp<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>pm2_df <span class="op">=</span> pd.DataFrame({</span>
@@ -1369,7 +1369,7 @@ that the response rate of ratios 3:1 and 1:1 are equal.
 </section>
 <section id="response-rate-regressed-on-match-ratio-from-treatment-group-only" class="level4">
 <h4 class="anchored" data-anchor-id="response-rate-regressed-on-match-ratio-from-treatment-group-only">Response Rate Regressed on Match Ratio (from treatment group only):</h4>
-<div id="073808e8" class="cell" data-execution_count="8">
+<div id="ad5a8d9f" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>treatment_df <span class="op">=</span> df.loc[df.treatment <span class="op">==</span> <span class="dv">1</span>]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>treatment_df <span class="op">=</span> treatment_df[[<span class="st">'gave'</span>, <span class="st">'ratio'</span>]].dropna()</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>treatment_df[<span class="st">'ratio'</span>] <span class="op">=</span> pd.Categorical(</span>
@@ -1423,7 +1423,7 @@ that the response rate of ratios 3:1 and 1:1 are equal.
 </div>
 </div>
 <p>With the control group excluded, we can see from the high p-values on the coefficients for 2:1 and 3:1 match ratios that they do not have a significantly different impact on response rates from the intercept (1:1).</p>
-<div id="b6bf4fec" class="cell" data-execution_count="9">
+<div id="6221dd89" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Observed difference between 3:1 response rate and 2:1 response rate: </span><span class="sc">{</span>ratio_df[<span class="st">'3'</span>] <span class="op">-</span> ratio_df[<span class="st">'2'</span>]<span class="sc">}</span><span class="ss">'</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Observed difference between 2:1 response rate and 1:1 response rate: </span><span class="sc">{</span>ratio_df[<span class="st">'2'</span>] <span class="op">-</span> ratio_df[<span class="st">'1'</span>]<span class="sc">}</span><span class="ss">'</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1447,7 +1447,7 @@ Estimated difference between 2:1 response rate and 1:1 response rate: 0.00180640
 <section id="size-of-charitable-contribution" class="level3">
 <h3 class="anchored" data-anchor-id="size-of-charitable-contribution">Size of Charitable Contribution</h3>
 <p>In this subsection, I analyze the effect of the size of matched donation on the size of the charitable contribution.</p>
-<div id="6eb7b726" class="cell" data-execution_count="10">
+<div id="65334001" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> df.loc[df.treatment <span class="op">==</span> <span class="dv">0</span>, <span class="st">'amount'</span>].dropna()</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>treatment <span class="op">=</span> df.loc[df.treatment <span class="op">==</span> <span class="dv">1</span>, <span class="st">'amount'</span>].dropna()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1479,7 +1479,7 @@ that the mean donation amount of the two samples are equal.</code></pre>
 </div>
 </div>
 <p>We can observe that the treatment group has a higher mean donation amount, as identified by the authors, but at the 95% confidence level, it is not statistically significant.</p>
-<div id="ea0c580e" class="cell" data-execution_count="11">
+<div id="b885e7b8" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> df.loc[(df.treatment <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span> (df.gave <span class="op">==</span> <span class="dv">1</span>), <span class="st">'amount'</span>].dropna()</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>treatment <span class="op">=</span> df.loc[(df.treatment <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (df.gave <span class="op">==</span> <span class="dv">1</span>), <span class="st">'amount'</span>].dropna()</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1511,7 +1511,7 @@ that the donation amount of the two samples are equal.</code></pre>
 </div>
 </div>
 <p>Assessing only those who made a donation, we in fact see that the mean donation amount among the treatment group is lower than the control group, though with a much higher p-value than the previous t-test. It appears that while the treatment results in higher response rates, most of those donors who are ‘converted’ by the treatment are making smaller donations than those who donated from the control group.</p>
-<div id="77d5c3bc" class="cell" data-execution_count="12">
+<div id="cf156a85" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">7.8</span>, <span class="fl">3.9</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">"Frequency"</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1543,7 +1543,7 @@ that the donation amount of the two samples are equal.</code></pre>
 <section id="law-of-large-numbers" class="level3">
 <h3 class="anchored" data-anchor-id="law-of-large-numbers">Law of Large Numbers</h3>
 <p>The below chart illustrates the cumulative average difference in response rates from 10,000 draws of simulated treatment and control distributions. In early simulations, we see this cumulative average move erratically due to random variation, but as more draws are simulated, the average begins to stabilize and converge toward the true observed treatment effect of approximately 0.004.</p>
-<div id="3dcfece7" class="cell" data-execution_count="13">
+<div id="f02d9227" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ctr_p <span class="op">=</span> <span class="fl">0.018</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>trt_p <span class="op">=</span> <span class="fl">0.022</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1574,7 +1574,7 @@ that the donation amount of the two samples are equal.</code></pre>
 <section id="central-limit-theorem" class="level3">
 <h3 class="anchored" data-anchor-id="central-limit-theorem">Central Limit Theorem</h3>
 <p>These histograms show the distribution of simulated average differences in response rates between treatment and control groups at sample sizes of 50, 200, 500, and 1000. As the sample size increases, the distributions become tighter and more symmetric, demonstrating the central limit theorem: larger samples yield more stable, normally distributed estimates.</p>
-<div id="b7671c84" class="cell" data-execution_count="14">
+<div id="6363e0e5" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">7.8</span>, <span class="fl">7.8</span>), sharey<span class="op">=</span><span class="va">True</span>, sharex<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">"Frequency"</span>)</span>

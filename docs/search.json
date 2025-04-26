@@ -49,8 +49,8 @@
     "text": "Simulation Experiment\nAs a reminder of how the t-statistic “works,” in this section I use simulation to demonstrate the Law of Large Numbers and the Central Limit Theorem.\nSuppose the true distribution of respondents who do not get a charitable donation match is Bernoulli with probability p=0.018 that a donation is made.\nFurther suppose that the true distribution of respondents who do get a charitable donation match of any size is Bernoulli with probability p=0.022 that a donation is made.\n\nLaw of Large Numbers\nThe below chart illustrates the cumulative average difference in response rates from 10,000 draws of simulated treatment and control distributions. In early simulations, we see this cumulative average move erratically due to random variation, but as more draws are simulated, the average begins to stabilize and converge toward the true observed treatment effect of approximately 0.004.\n\nctr_p = 0.018\ntrt_p = 0.022\n\nnp.random.seed(12)\nsim_ctr = np.random.binomial(n=1, p=ctr_p, size=10_000)\nsim_trt = np.random.binomial(n=1, p=trt_p, size=10_000)\n\nsim_diff = sim_trt - sim_ctr\ncumulative_avg = np.cumsum(sim_diff) / np.arange(1, len(sim_diff) + 1)\n\nplt.figure(figsize=(7.8, 3.9))\nplt.plot(cumulative_avg)\nplt.axhline(y=trt_p - ctr_p, color='red', linestyle='--', label=f'True Effect ({trt_p-ctr_p:.3f})')\nplt.title('Cumulative Average of Simulated Treatment Effect')\nplt.xlabel('Number of Simulated Draws')\nplt.ylabel('Cum. Avg. Difference (Treatment - Control)')\nplt.legend()\nplt.show()\n\n\n\n\n\n\n\n\n\n\nCentral Limit Theorem\nThese histograms show the distribution of simulated average differences in response rates between treatment and control groups at sample sizes of 50, 200, 500, and 1000. As the sample size increases, the distributions become tighter and more symmetric, demonstrating the central limit theorem: larger samples yield more stable, normally distributed estimates.\n\nfig, axes = plt.subplots(2, 2, figsize=(7.8, 7.8), sharey=True, sharex=True)\naxes = axes.flatten()\naxes[0].set_ylabel(\"Frequency\")\naxes[2].set_ylabel(\"Frequency\")\naxes[2].set_xlabel(\"Difference in Response Rate\")\naxes[3].set_xlabel(\"Difference in Response Rate\")\n\nfor ax, size in enumerate([50, 200, 500, 1000]):\n    samples = []\n    for i in range(1000):\n        sim_ctr = np.random.binomial(n=1, p=ctr_p, size=size)\n        sim_trt = np.random.binomial(n=1, p=trt_p, size=size)\n\n        sim_diff_mean = sim_trt.mean() - sim_ctr.mean()\n        samples.append(sim_diff_mean)\n    \n    axes[ax].hist(samples, bins=np.linspace(-0.02, 0.03, 11))\n    axes[ax].axvline(x=trt_p - ctr_p, color='red', linestyle='--', label='True Effect (0.004)')\n    axes[ax].legend()\n    axes[ax].set_title(f'Average Difference from {size} Draws')\n\nplt.tight_layout()\nplt.show()"
   },
   {
-    "objectID": "projects/school/hw3.html",
-    "href": "projects/school/hw3.html",
+    "objectID": "projects/school/example2.html",
+    "href": "projects/school/example2.html",
     "title": "Example 2",
     "section": "",
     "text": "##Example 2\nExample histogram below:\nThis is a protected section. Here’s a Python-generated histogram:\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nx = np.random.rand(100)\nplt.hist(x)\nplt.show()"
@@ -74,39 +74,39 @@
     "href": "index.html",
     "title": "Wesley D. Covey",
     "section": "",
-    "text": "Wesley is a data-driven operations analyst and Marine Corps veteran with a proven record of turning complex data into actionable insights. With experience spanning financial analytics, business intelligence, and process optimization, he brings precision and purpose to every challenge. Outside of work, he enjoys gardening, woodworking, and exploring San Diego’s hiking trails.\n\n\nUniversity of California, San Diego - Rady School of Management | M.S. in Business Analytics | 2024 - Present\nArizona State University - W.P. Carey School of Business | B.S. in Economics | 2018 - 2023\n\n\n\nAcademy Securities | Operations Analyst | 2023 - Present\nUnited States Marine Corps | Chief Force Deployment Analyst | 2015 - 2023"
+    "text": "Wesley is a data-driven operations analyst and Marine Corps veteran with a proven record of turning complex data into actionable insights. With experience spanning financial analytics, business intelligence, and process optimization, he brings precision and purpose to every challenge. Outside of work, he enjoys gardening, woodworking, and exploring San Diego’s hiking trails.\n\n\nUniversity of California, San Diego\nRady School of Management\nM.S. in Business Analytics | 2024 - Present\nArizona State University\nW.P. Carey School of Business\nB.S. in Economics | 2018 - 2023\n\n\n\nAcademy Securities\nOperations Analyst | 2023 - Present\nUnited States Marine Corps\nChief Force Deployment Analyst | 2015 - 2023"
   },
   {
     "objectID": "index.html#education",
     "href": "index.html#education",
     "title": "Wesley D. Covey",
     "section": "",
-    "text": "University of California, San Diego - Rady School of Management | M.S. in Business Analytics | 2024 - Present\nArizona State University - W.P. Carey School of Business | B.S. in Economics | 2018 - 2023"
+    "text": "University of California, San Diego\nRady School of Management\nM.S. in Business Analytics | 2024 - Present\nArizona State University\nW.P. Carey School of Business\nB.S. in Economics | 2018 - 2023"
   },
   {
     "objectID": "index.html#experience",
     "href": "index.html#experience",
     "title": "Wesley D. Covey",
     "section": "",
-    "text": "Academy Securities | Operations Analyst | 2023 - Present\nUnited States Marine Corps | Chief Force Deployment Analyst | 2015 - 2023"
+    "text": "Academy Securities\nOperations Analyst | 2023 - Present\nUnited States Marine Corps\nChief Force Deployment Analyst | 2015 - 2023"
   },
   {
-    "objectID": "projects/work/shiny_real_estate.html",
-    "href": "projects/work/shiny_real_estate.html",
+    "objectID": "projects/school/shiny_real_estate.html",
+    "href": "projects/school/shiny_real_estate.html",
     "title": "San Diego Real Estate Shiny App",
     "section": "",
     "text": "Here is where I will enter my project notes.\n\nClick here to open the app in a new tab."
   },
   {
-    "objectID": "projects/work/shiny_real_estate.html#project-notes",
-    "href": "projects/work/shiny_real_estate.html#project-notes",
+    "objectID": "projects/school/shiny_real_estate.html#project-notes",
+    "href": "projects/school/shiny_real_estate.html#project-notes",
     "title": "San Diego Real Estate Shiny App",
     "section": "",
     "text": "Here is where I will enter my project notes.\n\nClick here to open the app in a new tab."
   },
   {
-    "objectID": "projects/school/hw1.html",
-    "href": "projects/school/hw1.html",
+    "objectID": "projects/school/example1.html",
+    "href": "projects/school/example1.html",
     "title": "Example 1",
     "section": "",
     "text": "Example dataframe below:\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"A\": [1, 2, 3],\n    \"B\": [4, 5, 6]\n})\n\nprint(df)\n\n   A  B\n0  1  4\n1  2  5\n2  3  6"
