@@ -4,10 +4,11 @@ image: "images/headshot.jpg"
 format:
   html:
     toc: false
+    page-layout: full
 about:
     template: trestles
     image-shape: round
-    image-width: 12em
+    image-width: 16em
     links:
         - icon: envelope
           text: Email
@@ -21,6 +22,7 @@ about:
 :::{#hero-heading}
 
 Wesley is a data-driven operations analyst and Marine Corps veteran with a proven record of turning complex data into actionable insights. With experience spanning financial analytics, business intelligence, and process optimization, he brings precision and purpose to every challenge. Outside of work, he enjoys gardening, woodworking, and exploring San Diego’s hiking trails.
+
 
 ## <i class="bi bi-mortarboard" style="padding-right: 8px;"></i> Education
 
