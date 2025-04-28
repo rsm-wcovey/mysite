@@ -3,7 +3,7 @@ title: "My Projects"
 listing: 
     contents:
       - "projects/*/*.qmd"
-      #- "projects/*/*/*.qmd"
+      - "projects/*/*/*.qmd"
     type: grid
     sort: "date desc"
     categories: true

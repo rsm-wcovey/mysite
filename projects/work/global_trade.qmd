@@ -1,0 +1,31 @@
+---
+title: Global Trade Power BI Report
+image: ../../images/power_bi_logo.png
+author: "Wesley Covey"
+date: 2024-04-01
+format:
+  html:
+    page-layout: full
+    toc: false
+---
+
+## Project Notes
+Our Macroeconomist was looking for a tool to analyze data on global trade and determine what goods might be most effected as future geopolitical events developed. After assessing various data sources for scope, reliability, and accessibility, I decided to pull data from the <a href="https://comtradeplus.un.org/" target="_blank">UN Comtrade Database</a>. That data was then transformed and related for presentation in the below Power BI report.
+
+
+
+<script>
+  const isMobile = window.innerWidth <= 768;
+  const iframeHeight = isMobile ? 800 : 700;
+
+document.write(`
+    <iframe 
+      title="Global Trade Report"
+      src="https://app.powerbi.com/view?r=eyJrIjoiMjNiODk5YjMtOTM4Mi00MGZiLTkwZWMtM2ZiYTVlZTFlYjk4IiwidCI6IjhhMTk4ODczLTRmZWMtNGU3Ni04MTgyLWNhNDc5ZWRiYmQ2MCIsImMiOjZ9"
+      width="100%"
+      height="${iframeHeight}" 
+      frameborder="0" 
+      allowFullScreen="true">
+    </iframe>
+`);
+</script>

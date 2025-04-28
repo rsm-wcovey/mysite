@@ -16,6 +16,16 @@ a:hover {
   color: white !important;
 }
 
+/* TOC Color */
+nav.toc a:hover, 
+#TOC a:hover,
+nav.toc a.active, 
+#TOC a.active {
+  color: #189cd0 !important;
+  border-left-color: #189cd0 !important;
+}
+
+
 @media (max-width: 992px) {
   .about-image {
     margin-top: 1em; /* or however much space you want */

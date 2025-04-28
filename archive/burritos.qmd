@@ -8,6 +8,10 @@ format:
     toc: false
 ---
 
+### Project Notes
+As part of an early brainstorming idea for a project for UCSD's _Collecting and Analyzing Large Data_ course, I pulled a dataset from <a href="https://www.kaggle.com/datasets/srcole/burritos-in-san-diego" target="_blank">Kaggle</a> on burrito reviews in the San Diego area. It's a bit silly, and we didn't end up moving forward with this project, but I created the below Power BI report with the data as a proof of concept. 
+
+
 
 <script>
   const isMobile = window.innerWidth <= 768;

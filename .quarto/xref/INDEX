@@ -82,5 +82,14 @@
   },
   "projects/school/example1.qmd": {
     "example1.html": "d0df6fc5"
+  },
+  "archive/burritos.qmd": {
+    "burritos.html": "0b05a9c0"
+  },
+  "projects/school/MGTA495/hw1.qmd": {
+    "hw1.html": "16a5b079"
+  },
+  "projects/school/MGTA495/hw1_nb.ipynb": {
+    "hw1_nb.html": "ea10564e"
   }
 }
