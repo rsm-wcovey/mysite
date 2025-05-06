@@ -1,5 +1,6 @@
 ---
 title: "A Replication of Karlan and List (2007)"
+image: ../../images/python-logo.png
 author: "Wesley Covey"
 date: 2025-04-23
 callout-appearance: minimal # this hides the blue "i" icon on .callout-notes
