@@ -1,6 +1,6 @@
 ---
 title: "Poisson Regression Examples"
-image: ../../images/R_logo.png
+image: ../../../images/R_logo.png
 author: "Wesley Covey"
 date: 2025-05-07
 callout-appearance: minimal 
