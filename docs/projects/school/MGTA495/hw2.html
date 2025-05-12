@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Wesley Covey">
-<meta name="dcterms.date" content="2025-05-07">
+<meta name="dcterms.date" content="2025-05-11">
 
 <title>Poisson Regression Examples – Wesley Covey</title>
 <style>
@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -236,7 +202,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 7, 2025</p>
+      <p class="date">May 11, 2025</p>
     </div>
   </div>
   
@@ -258,29 +224,12 @@ window.Quarto = {
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/blueprinty.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>non_cust_mean <span class="ot">&lt;-</span> <span class="fu">mean</span> (df[df<span class="sc">$</span>iscustomer <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>patents, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df[df<span class="sc">$</span>iscustomer <span class="sc">==</span> <span class="dv">0</span>, ], <span class="fu">aes</span>(<span class="at">x =</span> patents)) <span class="sc">+</span> </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span> </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> non_cust_mean) <span class="sc">+</span> </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Non-Customers"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>cust_mean <span class="ot">&lt;-</span> <span class="fu">mean</span> (df[df<span class="sc">$</span>iscustomer <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>patents, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df[df<span class="sc">$</span>iscustomer <span class="sc">==</span> <span class="dv">1</span>, ], <span class="fu">aes</span>(<span class="at">x =</span> patents)) <span class="sc">+</span> </span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span> </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(df<span class="sc">$</span>patents, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span> </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Customers"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Non-Customer mean: "</span>, non_cust_mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Non-Customer mean:  3.4730127576055"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Customer mean: "</span>, cust_mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Customer mean:  4.13305613305613"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -292,15 +241,6 @@ window.Quarto = {
 <p>The histograms of patent counts by customers vs non-customers reveal nearly identical distributions with a slightly higher mean value for customers of the firm.</p>
 <p>Blueprinty customers are not selected at random. It may be important to account for systematic differences in the age and regional location of customers vs non-customers.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df[df<span class="sc">$</span>iscustomer <span class="sc">==</span> <span class="dv">0</span>, ], <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(region))) <span class="sc">+</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Non-Customers"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df[df<span class="sc">$</span>iscustomer <span class="sc">==</span> <span class="dv">1</span>, ], <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(region))) <span class="sc">+</span> </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Customers"</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -308,10 +248,6 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(iscustomer), <span class="at">y =</span> age)) <span class="sc">+</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_boxplot</span>()</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -325,26 +261,32 @@ window.Quarto = {
 <section id="estimation-of-simple-poisson-model" class="level3">
 <h3 class="anchored" data-anchor-id="estimation-of-simple-poisson-model">Estimation of Simple Poisson Model</h3>
 <p>Since our outcome variable of interest can only be small integer values per a set unit of time, we can use a Poisson density to model the number of patents awarded to each engineering firm over the last 5 years. We start by estimating a simple Poisson model via Maximum Likelihood.</p>
-<p><em>todo: Write down mathematically the likelihood for</em> <span class="math inline">\(Y \sim \text{Poisson}(\lambda)\)</span>. Note that <span class="math inline">\(f(Y|\lambda) = e^{-\lambda}\lambda^Y/Y!\)</span>.</p>
-<p><em>todo: Code the likelihood (or log-likelihood) function for the Poisson model. This is a function of lambda and Y. For example:</em></p>
-<pre><code>poisson_loglikelihood &lt;- function(lambda, Y){
-   ...
-}</code></pre>
-<p><em>todo: Use your function to plot lambda on the horizontal axis and the likelihood (or log-likelihood) on the vertical axis for a range of lambdas (use the observed number of patents as the input for Y).</em></p>
-<p><em>todo: If you’re feeling mathematical, take the first derivative of your likelihood or log-likelihood, set it equal to zero and solve for lambda. You will find lambda_mle is Ybar, which “feels right” because the mean of a Poisson distribution is lambda.</em></p>
-<p><em>todo: Find the MLE by optimizing your likelihood function with optim() in R or sp.optimize() in Python.</em></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hw2_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="estimation-of-poisson-regression-model" class="level3">
 <h3 class="anchored" data-anchor-id="estimation-of-poisson-regression-model">Estimation of Poisson Regression Model</h3>
 <p>Next, we extend our simple Poisson model to a Poisson Regression Model such that <span class="math inline">\(Y_i = \text{Poisson}(\lambda_i)\)</span> where <span class="math inline">\(\lambda_i = \exp(X_i'\beta)\)</span>. The interpretation is that the success rate of patent awards is not constant across all firms (<span class="math inline">\(\lambda\)</span>) but rather is a function of firm characteristics <span class="math inline">\(X_i\)</span>. Specifically, we will use the covariates age, age squared, region, and whether the firm is a customer of Blueprinty.</p>
-<p><em>todo: Update your likelihood or log-likelihood function with an additional argument to take in a covariate matrix X. Also change the parameter of the model from lambda to the beta vector. In this model, lambda must be a positive number, so we choose the inverse link function g_inv() to be exp() so that</em> <span class="math inline">\(\lambda_i = e^{X_i'\beta}\)</span>. <em>For example:</em></p>
-<pre><code>poisson_regression_likelihood &lt;- function(beta, Y, X){
-   ...
-}</code></pre>
-<p><em>todo: Use your function along with R’s optim() or Python’s sp.optimize() to find the MLE vector and the Hessian of the Poisson model with covariates. Specifically, the first column of X should be all 1’s to enable a constant term in the model, and the subsequent columns should be age, age squared, binary variables for all but one of the regions, and the binary customer variable. Use the Hessian to find standard errors of the beta parameter estimates and present a table of coefficients and standard errors.</em></p>
-<p><em>todo: Check your results using R’s glm() function or Python sm.GLM() function.</em></p>
-<p><em>todo: Interpret the results.</em></p>
-<p><em>todo: What do you conclude about the effect of Blueprinty’s software on patent success? Because the beta coefficients are not directly interpretable, it may help to create two fake datasets: X_0 and X_1 where X_0 is the X data but with iscustomer=0 for every observation and X_1 is the X data but with iscustomer=1 for every observation. Then, use X_0 and your fitted model to get the vector of predicted number of patents (y_pred_0) for every firm in the dataset, and use X_1 to get Y_pred_1 for every firm. Then subtract y_pred_1 minus y_pred_0 and take the average of that vector of differences.</em></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                    Estimate    Std_Error
+(Intercept)     -0.125735914 0.1122180346
+age              0.115793715 0.0063574229
+age_sq          -0.002228748 0.0000771291
+regionNortheast -0.024556782 0.0433762879
+regionNorthwest -0.034827790 0.0529311002
+regionSouth     -0.005441860 0.0524007440
+regionSouthwest -0.037784109 0.0471722463
+iscustomer       0.060665584 0.0320588299</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="airbnb-case-study" class="level2">
@@ -380,7 +322,74 @@ Variable Definitions
 </div>
 </div>
 </div>
-<p><em>todo: Assume the number of reviews is a good proxy for the number of bookings. Perform some exploratory data analysis to get a feel for the data, handle or drop observations with missing values on relevant variables, build one or more models (e.g., a poisson regression model for the number of bookings as proxied by the number of reviews), and interpret model coefficients to describe variation in the number of reviews as a function of the variables provided.</em></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>       X               id                days       last_scraped      
+ Min.   :    1   Min.   :    2515   Min.   :    1   Length:40628      
+ 1st Qu.:10158   1st Qu.: 4889868   1st Qu.:  542   Class :character  
+ Median :20314   Median : 9862878   Median :  996   Mode  :character  
+ Mean   :20314   Mean   : 9698889   Mean   : 1102                     
+ 3rd Qu.:30471   3rd Qu.:14667894   3rd Qu.: 1535                     
+ Max.   :40628   Max.   :18009669   Max.   :42828                     
+                                                                      
+  host_since         room_type           bathrooms        bedrooms     
+ Length:40628       Length:40628       Min.   :0.000   Min.   : 0.000  
+ Class :character   Class :character   1st Qu.:1.000   1st Qu.: 1.000  
+ Mode  :character   Mode  :character   Median :1.000   Median : 1.000  
+                                       Mean   :1.125   Mean   : 1.147  
+                                       3rd Qu.:1.000   3rd Qu.: 1.000  
+                                       Max.   :8.000   Max.   :10.000  
+                                       NA's   :160     NA's   :76      
+     price         number_of_reviews review_scores_cleanliness
+ Min.   :   10.0   Min.   :  0.0     Min.   : 2.000           
+ 1st Qu.:   70.0   1st Qu.:  1.0     1st Qu.: 9.000           
+ Median :  100.0   Median :  4.0     Median :10.000           
+ Mean   :  144.8   Mean   : 15.9     Mean   : 9.198           
+ 3rd Qu.:  170.0   3rd Qu.: 17.0     3rd Qu.:10.000           
+ Max.   :10000.0   Max.   :421.0     Max.   :10.000           
+                                     NA's   :10195            
+ review_scores_location review_scores_value instant_bookable  
+ Min.   : 2.000         Min.   : 2.000      Length:40628      
+ 1st Qu.: 9.000         1st Qu.: 9.000      Class :character  
+ Median :10.000         Median :10.000      Mode  :character  
+ Mean   : 9.414         Mean   : 9.332                        
+ 3rd Qu.:10.000         3rd Qu.:10.000                        
+ Max.   :10.000         Max.   :10.000                        
+ NA's   :10254          NA's   :10256                         </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = number_of_reviews ~ room_type + bathrooms + bedrooms + 
+    price + review_scores_cleanliness + review_scores_location + 
+    review_scores_value + instant_bookable, family = poisson(), 
+    data = df_clean)
+
+Coefficients:
+                            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                3.572e+00  1.600e-02 223.215  &lt; 2e-16 ***
+room_typePrivate room     -1.453e-02  2.737e-03  -5.310 1.09e-07 ***
+room_typeShared room      -2.519e-01  8.618e-03 -29.229  &lt; 2e-16 ***
+bathrooms                 -1.240e-01  3.747e-03 -33.091  &lt; 2e-16 ***
+bedrooms                   7.494e-02  1.988e-03  37.698  &lt; 2e-16 ***
+price                     -1.436e-05  8.303e-06  -1.729   0.0838 .  
+review_scores_cleanliness  1.132e-01  1.493e-03  75.821  &lt; 2e-16 ***
+review_scores_location    -7.680e-02  1.607e-03 -47.796  &lt; 2e-16 ***
+review_scores_value       -9.153e-02  1.798e-03 -50.902  &lt; 2e-16 ***
+instant_bookablet          3.344e-01  2.889e-03 115.748  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 961626  on 30159  degrees of freedom
+Residual deviance: 936528  on 30150  degrees of freedom
+AIC: 1058014
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+</div>
+<p>Instant booking and higher cleanliness scores both have positive coefficients, leading to more reviews. Shared rooms and higher number of bathrooms both have negative coefficients, resulting in fewer reviews. Surprisingly, higher location and value scores are also linked to fewer reviews, though not as strong as the last two variables. The only variable not statistically significant to the model at the 95% confidence level is price.</p>
 
 
 </section>

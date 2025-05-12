@@ -2,7 +2,7 @@
 title: "Poisson Regression Examples"
 image: ../../../images/R_logo.png
 author: "Wesley Covey"
-date: 2025-05-07
+date: 2025-05-11
 callout-appearance: minimal 
 ---
 
@@ -23,7 +23,7 @@ setwd("/home/jovyan/MSBA/mysite/projects/school/MGTA495")
 library(ggplot2)
 library(patchwork)
 ```
-```{r}
+```{r, echo=FALSE}
 df <- read.csv("data/blueprinty.csv")
 
 non_cust_mean <- mean (df[df$iscustomer == 0, ]$patents, na.rm = TRUE)
@@ -48,7 +48,7 @@ The histograms of patent counts by customers vs non-customers reveal nearly iden
 
 Blueprinty customers are not selected at random. It may be important to account for systematic differences in the age and regional location of customers vs non-customers.
 
-```{r}
+```{r, echo=FALSE}
 p1 <- ggplot(df[df$iscustomer == 0, ], aes(x = factor(region))) + 
       geom_bar() + 
       labs(title = "Non-Customers")
@@ -71,44 +71,64 @@ The company's customers are disproportionately from the Northeast region, though
 
 Since our outcome variable of interest can only be small integer values per a set unit of time, we can use a Poisson density to model the number of patents awarded to each engineering firm over the last 5 years. We start by estimating a simple Poisson model via Maximum Likelihood.
 
-_todo: Write down mathematically the likelihood for_ $Y \sim \text{Poisson}(\lambda)$. Note that $f(Y|\lambda) = e^{-\lambda}\lambda^Y/Y!$.
+```{r, echo=FALSE}
+Y <- df$patents
 
-_todo: Code the likelihood (or log-likelihood) function for the Poisson model. This is a function of lambda and Y. For example:_
-
-```
-poisson_loglikelihood <- function(lambda, Y){
-   ...
+poisson_loglikelihood <- function(lambda, Y) {
+  if (lambda <= 0) return(-Inf)
+  sum(Y * log(lambda) - lambda - lgamma(Y + 1))
 }
+
+lambda_vals <- seq(0.1, 10, by = 0.1)
+loglik_vals <- sapply(lambda_vals, poisson_loglikelihood, Y = Y)
+loglik_df <- data.frame(lambda = lambda_vals, loglikelihood = loglik_vals)
+
+ggplot(loglik_df, aes(x = lambda, y = loglikelihood)) +
+  geom_line()
+
+neg_loglik <- function(lambda) -poisson_loglikelihood(lambda, Y)
+result <- optim(par = 1, fn = neg_loglik, method = "Brent", lower = 0.001, upper = 20)
+lambda_mle <- result$par
 ```
-
-_todo: Use your function to plot lambda on the horizontal axis and the likelihood (or log-likelihood) on the vertical axis for a range of lambdas (use the observed number of patents as the input for Y)._
-
-_todo: If you're feeling mathematical, take the first derivative of your likelihood or log-likelihood, set it equal to zero and solve for lambda. You will find lambda_mle is Ybar, which "feels right" because the mean of a Poisson distribution is lambda._
-
-_todo: Find the MLE by optimizing your likelihood function with optim() in R or sp.optimize() in Python._
 
 
 ### Estimation of Poisson Regression Model
 
 Next, we extend our simple Poisson model to a Poisson Regression Model such that $Y_i = \text{Poisson}(\lambda_i)$ where $\lambda_i = \exp(X_i'\beta)$. The interpretation is that the success rate of patent awards is not constant across all firms ($\lambda$) but rather is a function of firm characteristics $X_i$. Specifically, we will use the covariates age, age squared, region, and whether the firm is a customer of Blueprinty.
 
-_todo: Update your likelihood or log-likelihood function with an additional argument to take in a covariate matrix X. Also change the parameter of the model from lambda to the beta vector. In this model, lambda must be a positive number, so we choose the inverse link function g_inv() to be exp() so that_ $\lambda_i = e^{X_i'\beta}$. _For example:_
+```{r, echo=FALSE}
 
-```
-poisson_regression_likelihood <- function(beta, Y, X){
-   ...
+df$age_sq <- df$age^2
+X <- model.matrix(~ age + age_sq + region + iscustomer, data = df)
+
+poisson_regression_likelihood <- function(beta, Y, X) {
+  lambda <- exp(X %*% beta)
+  if (any(lambda <= 0)) return(-Inf)
+  sum(Y * log(lambda) - lambda - lgamma(Y + 1))
 }
 ```
 
-_todo: Use your function along with R's optim() or Python's sp.optimize() to find the MLE vector and the Hessian of the Poisson model with covariates. Specifically, the first column of X should be all 1's to enable a constant term in the model, and the subsequent columns should be age, age squared, binary variables for all but one of the regions, and the binary customer variable. Use the Hessian to find standard errors of the beta parameter estimates and present a table of coefficients and standard errors._
 
-_todo: Check your results using R's glm() function or Python sm.GLM() function._
+```{r, echo=FALSE}
+neg_loglik <- function(beta, Y, X) {
+  lambda <- exp(X %*% beta)
+  -sum(Y * log(lambda) - lambda - lgamma(Y + 1))
+}
 
-_todo: Interpret the results._ 
+init_beta <- rep(0, ncol(X))
+result <- optim(par = init_beta, fn = neg_loglik, Y = Y, X = X, hessian = TRUE, method = "BFGS")
 
-_todo: What do you conclude about the effect of Blueprinty's software on patent success? Because the beta coefficients are not directly interpretable, it may help to create two fake datasets: X_0 and X_1 where X_0 is the X data but with iscustomer=0 for every observation and X_1 is the X data but with iscustomer=1 for every observation. Then, use X_0 and your fitted model to get the vector of predicted number of patents (y_pred_0) for every firm in the dataset, and use X_1 to get Y_pred_1 for every firm. Then subtract y_pred_1 minus y_pred_0 and take the average of that vector of differences._
+beta_hat <- result$par
+hessian <- result$hessian
+se_hat <- sqrt(diag(solve(hessian)))
 
-
+coef_table <- data.frame(
+  Estimate = beta_hat,
+  Std_Error = se_hat,
+  row.names = colnames(X)
+)
+print(coef_table)
+```
 
 
 ## AirBnB Case Study
@@ -135,10 +155,24 @@ AirBnB is a popular platform for booking short-term rentals. In March 2017, stud
     - `instant_bookable` = "t" if instantly bookable, "f" if not
 
 ::::
+```{r, echo=FALSE}
+df2 <- read.csv("data/airbnb.csv")
+summary(df2)
 
+df_clean <- na.omit(df2[, c("number_of_reviews", "room_type", "bathrooms", "bedrooms", "price", "review_scores_cleanliness", "review_scores_location", "review_scores_value", "instant_bookable")])
 
-_todo: Assume the number of reviews is a good proxy for the number of bookings. Perform some exploratory data analysis to get a feel for the data, handle or drop observations with missing values on relevant variables, build one or more models (e.g., a poisson regression model for the number of bookings as proxied by the number of reviews), and interpret model coefficients to describe variation in the number of reviews as a function of the variables provided._
+df_clean$room_type <- factor(df_clean$room_type)
+df_clean$instant_bookable <- factor(df_clean$instant_bookable)
 
+model <- glm(number_of_reviews ~ room_type + bathrooms + bedrooms + price +
+               review_scores_cleanliness + review_scores_location +
+               review_scores_value + instant_bookable,
+             data = df_clean, family = poisson())
+summary(model)
+
+```
+
+Instant booking and higher cleanliness scores both have positive coefficients, leading to more reviews. Shared rooms and higher number of bathrooms both have negative coefficients, resulting in fewer reviews. Surprisingly, higher location and value scores are also linked to fewer reviews, though not as strong as the last two variables. The only variable not statistically significant to the model at the 95% confidence level is price.
 
 
 
