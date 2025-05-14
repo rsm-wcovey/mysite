@@ -5,6 +5,7 @@ project:
 website:
   title: "Wesley Covey"
   favicon: images/favicon3.ico
+  google-analytics: "G-G4T8NLHWX1"
   navbar:
     left:
       - href: index.qmd
