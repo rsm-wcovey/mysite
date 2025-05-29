@@ -1,98 +1,35 @@
 {
-  "index.qmd": {
-    "index.html": "de74b3b9"
-  },
-  "about.qmd": {
-    "about.html": "7753f502"
-  },
-  "resume.qmd": {
-    "resume.html": "a89da6ec"
-  },
-  "projects.qmd": {
-    "projects.html": "fc9a4407"
-  },
-  "projects/hw1/index.qmd": {
-    "index.html": "fb121a61"
-  },
-  "projects/hw2/index.qmd": {
-    "index.html": "fd265c04"
-  },
-  "code/code_test.ipynb": {
-    "code_test.html": "e945ca05"
-  },
-  "projects/hw3/index.qmd": {
-    "index.html": "e18e3de2"
-  },
-  "code/old_code.qmd": {
-    "old_code.html": "48992ead"
-  },
-  "projects/MGTA/index.qmd": {
-    "index.html": "377c0506"
-  },
-  "projects/work/MGTA/index.qmd": {
-    "index.html": "a0ca0aca"
-  },
-  "projects/school/hw3/index.qmd": {
-    "index.html": "62acd1ed"
-  },
-  "projects/school/hw1/index.qmd": {
-    "index.html": "a09c0bcb"
-  },
-  "projects/work/shiny_real_estate.qmd": {
-    "shiny_real_estate.html": "8bbea790"
-  },
-  "projects/school/hw3.qmd": {
-    "hw3.html": "97da4465"
-  },
-  "projects/school/hw1.qmd": {
-    "hw1.html": "79afa80f"
-  },
-  "projects/work/global_trade.qmd": {
-    "global_trade.html": "942d7d52"
-  },
-  "stick.qmd": {
-    "stick.html": "142dcd1c"
-  },
-  "bonus.qmd": {
-    "bonus.html": "44b15726"
-  },
-  "projects/MGTA495/hw1_questions.qmd": {
-    "hw1_questions.html": "0a54cfb3"
-  },
-  "projects/MGTA495/hw1_nb.ipynb": {
-    "hw1_nb.html": "5641847f"
-  },
-  "projects/MGTA495/HW1/hw1_questions.qmd": {
-    "hw1_questions.html": "fb54e6da"
-  },
-  "projects/MGTA495/HW1/hw1_nb.ipynb": {
-    "hw1_nb.html": "1f373a0a"
-  },
-  "projects/MGTA495/hw1.qmd": {
-    "hw1.html": "c4d49b5a"
-  },
-  "projects/school/burritos_pbi.qmd": {
-    "burritos_pbi.html": "54d70a77"
-  },
-  "projects/school/shiny_real_estate.qmd": {
-    "shiny_real_estate.html": "d74d1d0b"
-  },
-  "projects/school/example2.qmd": {
-    "example2.html": "ef051327"
-  },
-  "projects/school/example1.qmd": {
-    "example1.html": "d0df6fc5"
-  },
-  "archive/burritos.qmd": {
-    "burritos.html": "0b05a9c0"
-  },
-  "projects/school/MGTA495/hw1.qmd": {
-    "hw1.html": "16a5b079"
-  },
-  "projects/school/MGTA495/hw1_nb.ipynb": {
-    "hw1_nb.html": "ea10564e"
+  "projects/school/MGTA495/hw3.qmd": {
+    "hw3.html": "d7a83c09"
   },
   "projects/school/MGTA495/hw2.qmd": {
-    "hw2.html": "e40373d8"
+    "hw2.html": "32bfd503"
+  },
+  "projects/school/MGTA495/hw1.qmd": {
+    "hw1.html": "a6592493"
+  },
+  "projects/school/example2.qmd": {
+    "example2.html": "60685c64"
+  },
+  "projects/school/example1.qmd": {
+    "example1.html": "f7c56e04"
+  },
+  "code/code_test.ipynb": {
+    "code_test.html": "cb52f755"
+  },
+  "code/old_code.qmd": {
+    "old_code.html": "bbe5bc27"
+  },
+  "resume.qmd": {
+    "resume.html": "b7c10477"
+  },
+  "projects.qmd": {
+    "projects.html": "b3fb322f"
+  },
+  "index.qmd": {
+    "index.html": "50e13e7c"
+  },
+  "bonus.qmd": {
+    "bonus.html": "79f17d12"
   }
 }
