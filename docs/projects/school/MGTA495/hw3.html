@@ -455,10 +455,10 @@ price: -0.0995 ± 0.0120 → CI: [-0.1115, -0.0875]</code></pre>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, m, s, lo, hi <span class="kw">in</span> <span class="bu">zip</span>([<span class="st">'brand_N'</span>, <span class="st">'brand_P'</span>, <span class="st">'ad'</span>, <span class="st">'price'</span>], means, sds, ci_lower, ci_upper):</span>
 <span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>m<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>s<span class="sc">:.4f}</span><span class="ss"> → CI: [</span><span class="sc">{</span>lo<span class="sc">:.4f}</span><span class="ss">, </span><span class="sc">{</span>hi<span class="sc">:.4f}</span><span class="ss">]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>brand_N: 0.9403 ± 0.1118 → CI: [0.7230, 1.1737]
-brand_P: 0.4953 ± 0.1120 → CI: [0.2733, 0.7158]
-ad: -0.7295 ± 0.0855 → CI: [-0.9019, -0.5603]
-price: -0.0995 ± 0.0062 → CI: [-0.1123, -0.0874]</code></pre>
+<pre><code>brand_N: 0.9340 ± 0.1102 → CI: [0.7171, 1.1524]
+brand_P: 0.4898 ± 0.1058 → CI: [0.2863, 0.7011]
+ad: -0.7287 ± 0.0869 → CI: [-0.8916, -0.5544]
+price: -0.1002 ± 0.0064 → CI: [-0.1128, -0.0875]</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'axes.prop_cycle'</span>] <span class="op">=</span> cycler(color<span class="op">=</span>[<span class="st">'#375a7f'</span>]) </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.plot(beta_posterior[:,<span class="dv">3</span>])</span>
@@ -486,7 +486,12 @@ price: -0.0995 ± 0.0062 → CI: [-0.1123, -0.0874]</code></pre>
 </section>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">6. Discussion</h2>
-<p>Were this data real rather than simulated, we could conclude a few things from our parameter estimates including that consumers prefer Netflix over Amazon Prime, since <span class="math inline">\(\beta_{\text{Netflix}} &gt; \beta_{\text{Prime}}\)</span>. A negative <span class="math inline">\(\beta_{\text{price}}\)</span> indicates that as price increases, the likelihood of a consumer choosing a streaming service decreases, which aligns with standard economic intuition about price sensitivity.</p>
+<p>Were this data real rather than simulated, we could conclude a few things from our parameter estimates including:</p>
+<ul>
+<li>Consumers prefer Netflix over Amazon Prime and both over Hulu, since <span class="math inline">\(\beta_{\text{Netflix}} &gt; \beta_{\text{Prime}}\)</span> and both are positive</li>
+<li>A negative <span class="math inline">\(\beta_{\text{ad}}\)</span> indicates consumers prefer streaming services without ads</li>
+<li>A negative <span class="math inline">\(\beta_{\text{price}}\)</span> indicates that as price increases, the likelihood of a consumer choosing a streaming service decreases, which aligns with standard economic intuition about price sensitivity</li>
+</ul>
 <p>To move to a hierarchical model, we would simulate each respondent’s preferences by drawing their betas from a population-level normal distribution. To estimate the model, we’d use hierarchical Bayesian methods that jointly estimate individual-level betas and the overall population parameters.</p>
 
 

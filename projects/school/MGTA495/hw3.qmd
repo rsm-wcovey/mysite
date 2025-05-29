@@ -243,7 +243,11 @@ The Bayesian and MLE estimates for price are nearly identical, but the Bayesian 
 
 ## 6. Discussion
 
-Were this data real rather than simulated, we could conclude a few things from our parameter estimates including that consumers prefer Netflix over Amazon Prime, since $\beta_{\text{Netflix}} > \beta_{\text{Prime}}$. A negative $\beta_{\text{price}}$ indicates that as price increases, the likelihood of a consumer choosing a streaming service decreases, which aligns with standard economic intuition about price sensitivity.
+Were this data real rather than simulated, we could conclude a few things from our parameter estimates including:
+
+- Consumers prefer Netflix over Amazon Prime and both over Hulu, since $\beta_{\text{Netflix}} > \beta_{\text{Prime}}$ and both are positive
+- A negative $\beta_{\text{ad}}$ indicates consumers prefer streaming services without ads
+- A negative $\beta_{\text{price}}$ indicates that as price increases, the likelihood of a consumer choosing a streaming service decreases, which aligns with standard economic intuition about price sensitivity
 
 To move to a hierarchical model, we would simulate each respondent’s preferences by drawing their betas from a population-level normal distribution. To estimate the model, we’d use hierarchical Bayesian methods that jointly estimate individual-level betas and the overall population parameters.
 
