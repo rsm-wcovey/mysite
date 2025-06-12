@@ -276,6 +276,77 @@ function moveObstacle() {
 drawScene();
 requestAnimationFrame(moveObstacle);
 </script>
+<p>🦖🌵</p>
+<div style="margin: 40px auto; width: 300px; text-align:center;">
+<p>
+Catch Score: <span id="catchScore">0</span>
+</p>
+<canvas id="catchCanvas" width="300" height="200" style="border:1px solid #ccc;">
+</canvas>
+<p><br> <button onclick="moveLeft()">⬅️ Left</button> <button onclick="moveRight()">Right ➡️</button></p>
+</div>
+<script>
+(function() {
+  const canvas = document.getElementById("catchCanvas");
+  const ctx = canvas.getContext("2d");
+  let playerX = 130;
+  let fallingX = Math.random() * 280;
+  let fallingY = 0;
+  let score = 0;
+
+  function drawGame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw falling object
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.arc(fallingX, fallingY, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw player (rectangle at bottom)
+    ctx.fillStyle = "blue";
+    ctx.fillRect(playerX, 180, 40, 10);
+  }
+
+  function updateGame() {
+    fallingY += 2;
+
+    // Check for catch
+    if (fallingY > 180 && fallingX > playerX && fallingX < playerX + 40) {
+      score++;
+      document.getElementById("catchScore").innerText = score;
+      resetObject();
+    }
+
+    // Reset if missed
+    if (fallingY > 200) {
+      resetObject();
+    }
+
+    drawGame();
+    requestAnimationFrame(updateGame);
+  }
+
+  function resetObject() {
+    fallingY = 0;
+    fallingX = Math.random() * 280;
+  }
+
+  function moveLeft() {
+    playerX = Math.max(0, playerX - 20);
+  }
+
+  function moveRight() {
+    playerX = Math.min(260, playerX + 20);
+  }
+
+  window.moveLeft = moveLeft;
+  window.moveRight = moveRight;
+
+  drawGame();
+  requestAnimationFrame(updateGame);
+})();
+</script>
 
 
 

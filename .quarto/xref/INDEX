@@ -31,5 +31,17 @@
   },
   "bonus.qmd": {
     "bonus.html": "79f17d12"
+  },
+  "projects/school/MGTA495/hw4.qmd": {
+    "hw4.html": "81ee1d9b"
+  },
+  "archive/burritos.qmd": {
+    "burritos.html": "a6e3c512"
+  },
+  "projects/work/global_trade.qmd": {
+    "global_trade.html": "53c65c2c"
+  },
+  "projects/school/shiny_real_estate.qmd": {
+    "shiny_real_estate.html": "6c98d079"
   }
 }

@@ -455,10 +455,10 @@ price: -0.0995 ± 0.0120 → CI: [-0.1115, -0.0875]</code></pre>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, m, s, lo, hi <span class="kw">in</span> <span class="bu">zip</span>([<span class="st">'brand_N'</span>, <span class="st">'brand_P'</span>, <span class="st">'ad'</span>, <span class="st">'price'</span>], means, sds, ci_lower, ci_upper):</span>
 <span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>m<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>s<span class="sc">:.4f}</span><span class="ss"> → CI: [</span><span class="sc">{</span>lo<span class="sc">:.4f}</span><span class="ss">, </span><span class="sc">{</span>hi<span class="sc">:.4f}</span><span class="ss">]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>brand_N: 0.9340 ± 0.1102 → CI: [0.7171, 1.1524]
-brand_P: 0.4898 ± 0.1058 → CI: [0.2863, 0.7011]
-ad: -0.7287 ± 0.0869 → CI: [-0.8916, -0.5544]
-price: -0.1002 ± 0.0064 → CI: [-0.1128, -0.0875]</code></pre>
+<pre><code>brand_N: 0.9485 ± 0.1139 → CI: [0.7154, 1.1636]
+brand_P: 0.5059 ± 0.1153 → CI: [0.2860, 0.7403]
+ad: -0.7324 ± 0.0892 → CI: [-0.8999, -0.5549]
+price: -0.0998 ± 0.0063 → CI: [-0.1124, -0.0875]</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'axes.prop_cycle'</span>] <span class="op">=</span> cycler(color<span class="op">=</span>[<span class="st">'#375a7f'</span>]) </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.plot(beta_posterior[:,<span class="dv">3</span>])</span>
