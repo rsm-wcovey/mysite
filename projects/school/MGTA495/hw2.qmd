@@ -19,7 +19,7 @@ However, Blueprinty has collected data on 1,500 mature (non-startup) engineering
 ### Data
 
 ```{r, echo=FALSE}
-setwd("/home/jovyan/MSBA/mysite/projects/school/MGTA495")
+#setwd(".")
 library(ggplot2)
 library(patchwork)
 ```

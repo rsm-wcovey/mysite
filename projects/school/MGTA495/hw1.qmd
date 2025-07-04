@@ -279,8 +279,8 @@ With the control group excluded, we can see from the high p-values on the coeffi
 
 
 ```{python}
-print(f'Observed difference between 3:1 response rate and 2:1 response rate: {ratio_df['3'] - ratio_df['2']}')
-print(f'Observed difference between 2:1 response rate and 1:1 response rate: {ratio_df['2'] - ratio_df['1']}')
+print(f"Observed difference between 3:1 response rate and 2:1 response rate: {ratio_df['3'] - ratio_df['2']}")
+print(f"Observed difference between 2:1 response rate and 1:1 response rate: {ratio_df['2'] - ratio_df['1']}")
 
 mfx = probit_model2.get_margeff()
 marginal_effects = mfx.margeff
@@ -326,7 +326,7 @@ treatment = df.loc[(df.treatment == 1) & (df.gave == 1), 'amount'].dropna()
 
 t_stat, pval = ttest_ind(control, treatment)
 
-print(f'''
+print(f"""
 T-test Results:
       
 Control mean: ${control.mean():,.2f}
@@ -335,8 +335,8 @@ Treatment mean: ${treatment.mean():,.2f}
 t-statistic: {t_stat}
 p-value: {pval}
 
-At the 95% confidence level, we {pval < 0.05 and "reject" or "fail to reject"} the null hypothesis 
-that the donation amount of the two samples are equal.''')
+At the 95% confidence level, we {pval < 0.05 and 'reject' or 'fail to reject'} the null hypothesis 
+that the donation amount of the two samples are equal.""")
 ```
 
 Assessing only those who made a donation, we in fact see that the mean donation amount among the treatment group is lower than the control group, though with a much higher p-value than the previous t-test. It appears that while the treatment results in higher response rates, most of those donors who are 'converted' by the treatment are making smaller donations than those who donated from the control group.

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.5">
+<meta name="generator" content="quarto-1.6.34">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -72,12 +72,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-ff4371ef257df69894857e99c6ad0d06.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-dec4957386d03255e1655963b31d62d3.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-f23ab18612d661d7bd56dbc0c0fd3817.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-18eea8fc61e7613334e931e91aad4e89.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-817375e08cc9a5277585464cf6efa509.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../site_libs/bootstrap/bootstrap-dark-7f8b10c4e574d72e2a1a39ffddcc6cbe.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../site_libs/bootstrap/bootstrap-818b32141788da5f3afc8302f6e847b9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-dark-1851c9bb8f3f4849af8ba858f06152b9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -194,7 +194,6 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <h1 class="title">Rage Against The Machine Learning</h1>
   <div class="quarto-categories">
     <div class="quarto-category">School</div>
-    <div class="quarto-category">MGTA495</div>
   </div>
   </div>
 
@@ -232,7 +231,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="k-means">K-Means</h2>
 <p>K-means is an unsupervised clustering algorithm that partitions data into k groups by minimizing the distance between points and their assigned cluster centroids.</p>
 <p>Using a dataset on penguin feature measurements, I will demonstrate this process with a manual Python implementation that iteratively updates centroids to form well-separated clusters.</p>
-<div id="be4b56eb" class="cell" data-execution_count="1">
+<div id="9330c503" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -270,44 +269,44 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">1 Iteration</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">4 Iterations</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">8 Iterations</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">12 Iterations</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="4b829b73" class="cell" data-execution_count="2">
+<div id="b3011aa1" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-3-output-1.png" width="593" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="d520a3fd" class="cell" data-execution_count="3">
+<div id="5abffdbd" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-4-output-1.png" width="593" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div id="6d73359b" class="cell" data-execution_count="4">
+<div id="012e23e5" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-5-output-1.png" width="593" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
-<div id="dcc4f6ce" class="cell" data-execution_count="5">
+<div id="2355993c" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-6-output-1.png" width="593" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -316,7 +315,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 </div>
 </div>
 <p>For comparison, I will run this dataset through scikit-learn’s built-in K-means function.</p>
-<div id="5119e986" class="cell" data-execution_count="6">
+<div id="b514a5cc" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -341,7 +340,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-7-output-1.png" width="593" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -350,7 +349,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <section id="within-cluster-sum-of-squares" class="level3">
 <h3 class="anchored" data-anchor-id="within-cluster-sum-of-squares">Within-Cluster Sum of Squares</h3>
 <p>A low Within-Cluster Sum of Squares (WCSS) is good, indicating that the points in a cluster are close to their centroid. However, as the number of clusters (k) increases, the WCSS will always decrease until eventually reaching zero at k = the number of data points. Of course, having that many clusters is not useful or informative. In the plot below, the WCSS drops sharply at first, then levels off. The “elbow” in the curve, where the rate of improvement slows, appears between k = 3 and k = 6, suggesting a good range for the optimal number of clusters.</p>
-<div id="932b5d97" class="cell" data-execution_count="7">
+<div id="c43c1820" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>wcss <span class="op">=</span> []</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>silhouette <span class="op">=</span> []</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>K_range <span class="op">=</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">20</span>)</span>
@@ -370,7 +369,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-8-output-1.png" width="610" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -379,7 +378,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <section id="silhouette-scores" class="level3">
 <h3 class="anchored" data-anchor-id="silhouette-scores">Silhouette Scores</h3>
 <p>In contrast to WCSS, silhouette scores evaluate a point’s proximity to other points within its cluster as well as to points in other clusters. The closer it is to points in its own cluster and the farther it is from other clusters, the higher the score. Unlike WCSS, increasing the number of clusters does not always lead to better scores — too many clusters can create tightly packed, less meaningful groupings.</p>
-<div id="a326b32b" class="cell" data-execution_count="8">
+<div id="73919ce4" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.plot(K_range, silhouette, marker<span class="op">=</span><span class="st">'o'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Silhouette Scores"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Number of Clusters (k)"</span>)</span>
@@ -389,7 +388,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-9-output-1.png" width="597" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -401,7 +400,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="k-nearest-neighbors">K Nearest Neighbors</h2>
 <p>K-nearest neighbors (KNN) is a simple, non-parametric classification algorithm that predicts a point’s label based on the majority label of its closest k neighbors in the training data.</p>
 <p>We will first create a synthetic dataset with two input features (x1, x2) and a binary outcome y, which is based on whether a point lies above or below a nonlinear “wiggly” boundary. We’ll use this to train the KNN model.</p>
-<div id="28179499" class="cell" data-execution_count="9">
+<div id="c18952c6" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">100</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x1 <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, n)</span>
@@ -422,14 +421,14 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-10-output-1.png" width="587" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Here, the training data is visualized in 2D space. Points are colored by class (y), and the wiggly decision boundary is shown as a dashed line for reference.</p>
 <p>Below, a second synthetic dataset is generated using a different random seed. This test set follows the same logic as the training set and will be used to evaluate model accuracy.</p>
-<div id="7d7bf023" class="cell" data-execution_count="10">
+<div id="8bad7c2b" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">99</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x1_test <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, n)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x2_test <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, n)</span>
@@ -439,7 +438,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> pd.DataFrame({<span class="st">'x1'</span>: x1_test, <span class="st">'x2'</span>: x2_test, <span class="st">'y'</span>: y_test})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This section defines a manual version of the K-nearest neighbors classifier. For each value of k from 1 to 30, we predict labels for the test set and compute the classification accuracy. The resulting plot shows how the accuracy of the manual KNN classifier changes with different values of k. This helps us identify which value of k gives the best test performance.</p>
-<div id="dab21a83" class="cell" data-execution_count="11">
+<div id="041e4dc8" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> euclidean(a, b):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sqrt(np.<span class="bu">sum</span>((a <span class="op">-</span> b) <span class="op">**</span> <span class="dv">2</span>, axis<span class="op">=</span><span class="dv">1</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -473,13 +472,13 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-12-output-1.png" width="585" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The same evaluation is repeated, using scikit-learn’s built-in KNN function, serving as a check to confirm the manual implementation.</p>
-<div id="c4a9db64" class="cell" data-execution_count="12">
+<div id="277248e9" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsClassifier</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>accuracies_sklearn <span class="op">=</span> []</span>
@@ -502,7 +501,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="hw4_files/figure-html/cell-13-output-1.png" width="585" height="449" class="figure-img"></p>
+<p><img src="hw4_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
