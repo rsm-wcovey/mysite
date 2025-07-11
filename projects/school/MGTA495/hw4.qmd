@@ -1,5 +1,5 @@
 ---
-title: "Rage Against The Machine Learning"
+title: "Today's Post Was Brought To You By The Letter K"
 image: ../../../images/python-logo.png
 author: "Wesley Covey"
 date: 2025-06-11
