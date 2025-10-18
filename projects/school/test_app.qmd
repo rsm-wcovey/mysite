@@ -1,0 +1,54 @@
+---
+title: Test Embedded Shiny App
+image: ../../images/shiny-solo.png
+author: "Wesley Covey"
+date: 2025-10-17
+format:
+  html:
+    page-layout: article
+    toc: true
+    shinylive-theme: auto
+filters:
+  - shinylive
+---
+
+## Project Notes
+Notes notes notes...
+
+```{shinylive-python}
+#| standalone: true
+#| components: [viewer]
+#| viewerHeight: 200
+from shiny import App, render, ui
+import numpy as np
+
+app_ui = ui.page_fluid(
+    ui.tags.script("""
+        const observer = new MutationObserver(() => {
+            const mode = parent.document.documentElement.getAttribute('data-mode');
+            const body = document.body;
+            if (mode === 'dark') {
+                body.style.backgroundColor = '#222';
+                body.style.color = '#eee';
+            } else {
+                body.style.backgroundColor = '#fff';
+                body.style.color = '#111';
+            }
+        });
+        observer.observe(parent.document.documentElement, { attributes: true });
+    """),
+    ui.h2("Simple Shiny App"),
+    ui.input_slider("n", "Choose a number:", -10, 10, 1),
+    ui.output_text_verbatim("txt")
+)
+
+def server(input, output, session):
+    @output
+    @render.text
+    def txt():
+        return f'Answer: {np.absolute(input.n())}'
+   
+
+app = App(app_ui, server)
+
+```

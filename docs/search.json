@@ -172,6 +172,20 @@
     "href": "projects.html",
     "title": "My Projects",
     "section": "",
-    "text": "Logos used on this site are the property of their respective owners. No endorsement or affiliation is implied. \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning Was Brought To You By The Letter K\n\n\n\nJun 11, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPoisson Regression Examples\n\n\n\nMay 11, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nA Replication of Karlan and List (2007)\n\n\n\nApr 23, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSan Diego Real Estate Shiny App\n\n\n\nNov 20, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGlobal Trade Power BI Report\n\n\n\nApr 1, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Logos used on this site are the property of their respective owners. No endorsement or affiliation is implied. \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTest Embedded Shiny App\n\n\n\nOct 17, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning Was Brought To You By The Letter K\n\n\n\nJun 11, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPoisson Regression Examples\n\n\n\nMay 11, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nA Replication of Karlan and List (2007)\n\n\n\nApr 23, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSan Diego Real Estate Shiny App\n\n\n\nNov 20, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGlobal Trade Power BI Report\n\n\n\nApr 1, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/school/test_app.html",
+    "href": "projects/school/test_app.html",
+    "title": "Test Embedded Shiny App",
+    "section": "",
+    "text": "Notes notes notes…\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n#| standalone: true\n#| components: [viewer]\n#| viewerHeight: 200\nfrom shiny import App, render, ui\nimport numpy as np\n\napp_ui = ui.page_fluid(\n    ui.tags.script(\"\"\"\n        const observer = new MutationObserver(() =&gt; {\n            const mode = parent.document.documentElement.getAttribute('data-mode');\n            const body = document.body;\n            if (mode === 'dark') {\n                body.style.backgroundColor = '#222';\n                body.style.color = '#eee';\n            } else {\n                body.style.backgroundColor = '#fff';\n                body.style.color = '#111';\n            }\n        });\n        observer.observe(parent.document.documentElement, { attributes: true });\n    \"\"\"),\n    ui.h2(\"Simple Shiny App\"),\n    ui.input_slider(\"n\", \"Choose a number:\", -10, 10, 1),\n    ui.output_text_verbatim(\"txt\")\n)\n\ndef server(input, output, session):\n    @output\n    @render.text\n    def txt():\n        return f'Answer: {np.absolute(input.n())}'\n   \n\napp = App(app_ui, server)"
+  },
+  {
+    "objectID": "projects/school/test_app.html#project-notes",
+    "href": "projects/school/test_app.html#project-notes",
+    "title": "Test Embedded Shiny App",
+    "section": "",
+    "text": "Notes notes notes…\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n#| standalone: true\n#| components: [viewer]\n#| viewerHeight: 200\nfrom shiny import App, render, ui\nimport numpy as np\n\napp_ui = ui.page_fluid(\n    ui.tags.script(\"\"\"\n        const observer = new MutationObserver(() =&gt; {\n            const mode = parent.document.documentElement.getAttribute('data-mode');\n            const body = document.body;\n            if (mode === 'dark') {\n                body.style.backgroundColor = '#222';\n                body.style.color = '#eee';\n            } else {\n                body.style.backgroundColor = '#fff';\n                body.style.color = '#111';\n            }\n        });\n        observer.observe(parent.document.documentElement, { attributes: true });\n    \"\"\"),\n    ui.h2(\"Simple Shiny App\"),\n    ui.input_slider(\"n\", \"Choose a number:\", -10, 10, 1),\n    ui.output_text_verbatim(\"txt\")\n)\n\ndef server(input, output, session):\n    @output\n    @render.text\n    def txt():\n        return f'Answer: {np.absolute(input.n())}'\n   \n\napp = App(app_ui, server)"
   }
 ]

@@ -2,7 +2,6 @@
 title: "Resume"
 ---
 
-_Last updated 04/05/2025_
 
 ```{=html}
 <iframe src="content/resume.pdf" width="100%" height="800px"></iframe>

@@ -43,5 +43,8 @@
   },
   "projects/school/shiny_real_estate.qmd": {
     "shiny_real_estate.html": "6c98d079"
+  },
+  "projects/school/test_app.qmd": {
+    "test_app.html": "a0d8e0d7"
   }
 }
