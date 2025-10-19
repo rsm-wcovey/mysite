@@ -9,7 +9,7 @@
 <meta name="author" content="Wesley Covey">
 <meta name="dcterms.date" content="2024-11-25">
 
-<title>Wesley Covey - Advanced Simulation - Anylogic Bank Scenario</title>
+<title>Wesley Covey - Advanced Simulation - Bank Scenario</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -179,13 +179,14 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
   <ul>
   <li><a href="#project-description" id="toc-project-description" class="nav-link active" data-scroll-target="#project-description">Project Description</a>
   <ul class="collapse">
-  <li><a href="#problem-details" id="toc-problem-details" class="nav-link" data-scroll-target="#problem-details">Problem Details</a></li>
+  <li><a href="#scenario-details" id="toc-scenario-details" class="nav-link" data-scroll-target="#scenario-details">Scenario Details</a></li>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">Objectives</a></li>
   <li><a href="#process-flowchart" id="toc-process-flowchart" class="nav-link" data-scroll-target="#process-flowchart">Process Flowchart</a></li>
   </ul></li>
   <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation">Simulation</a>
   <ul class="collapse">
   <li><a href="#simulation-code" id="toc-simulation-code" class="nav-link" data-scroll-target="#simulation-code">Simulation Code</a></li>
-  <li><a href="#live-simulator" id="toc-live-simulator" class="nav-link" data-scroll-target="#live-simulator">Live Simulator</a></li>
+  <li><a href="#interactive-simulator" id="toc-interactive-simulator" class="nav-link" data-scroll-target="#interactive-simulator">Interactive Simulator</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -199,7 +200,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Advanced Simulation - Anylogic Bank Scenario</h1>
+<h1 class="title">Advanced Simulation - Bank Scenario</h1>
   <div class="quarto-categories">
     <div class="quarto-category">School</div>
   </div>
@@ -233,9 +234,10 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 
 <section id="project-description" class="level2">
 <h2 class="anchored" data-anchor-id="project-description">Project Description</h2>
-<p>An assignment from my <em>Business Analytics</em> class at UCSD referenced a problem from <em>The Big Book of Simulation Modeling</em> by Borshchev &amp; Grigoryev (2020). To solve the problem, I wrote an in-depth simulation with python to model the scenario parameters and demonstrate the resulting outcome.</p>
-<section id="problem-details" class="level3">
-<h3 class="anchored" data-anchor-id="problem-details">Problem Details</h3>
+<p>An assignment from my <em>Business Analytics</em> course at UCSD referenced a problem from <em>The Big Book of Simulation Modeling: Multimethod Modeling with AnyLogic 8</em> by Borshchev &amp; Grigoryev (2020) in which a bank was described with a series of operational parameters.</p>
+<p>The task was to replicate the problem, creating a simulation that would model the scenario parameters and enable me to answer a set of questions relating to expected customer experience.</p>
+<section id="scenario-details" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-details">Scenario Details</h3>
 <p>Consider a bank with an ATM inside. The process in the bank is described as follows:</p>
 <ul>
 <li>On average, 45 clients per hour enter the bank.</li>
@@ -246,21 +248,31 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <li>There are 5 cashiers in the bank, and there is a single shared queue for all the cashiers.</li>
 <li>After being served by a cashier, clients exit the bank.</li>
 </ul>
-<p>We need to find out the:</p>
+</section>
+<section id="objectives" class="level3">
+<h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
+<p>The simulation model should determine:</p>
 <ul>
-<li>Utilization of cashiers,</li>
-<li>Average queue lengths, both to the ATM and to the cashiers, and the</li>
-<li>Distribution of time spent by a customer in the bank.</li>
+<li>Average customer wait time and flow time (total time spent in bank)</li>
+<li>Probability of a customer spending more than 30 minutes in the bank</li>
+<li>Average queue lengths, both to the ATM and to the cashiers</li>
+<li>Distribution of customer flow times</li>
 </ul>
 </section>
 <section id="process-flowchart" class="level3">
 <h3 class="anchored" data-anchor-id="process-flowchart">Process Flowchart</h3>
-<p><img src="../../images/anylogic.png" alt="Anylogic Process Flowchart" width="100%"></p>
+<p><img src="../../images/bank_flowchart.png" alt="Process Flowchart" width="100%"></p>
 </section>
 </section>
 <section id="simulation" class="level2">
 <h2 class="anchored" data-anchor-id="simulation">Simulation</h2>
-<p>The simulation is available to try below; it has been adjusted to function in quarto’s shinylive extension for python. You may adjust the number of simulations (total customers haveing entered the bank) and see the resulting outputs.</p>
+<p>My simulation is presented below, both as python code and as an interactive version built using shinylive for python. It leverages a combination of different distributions to accurately model the scenario:</p>
+<ul>
+<li>Exponential: customer arrival intervals</li>
+<li>Triangular: service time for cashiers and the ATM</li>
+<li>Uniform: probabilistic customer decisions</li>
+</ul>
+<p>The simulation iterates sequentially for each newly arriving customer, calculating the time since the previous arrival and updating events across the various components of a virtual bank. You may adjust the number of simulations (total customers having entered the bank) to observe the resulting outcomes.</p>
 <section id="simulation-code" class="level3">
 <h3 class="anchored" data-anchor-id="simulation-code">Simulation Code</h3>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
@@ -275,7 +287,7 @@ Expand to view python code
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="62faf57e" class="cell" data-execute="false" data-execution_count="1">
+<div id="3367b764" class="cell" data-execute="false" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sim_flow_time(simulations <span class="op">=</span> <span class="dv">100000</span>, lam<span class="op">=</span><span class="fl">0.75</span>):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> pop_cust(lst, person):</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i, d <span class="kw">in</span> <span class="bu">enumerate</span>(lst):</span>
@@ -488,8 +500,8 @@ Expand to view python code
 </div>
 </div>
 </section>
-<section id="live-simulator" class="level3">
-<h3 class="anchored" data-anchor-id="live-simulator">Live Simulator</h3>
+<section id="interactive-simulator" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-simulator">Interactive Simulator</h3>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -505,8 +517,8 @@ import matplotlib.pyplot as plt
 
 app_ui = ui.page_fluid(
   ui.div(
-    ui.input_slider('sims', 'Select simulation size:', 0, 100000, value=10000, step=1, width='100%'),
-    style='position: fixed; top: 0; left: 0; width: 100%; background: white; z-index: 999; border-bottom: 2px solid #000000; text-align: center; height: 100px;'
+    ui.input_slider('sims', 'Select simulation size:', 1, 100000, value=10000, step=1, width='100%'),
+    style='position: fixed; top: 0; left: 0; width: 100%; background: white; z-index: 999; border-bottom: 2px solid #000000; text-align: center; height: 100px; padding-top: 2px;'
   ),
   ui.div(
     ui.card(
@@ -550,12 +562,12 @@ app_ui = ui.page_fluid(
     ui.div(
       ui.card(
         ui.card_header('Queue for Cashier'),
-        ui.output_data_frame('cashier_queue_df'),
+        ui.div(ui.output_data_frame('cashier_queue_df'), style='width: 100%;'),
         style='flex: 1; min-width: 280px; max-height: 300px;'
       ),
       ui.card(
         ui.card_header('Queue for ATM'),
-        ui.output_data_frame('atm_queue_df'),
+        ui.div(ui.output_data_frame('atm_queue_df'), style='width: 100%;'),
         style='flex: 1; min-width: 280px; max-height: 300px;'
       ),
       style='''
@@ -870,7 +882,10 @@ def server(input, output, session):
   def with_cashier_df():
     sim_outputs = sim_flow_time()
     df = sim_outputs['with_cashier_df']
-    return df.round(2)
+    if df.shape[0] &gt; 0:
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers currently with cashiers"]})
 
   @output
   @render.ui
@@ -890,9 +905,9 @@ def server(input, output, session):
   @render.ui
   def at_atm():
     sim_outputs = sim_flow_time()
-    occupied = sim_outputs['atm']['occupied']
-    at_atm = sim_outputs['at_atm'][0]
-    if occupied:
+    at_atm_list = sim_outputs['at_atm']
+    if len(at_atm_list) &gt; 0:
+      at_atm = sim_outputs['at_atm'][0]
       return ui.markdown(
         f'''
         Customer at ATM:
@@ -902,37 +917,41 @@ def server(input, output, session):
         '''
       )
     else:
-      return 'ATM Vacant'
-
+      return 'No customer at ATM'
+      
   @output
   @render.data_frame
   def cashier_queue_df():
     sim_outputs = sim_flow_time()
     df = sim_outputs['cashier_queue_df']
-    return df.round(2)
-
-  @output
-  @render.data_frame
-  def cashier_queue_df():
-    sim_outputs = sim_flow_time()
-    df = sim_outputs['cashier_queue_df'][['id', 'q_entry', 'ATM_cust']]
-    df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
-    return df.round(2)
+    if df.shape[0] &gt; 0:
+      df = df[['id', 'q_entry', 'ATM_cust']]
+      df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers in queue"]})
 
   @output
   @render.data_frame
   def atm_queue_df():
     sim_outputs = sim_flow_time()
-    df = sim_outputs['atm_queue_df'][['id', 'q_entry']]
-    df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
-    return df.round(2)
+    df = sim_outputs['atm_queue_df']
+    if df.shape[0] &gt; 0:
+      df = df[['id', 'q_entry']]
+      df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers in queue"]})
 
   @output
   @render.data_frame
   def completed_df():
     sim_outputs = sim_flow_time()
     df = sim_outputs['completed_df']
-    return df.round(2)
+    if df.shape[0] &gt; 0:
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers have left the bank"]})
 
 
 app = App(app_ui, server)
