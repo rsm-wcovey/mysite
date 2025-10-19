@@ -46,5 +46,11 @@
   },
   "projects/school/test_app.qmd": {
     "test_app.html": "a0d8e0d7"
+  },
+  "projects/school/test_app/test_app.qmd": {
+    "test_app.html": "38de5613"
+  },
+  "projects/school/anylogic_simulation.qmd": {
+    "anylogic_simulation.html": "3c1cb443"
   }
 }

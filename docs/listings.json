@@ -2,10 +2,10 @@
   {
     "listing": "/projects.html",
     "items": [
-      "/projects/school/test_app.html",
       "/projects/school/MGTA495/hw4.html",
       "/projects/school/MGTA495/hw2.html",
       "/projects/school/MGTA495/hw1.html",
+      "/projects/school/anylogic_simulation.html",
       "/projects/school/shiny_real_estate.html",
       "/projects/work/global_trade.html"
     ]
