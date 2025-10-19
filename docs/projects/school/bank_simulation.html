@@ -268,9 +268,9 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="simulation">Simulation</h2>
 <p>My simulation is presented below, both as python code and as an interactive version built using shinylive for python. It leverages a combination of different distributions to accurately model the scenario:</p>
 <ul>
-<li>Exponential: customer arrival intervals</li>
-<li>Triangular: service time for cashiers and the ATM</li>
-<li>Uniform: probabilistic customer decisions</li>
+<li><b>Exponential</b>: customer arrival intervals</li>
+<li><b>Triangular</b>: service time for cashiers and the ATM</li>
+<li><b>Uniform</b>: probabilistic customer decisions</li>
 </ul>
 <p>The simulation iterates sequentially for each newly arriving customer, calculating the time since the previous arrival and updating events across the various components of a virtual bank. You may adjust the number of simulations (total customers having entered the bank) to observe the resulting outcomes.</p>
 <section id="simulation-code" class="level3">
@@ -287,7 +287,7 @@ Expand to view python code
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="3367b764" class="cell" data-execute="false" data-execution_count="1">
+<div id="0f254894" class="cell" data-execute="false" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sim_flow_time(simulations <span class="op">=</span> <span class="dv">100000</span>, lam<span class="op">=</span><span class="fl">0.75</span>):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> pop_cust(lst, person):</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i, d <span class="kw">in</span> <span class="bu">enumerate</span>(lst):</span>
@@ -508,7 +508,7 @@ Expand to view python code
 #| standalone: true
 #| echo: false
 #| components: [viewer]
-#| viewerHeight: 1000
+#| viewerHeight: 800
 
 from shiny import App, render, ui, reactive
 import pandas as pd

@@ -46,9 +46,9 @@ The simulation model should determine:
 
 My simulation is presented below, both as python code and as an interactive version built using shinylive for python. It leverages a combination of different distributions to accurately model the scenario:
 
-- Exponential: customer arrival intervals
-- Triangular: service time for cashiers and the ATM
-- Uniform: probabilistic customer decisions
+- <b>Exponential</b>: customer arrival intervals
+- <b>Triangular</b>: service time for cashiers and the ATM
+- <b>Uniform</b>: probabilistic customer decisions
 
 The simulation iterates sequentially for each newly arriving customer, calculating the time since the previous arrival and updating events across the various components of a virtual bank. You may adjust the number of simulations (total customers having entered the bank) to observe the resulting outcomes.
 
@@ -277,7 +277,7 @@ def sim_flow_time(simulations = 100000, lam=0.75):
 #| standalone: true
 #| echo: false
 #| components: [viewer]
-#| viewerHeight: 1000
+#| viewerHeight: 800
 
 from shiny import App, render, ui, reactive
 import pandas as pd
