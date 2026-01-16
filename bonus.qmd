@@ -1,15 +1,13 @@
 ---
-title: "Rex"
+title: 🦖 "Bonus!" 🌵
 ---
 
-
-🦖🌵
 
 
 <div style="margin: 40px auto; width: 400px; text-align:center;">
   <p>Score: <span id="score">0</span></p>
-  <canvas id="gameCanvas" width="400" height="300" style="border:1px solid #ccc;"></canvas><br/>
-  <button onclick="jump()">Jump!</button>
+  <canvas id="gameCanvas" width="400" height="300" style="border:1px solid #ccc; background-color: #f0f0f0;"></canvas><br/>
+  <button onclick="jump()" style="background-color: #f0f0f0;">Jump!</button>
 </div>
 
 <script>

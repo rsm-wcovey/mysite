@@ -2,12 +2,12 @@
   {
     "listing": "/projects.html",
     "items": [
-      "/projects/school/MGTA495/hw4.html",
-      "/projects/school/MGTA495/hw2.html",
-      "/projects/school/MGTA495/hw1.html",
-      "/projects/school/bank_simulation.html",
-      "/projects/school/shiny_real_estate.html",
-      "/projects/work/global_trade.html"
+      "/projects/2025/MGTA495/hw4.html",
+      "/projects/2025/MGTA495/hw2.html",
+      "/projects/2025/MGTA495/hw1.html",
+      "/projects/2024/bank_simulation.html",
+      "/projects/2024/shiny_real_estate.html",
+      "/projects/2024/global_trade.html"
     ]
   }
 ]

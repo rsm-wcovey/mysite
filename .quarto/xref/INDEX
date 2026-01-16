@@ -55,5 +55,23 @@
   },
   "projects/school/bank_simulation.qmd": {
     "bank_simulation.html": "ad1dc903"
+  },
+  "projects/2024/bank_simulation.qmd": {
+    "bank_simulation.html": "4edbed95"
+  },
+  "projects/2024/global_trade.qmd": {
+    "global_trade.html": "1cf0a69a"
+  },
+  "projects/2024/shiny_real_estate.qmd": {
+    "shiny_real_estate.html": "69f3183a"
+  },
+  "projects/2025/MGTA495/hw1.qmd": {
+    "hw1.html": "50dccf8e"
+  },
+  "projects/2025/MGTA495/hw2.qmd": {
+    "hw2.html": "9018fb45"
+  },
+  "projects/2025/MGTA495/hw4.qmd": {
+    "hw4.html": "413b90c1"
   }
 }
