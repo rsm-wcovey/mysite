@@ -1,0 +1,709 @@
+---
+title: "Refreshing Linear Regression with Diamonds"
+image: ../../../images/python-logo.png
+author: "Wesley Covey"
+date: 2025-05-31
+categories: ["Python", "ML"]
+callout-appearance: minimal 
+---
+
+## Introduction
+Roughly six months on from completing my MSBA degree, I'm thrilled to have taken on a new role at work, focused specifically on data analytics and engineering. This has provided copious opportunities to exercise and build upon the skills I learned in school, as well as branching out to several new skills. 
+
+However, I've realized there are handful of concepts from school, mostly in the data science and machine learning realm, that I'm not using day-to-day. I'd like to keep these skills fresh, so I've set a goal to complete one small personal project each month that let's me practice and expand upon them.
+
+## Diamond Pricing
+For this first project, I decided to search Kaggle for a fairly simple yet large dataset, applicable to predictive modeling. I chose this <a href="https://www.kaggle.com/datasets/nancyalaswad90/diamonds-prices/data">Diamond Prices</a> dataset from 2022, containing prices and attributes of over 50k diamonds. 
+
+### Project Goals
+- Conduct exploratory data analysis to:
+    - Understand the dataset, its features, their structures and relationships
+    - Which features are most likely significant
+    - Determine if any transformations are needed
+- Begin modeling with OLS, assessing significance of potential features and validity of model assumptions
+- If appropriate, explore alternative model types and/or further feature transformations
+- Get more practice with commonly used libraries like scikit-learn and statsmodels as opposed to the proprietary library we typically used in school, pyrsm
+- As I typically do in the workplace, restrict use of generative AI tools for learning, as opposed to writing any code directly
+
+```{python}
+#| echo: False
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+from cycler import cycler
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import root_mean_squared_error, r2_score
+from sklearn.inspection import permutation_importance
+import statsmodels.api as sm 
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+mysite_palette = ['#375a7f', "#ff879b", '#189cd0', "#c46151", "#18bc9c", "#54011a", '#2c3e50']
+plt.rcParams['axes.prop_cycle'] = cycler(color=mysite_palette) 
+
+df = pd.read_csv('../data/Diamonds Prices2022.csv', index_col=0).reset_index(drop=True)
+```
+
+## EDA
+Having downloaded and read-in the data, let's take a look at some basic descriptive outputs.
+
+:::: {.callout-note collapse="true"}
+#### View Descriptive Outputs
+```{python}
+display(df.info())
+display(df.head())
+display(df.describe())
+
+for col in df.columns:
+    if df[col].dtype == 'object':
+        vc = df.value_counts(col).reset_index()
+        vc['percent'] = np.round(vc['count']*100/df.shape[0], 2)
+        display(vc)
+```
+
+::::
+
+Since we clearly have some ordinal categorical variables here, let's define them as such and sort them properly. It's been a few years since I've been diamond shopping, so I had to look up these clarity and color tiers, as well as the meaning of the table variable which is the ratio of the flat top surface to the total width.
+
+```{python}
+df.cut = pd.Categorical(
+    df.cut, categories=['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'], 
+    ordered=True
+)
+color_letters = sorted(df.color.unique(), reverse=True)
+df.color = pd.Categorical(
+    df.color, categories=color_letters, ordered=True
+)
+df.clarity = pd.Categorical(
+    df.clarity, categories=['I3', 'I2', 'I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'], 
+    ordered=True
+)
+df.clarity = df.clarity.cat.remove_unused_categories()
+```
+
+With the categorical variables handled, I'd like to get some quick visual plots to better understand these variables' distributions.
+
+```{python}
+n_axes = df.shape[1]
+n_plot_rows = int(np.ceil(n_axes/2))
+
+fig, axes = plt.subplots(n_plot_rows, 2, figsize=(12,n_plot_rows*4))
+axes = axes.flatten()
+
+for a, col in enumerate(df.columns):
+    sns.histplot(df[col], ax=axes[a])
+    axes[a].set_title(f'Distribution of {col.capitalize()}')
+
+plt.tight_layout(h_pad=3)
+plt.show()
+```
+
+Notably, many of the variables demonstrate a roughly normal distribution, including color, clarity, depth, and table. However, both price and carat are strongly right-skewed. Carat exhibits an interesting stepped behavior with higher frequencies just near certain thresholds like 1.0, 1.5, or 2.0 carats. I imagine this is not random but the result of conscious efforts to achieve specific final diamond weights when being cut and finished. 
+
+```{python}
+plt.figure(figsize=(12,5))
+plt.xticks(np.arange(0, 6, 0.1), labels=None)
+sns.histplot(df.carat, bins=300)
+plt.title('Enhanced View of Carat')
+plt.show()
+```
+
+The dimension variables x, y, and z, representing the width, length, and height of the diamonds, appear to warrant further attention. Given that these are measured in mm, values of 30+ seem a bit questionable.
+
+### Cleaning
+
+This dataset is described as containing round-cut diamonds, which should have roughly equal width and length. With more than 50k rows, it seems plausible that some irregularly shaped diamonds, like oval or heart, may be included. In order to examine this aspect and help identify potential erroneous data points, I'll create a new variable, assessing whether the length is +/-3% different than the width. As plotted below, you can see the segregation of two groups, the majority which are roughly equal in dimension and a minority that aren't.
+
+```{python}
+df['irregular'] = np.abs((df.x - df.y) / df.y) > 0.03
+plt.figure(figsize=(12,5))
+sns.scatterplot(df, x=df.x, y=df.y, hue='irregular')
+plt.title('Comparison of X (width mm) and Y (length mm)')
+plt.show()
+```
+
+Easier to see in this plot than the initial histograms are several clearly erroneous sizes: several widths of 0 and few lengths more than 6x greater than their widths. In total, this amounts to only 10 rows, so I see no issue with simply dropping them.
+
+```{python}
+df['erroneous'] = (df.x == 0) | (df.y > 20)
+erroneous = df.copy().loc[df.erroneous]
+cleaned = df.copy().loc[~df.erroneous]
+
+plt.figure(figsize=(12,5))
+sns.scatterplot(cleaned, x='x', y='y', hue='irregular')
+plt.title('Comparison of X (width mm) and Y (length mm)')
+plt.show()
+```
+
+We now see a much more logical pattern displayed, with most still being regularly shaped and a minority being irregular but plausibly so. Since there have been at least some data quality issues found thus far with x and y, it would be prudent to check the z values. 
+
+In theory, these should be well related to the depth ratio variable. However, since that's the ratio of height to width and some of these diamonds have irregular sizes, I cannot be certain in how the given depth values were produced. E.g. was width considered width, length, or some average of the two? For this reason, I'll give those irregular diamonds a 'pass' here and focus on identifying the other outliers through a comparison of provided depth ratio and manually calculated depth ratio.
+
+```{python}
+cleaned['depth_ratio_x'] = cleaned.z / cleaned.x * 100
+cleaned['depth_ratio_y'] = cleaned.z / cleaned.y * 100
+def assign_depth_error(row):
+    if row.irregular:
+        return 'irregular'
+    elif (np.abs(row.depth_ratio_x - row.depth) > 3):
+        return 'error'
+    else:
+        return 'normal'
+    
+cleaned['depth_error'] = cleaned.apply(assign_depth_error, axis=1)
+```
+
+::: {.panel-tabset}
+#### Depth vs Z/Y
+```{python}
+#| echo: False
+plt.figure(figsize=(8,4))
+plt.title('Comparison of Given and Calculated Depth Ratio (z / y)')
+sns.scatterplot(cleaned.loc[cleaned.depth_ratio_y < 100], x='depth_ratio_y', y='depth', hue='irregular')
+plt.show()
+```
+
+#### Depth vs Z/X
+```{python}
+#| echo: False
+plt.figure(figsize=(8,4))
+plt.title('Comparison of Given and Calculated Depth Ratio (z / x)')
+sns.scatterplot(cleaned.loc[cleaned.depth_ratio_x < 100], x='depth_ratio_x', y='depth', hue='irregular')
+plt.show()
+```
+
+#### Proposed Erroneous Z Values
+```{python}
+#| echo: False
+plt.figure(figsize=(8,4))
+plt.title('Proposed Erroneous Z Values')
+sns.scatterplot(cleaned.loc[cleaned.depth_ratio_x < 100], x='depth_ratio_x', y='depth', hue='depth_error')
+plt.title(f'Proposed Erroneous Z Values ({cleaned.loc[cleaned.depth_error == "error"].shape[0]})')
+plt.show()
+```
+
+:::
+
+With what is again a very small number of erroneous datapoints, more advanced imputation methods are likely not required here. To be on the safe side, I'll compare the dropped rows to the remaining ones, checking for any patterns across the other variables. What we see below is a fairly even/random distribution, so no significant bias concern from dropping. Moreover, the x, y, and z histograms now appear aligned with each other, as we'd expect.
+
+```{python}
+#| echo: False
+depth_errors = cleaned.copy().loc[cleaned.depth_error=='error']
+cleaned_2 = cleaned.copy().loc[cleaned.depth_error!='error']
+
+check_cols = [col for col in cleaned_2 if col not in ['irregular', 'erroneous', 'depth_ratio_x', 'depth_ratio_y', 'depth_error']]
+
+n_axes = len(check_cols)
+n_plot_rows = int(np.ceil(n_axes/2))
+
+fig, axes = plt.subplots(n_plot_rows, 2, figsize=(12,n_plot_rows*4))
+axes = axes.flatten()
+
+for a, col in enumerate(check_cols):
+    axes[a].set_title(f'Distribution of {col.capitalize()}')
+    sns.histplot(cleaned_2[col], ax=axes[a])
+    if col not in ['x', 'y', 'z']:
+        for i in range(depth_errors.shape[0]):
+            axes[a].axvline(x=depth_errors.iloc[i][col], color='pink', alpha=.5)
+
+plt.tight_layout(h_pad=3)
+plt.show()
+```
+
+### Feature Engineering
+With the data cleaned up, it's time to check out the relationships between the response, price, and the potential model features.
+
+```{python}
+#| echo: False
+cdf = cleaned_2.copy().drop(columns=['erroneous', 'depth_ratio_x', 'depth_ratio_y', 'depth_error'])
+evar_cols = [c for c in cdf.columns if c != 'price']
+
+n_axes = len(evar_cols)
+n_plot_rows = int(np.ceil(n_axes/2))
+
+fig, axes = plt.subplots(n_plot_rows, 2, figsize=(12,n_plot_rows*4))
+axes = axes.flatten()
+
+for a, col in enumerate(evar_cols):
+    if cdf[col].dtype == 'category' or col == 'irregular':
+        sns.boxplot(cdf, x=col, y='price', ax=axes[a])
+    else:
+        sns.scatterplot(cdf, x=col, y='price', ax=axes[a])
+
+    axes[a].set_title(f'Price vs {col.capitalize()}')
+
+plt.tight_layout(h_pad=3)
+plt.show()
+```
+
+Analyzing these plots, it would appear the variable with the strongest relationship to price is carat, as well as the dimensional variables x, y, and z, which makes sense given that carat is, after all, a measure of the diamond's weight. There's clearly a non-linear relationship between carat and price, which if I want to continue with OLS, I'll have to resolve through transformation. 
+
+The boxplots of cut, color, and clarity all show the opposite of what I would have expected: generally lower median prices as you move along the categories from worst to best. I suspect this is less representative of their true relationships with price and more likely a result of the skewed price and carat distributions. I'll look forward to seeing the plots of these variables' independent effects on price later, a standard plotting option baked into pyrsm that I plan on reproducing. 
+
+Another notable observation is that there's slightly more variation in depth, and to a lesser extent, table, at the lower prices than there is at higher prices. This is consistent with what I had read about there being an ideal central range of ratios for these.
+
+Let's continue on and examine some potential transformations of carat, price, or both.
+
+```{python}
+cdf['log_price'] = np.log(cdf.price)
+cdf['sqrt_price'] = np.sqrt(cdf.price)
+cdf['log_carat'] = np.log(cdf.carat)
+
+fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+sns.scatterplot(cdf, x='carat', y='log_price', ax=axes[0])
+axes[0].set_title('Carat vs Log Price')
+sns.scatterplot(cdf, x='carat', y='sqrt_price', ax=axes[1])
+axes[1].set_title('Carat vs Sqrt Price')
+sns.scatterplot(cdf, x='log_carat', y='log_price', ax=axes[2])
+axes[2].set_title('Log Carat vs Log Price')
+
+plt.show()
+```
+
+Of the three, the log-log transformation seems to be the most linear, which stands to reason give that both variables are heavily skewed in the same direction. With so many data points though, I thought the scatterplots may be obscuring some latent pattern still, so I ran a line plots which indeed show that while the relationship is fairly linear up to about 2 carats, somewhere north of there the behavior changes with the line leveling off and becoming more variable. To capture these alternate behaviors at different carat sizes, I'll create a dummy variable for carat>2 and an interaction term between that and log_carat to pass to the model.
+
+```{python}
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+sns.lineplot(cdf, x='carat', y='price', ax=axes[0])
+axes[0].set_title('Carat vs Price')
+sns.lineplot(cdf, x='log_carat', y='log_price', ax=axes[1])
+axes[1].set_title('Log Carat vs Log Price')
+
+plt.show()
+
+cdf['large'] = (cdf.carat > 2).astype(int)
+cdf['carat:large'] = cdf.log_carat * cdf.large
+```
+
+Two final transformations I'll apply are to the table and depth variables. Since these are both ratios bounded between 0 and 1 with an optimal central range of values, I'll convert them to an absolute z score instead.
+
+```{python}
+depth_std = np.std(cdf.depth)
+depth_mean = np.mean(cdf.depth)
+cdf['depth_norm'] = abs(cdf.depth - depth_mean)/depth_std
+
+table_std = np.std(cdf.table)
+table_mean = np.mean(cdf.table)
+cdf['table_norm'] = abs(cdf.table - table_mean)/table_std
+```
+
+## Modeling
+To save a some time and space on the page, I'll summarize my OLS model trials here and display my final results at the bottom.
+
+### Model Trials
+- #1: As a quick test, I regressed log_price on log_carat. That alone yielded an R^2 of .933 on the training data and 0.932 on the test data. Residuals were normally distributed, however, there was evident heteroskedasticity with greater residual variance at higher predicted prices, as expected from the previous line plots.
+- #2: Next, I regressed log_price on every available feature. R^2 increased to .983 and the heteroskedasticity was resolved. While all features appeared to be statistically significant to the model with p-values <= .001, a comparison of their independent effect plots and permutation importance scores revealed that 'table_norm', 'depth_norm', and 'irregular' were contributing little-to-nothing. 
+- #3: Preferring a simpler model when possible, I removed the three aforementioned features for the next model trial. R^2 didn't decrease at all nor did any diagnostic plot materially change. As this model performed so well, I felt no need to trial any tree-based or other models.
+
+### Final Model & Outputs
+Now, as I mentioned, the pyrsm package has a plotting option to easily generate plots of each feature's independent effect on the prediction. It also has options to quickly generate common diagnostic plots, correlation plot, variable permutation importance plot, VIF scores, and a summary of feature coefficients and error stats. These were always highly informative, and wanting to replicate them here, I discovered that it in fact takes a combination of functions from sklearn and statsmodels to do so. 
+
+Below is my final model and the additional code I wrote to successfully replicate the output summaries and plots. 
+
+:::: {.callout-note collapse="true"}
+#### View Code
+```{python}
+#| execute: False
+evars = ['carat', 'large', 'carat:large', 'cut', 'color', 'clarity'] 
+rvar = ['price']
+
+x_train, x_test, y_train, y_test = train_test_split(
+    cdf[evars],
+    cdf[rvar],
+    test_size=0.2,
+    random_state=42
+)
+
+train_df = pd.concat([x_train, y_train], axis=1)
+test_df = pd.concat([x_test, y_test], axis=1)
+cat_cols = [col for col in evars if cdf[col].dtype not in ['int64', 'float64']]
+
+col_transformer = ColumnTransformer(
+    transformers=[
+        ('onehot', OneHotEncoder(drop='first'), cat_cols),
+        ('log', FunctionTransformer(np.log, feature_names_out="one-to-one"), ['carat'])
+    ],
+    remainder='passthrough'
+)
+
+x_train_encoded = col_transformer.fit_transform(x_train)
+x_test_encoded = col_transformer.transform(x_test)
+
+if type(x_train_encoded) != np.ndarray:
+    x_train_encoded = x_train_encoded.toarray()
+x_const = sm.add_constant(x_train_encoded)
+feature_names = ['intercept'] + list(col_transformer.get_feature_names_out())
+x_const_df = pd.DataFrame(x_const, columns=feature_names)
+
+y_train_log = np.log(y_train).reset_index(drop=True)
+sm_model = sm.OLS(y_train_log, x_const_df).fit()
+
+
+model = TransformedTargetRegressor(
+    regressor=LinearRegression(),
+    func=np.log,
+    inverse_func=np.exp
+) 
+model.fit(x_train_encoded, y_train)
+
+
+y_pred_train = model.predict(x_train_encoded)
+train_df['y_pred'] = y_pred_train
+train_df['log_y_pred'] = np.log(train_df.y_pred)
+train_df['log_price'] = np.log(train_df.price)
+train_df['resid'] = train_df.log_y_pred - train_df.log_price
+r2_train = r2_score(train_df.log_price, train_df.log_y_pred)
+rmse_train = root_mean_squared_error(train_df.log_price, train_df.log_y_pred)
+
+y_pred_test = model.predict(x_test_encoded)
+test_df['y_pred'] = y_pred_test
+test_df['log_y_pred'] = np.log(test_df.y_pred)
+test_df['log_price'] = np.log(test_df.price)
+test_df['resid'] = test_df.log_y_pred - test_df.log_price
+r2_test = r2_score(test_df.log_price, test_df.log_y_pred)
+rmse_test = root_mean_squared_error(test_df.log_price, test_df.log_y_pred)
+
+print(sm_model.summary())
+
+print('''==============================================================================
+''')
+print(f'Training Data - R Squared: {round(r2_train, 3)}  RMSE: {round(rmse_train, 3)}')
+print(f'Test Data - R Squared: {round(r2_test, 3)}  RMSE: {round(rmse_test, 3)}')
+
+x_vif = x_train.copy()
+for col in cat_cols:
+    x_vif[col] = x_vif[col].cat.codes
+vifs = [round(variance_inflation_factor(x_vif.values, n), 2) for n in range(x_vif.shape[1])]
+vif_df = pd.DataFrame(vifs, columns=['VIF Score'], index=x_vif.columns).sort_values('VIF Score', ascending=False)
+display(vif_df)
+```
+
+::::
+
+```{python}
+#| echo: False
+evars = ['carat', 'large', 'carat:large', 'cut', 'color', 'clarity']
+rvar = ['price']
+
+x_train, x_test, y_train, y_test = train_test_split(
+    cdf[evars],
+    cdf[rvar],
+    test_size=0.2,
+    random_state=42
+)
+
+train_df = pd.concat([x_train, y_train], axis=1)
+test_df = pd.concat([x_test, y_test], axis=1)
+cat_cols = [col for col in evars if cdf[col].dtype not in ['int64', 'float64']]
+
+col_transformer = ColumnTransformer(
+    transformers=[
+        ('onehot', OneHotEncoder(drop='first'), cat_cols),
+        ('log', FunctionTransformer(np.log, feature_names_out="one-to-one"), ['carat'])
+    ],
+    remainder='passthrough'
+)
+
+x_train_encoded = col_transformer.fit_transform(x_train)
+x_test_encoded = col_transformer.transform(x_test)
+
+if type(x_train_encoded) != np.ndarray:
+    x_train_encoded = x_train_encoded.toarray()
+x_const = sm.add_constant(x_train_encoded)
+feature_names = ['intercept'] + list(col_transformer.get_feature_names_out())
+x_const_df = pd.DataFrame(x_const, columns=feature_names)
+
+y_train_log = np.log(y_train).reset_index(drop=True)
+sm_model = sm.OLS(y_train_log, x_const_df).fit()
+
+
+model = TransformedTargetRegressor(
+    regressor=LinearRegression(),
+    func=np.log,
+    inverse_func=np.exp
+) 
+model.fit(x_train_encoded, y_train)
+
+
+y_pred_train = model.predict(x_train_encoded)
+train_df['y_pred'] = y_pred_train
+train_df['log_y_pred'] = np.log(train_df.y_pred)
+train_df['log_price'] = np.log(train_df.price)
+train_df['resid'] = train_df.log_y_pred - train_df.log_price
+r2_train = r2_score(train_df.log_price, train_df.log_y_pred)
+rmse_train = root_mean_squared_error(train_df.log_price, train_df.log_y_pred)
+
+y_pred_test = model.predict(x_test_encoded)
+test_df['y_pred'] = y_pred_test
+test_df['log_y_pred'] = np.log(test_df.y_pred)
+test_df['log_price'] = np.log(test_df.price)
+test_df['resid'] = test_df.log_y_pred - test_df.log_price
+r2_test = r2_score(test_df.log_price, test_df.log_y_pred)
+rmse_test = root_mean_squared_error(test_df.log_price, test_df.log_y_pred)
+
+print(sm_model.summary())
+
+print('''==============================================================================
+''')
+print(f'Training Data - R Squared: {round(r2_train, 3)}  RMSE: {round(rmse_train, 3)}')
+print(f'Test Data - R Squared: {round(r2_test, 3)}  RMSE: {round(rmse_test, 3)}')
+
+x_vif = x_train.copy()
+for col in cat_cols:
+    x_vif[col] = x_vif[col].cat.codes
+vifs = [round(variance_inflation_factor(x_vif.values, n), 2) for n in range(x_vif.shape[1])]
+vif_df = pd.DataFrame(vifs, columns=['VIF Score'], index=x_vif.columns).sort_values('VIF Score', ascending=False)
+display(vif_df)
+```
+
+
+:::: {.callout-note collapse="true"}
+#### View Code
+```{python}
+#| execute: False
+# model diagnostic plots
+fig, ax = plt.subplots(3, 2, figsize=(12, 15))
+ax = ax.flatten()
+
+sns.scatterplot(train_df, x='log_y_pred', y='log_price', ax=ax[0])
+ax[0].plot(train_df.log_y_pred, train_df.log_y_pred, color='black')
+ax[0].xlabel = 'Predicted'
+ax[0].ylabel = 'Actual'
+ax[0].set_title('Price: Predicted v Actual')
+
+sns.scatterplot(train_df, x='log_y_pred', y='resid', ax=ax[1])
+ax[1].plot(train_df.log_y_pred, np.zeros(train_df.shape[0]), color='black')
+ax[1].xlabel = 'Predicted'
+ax[1].ylabel = 'Actual'
+ax[1].set_title('Price: Predicted v Residuals')
+
+mean_resid = train_df.resid.mean()
+std_resid = train_df.resid.std()
+train_df['resid_norm'] = train_df.resid.apply(
+    lambda x: (x - mean_resid) / std_resid
+)
+sns.histplot(train_df, x='resid_norm', bins=100, ax=ax[2])
+ax[2].set_xlim(-4, 4)
+ax[2].set_title('Normalized Residual Distribution')
+
+
+vimp = permutation_importance(
+    model,
+    x_train_encoded,
+    y_train,
+    random_state=42,
+    n_repeats=10
+)
+vimp_features = col_transformer.get_feature_names_out()
+vimp_df = pd.DataFrame({
+    'feature': vimp_features,
+    'importances_mean': vimp.importances_mean
+})
+vimp_df['feature_transformer'] = vimp_df.feature.apply(lambda x: x.split('_')[0])
+vimp_df['feature_name'] = vimp_df.apply(lambda x: x.feature.split('_')[2] if x.feature_transformer == 'onehot' else x.feature.split('__')[1], axis=1)
+vimp_df['feature_value'] = vimp_df.apply(lambda x: x.feature.split('_')[3] if x.feature_transformer == 'onehot' else None, axis=1)
+vimp_grp = vimp_df.groupby('feature_name').mean('importances_mean').reset_index().sort_values('importances_mean', ascending=False)
+sns.barplot(orient='h', data=vimp_grp, y='feature_name', x='importances_mean', ax=ax[3])
+ax[3].set_yticklabels([])
+xlim = vimp_grp.importances_mean.max() * 1.5
+for i, label in enumerate(vimp_grp.feature_name):
+    ax[3].text(xlim*0.98, i, label, ha='right', va='center', fontsize=10)
+ax[3].set_xlim(0, xlim)
+ax[3].set_title('Variable Permutation Importance')
+
+corr_mtx = x_vif.corr().round(2)
+np.fill_diagonal(corr_mtx.values, None)
+sns.heatmap(corr_mtx, annot=True, cmap='RdBu_r', center=0, vmin=-1, vmax=1, ax=ax[4])
+ax[4].set_title('Feature Correlation Map')
+ax[4].tick_params(axis='both', labelsize=10)
+
+
+plt.tight_layout(h_pad=3)
+plt.show()
+
+
+# feature impact plots
+def get_evar_avgs(evar_list, training_df, cat_cols):
+    avg_vals = []
+    for col in evar_list:
+        if col not in cat_cols:
+            avg_val = training_df[col].mean()
+        else:
+            avg_val = training_df[col].mode().values[0]
+        avg_vals.append(avg_val)
+    output = {col: val for col, val in zip(evar_list, avg_vals)}
+    return output
+            
+avg_evar_vals = get_evar_avgs(evars, x_train, cat_cols)
+
+
+n_axes = len(evars)
+n_plot_rows = int(np.ceil(n_axes/2))
+
+fig, axes = plt.subplots(n_plot_rows, 2, figsize=(12,n_plot_rows*4))
+axes = axes.flatten()
+plt.rcParams.update(
+    {'xtick.labelsize': 14, 'ytick.labelsize': 14, 'axes.labelsize': 16}
+)
+
+for a, col in enumerate(evars):
+
+    x_train_synth = x_train.copy()
+    other_evars = evars.copy()
+    other_evars.remove(col)
+    for other_col in other_evars:
+        x_train_synth[other_col] = avg_evar_vals[other_col]
+
+    x_train_synth_encoded = col_transformer.transform(x_train_synth)
+    x_train_synth['y_pred'] = model.predict(x_train_synth_encoded)
+    x_train_synth['price'] = y_train
+
+    sns.lineplot(x_train_synth, x=col, y='y_pred', ax=axes[a])# , label='pred')
+    axes[a].set_ylim(0, min(train_df.price.max()*1.1, x_train_synth.y_pred.max()*2))
+
+plt.tight_layout(h_pad=3)
+plt.show()
+```
+
+::::
+
+
+```{python}
+#| echo: False
+# model diagnostic plots
+fig, ax = plt.subplots(3, 2, figsize=(12, 15))
+ax = ax.flatten()
+
+sns.scatterplot(train_df, x='log_y_pred', y='log_price', ax=ax[0])
+ax[0].plot(train_df.log_y_pred, train_df.log_y_pred, color='black')
+ax[0].xlabel = 'Predicted'
+ax[0].ylabel = 'Actual'
+ax[0].set_title('Price: Predicted v Actual')
+
+sns.scatterplot(train_df, x='log_y_pred', y='resid', ax=ax[1])
+ax[1].plot(train_df.log_y_pred, np.zeros(train_df.shape[0]), color='black')
+ax[1].xlabel = 'Predicted'
+ax[1].ylabel = 'Actual'
+ax[1].set_title('Price: Predicted v Residuals')
+
+mean_resid = train_df.resid.mean()
+std_resid = train_df.resid.std()
+train_df['resid_norm'] = train_df.resid.apply(
+    lambda x: (x - mean_resid) / std_resid
+)
+sns.histplot(train_df, x='resid_norm', bins=100, ax=ax[2])
+ax[2].set_xlim(-4, 4)
+ax[2].set_title('Normalized Residual Distribution')
+
+
+vimp = permutation_importance(
+    model,
+    x_train_encoded,
+    y_train,
+    random_state=42,
+    n_repeats=10
+)
+vimp_features = col_transformer.get_feature_names_out()
+vimp_df = pd.DataFrame({
+    'feature': vimp_features,
+    'importances_mean': vimp.importances_mean
+})
+vimp_df['feature_transformer'] = vimp_df.feature.apply(lambda x: x.split('_')[0])
+vimp_df['feature_name'] = vimp_df.apply(lambda x: x.feature.split('_')[2] if x.feature_transformer == 'onehot' else x.feature.split('__')[1], axis=1)
+vimp_df['feature_value'] = vimp_df.apply(lambda x: x.feature.split('_')[3] if x.feature_transformer == 'onehot' else None, axis=1)
+vimp_grp = vimp_df.groupby('feature_name').mean('importances_mean').reset_index().sort_values('importances_mean', ascending=False)
+sns.barplot(orient='h', data=vimp_grp, y='feature_name', x='importances_mean', ax=ax[3])
+ax[3].set_yticklabels([])
+xlim = vimp_grp.importances_mean.max() * 1.5
+for i, label in enumerate(vimp_grp.feature_name):
+    ax[3].text(xlim*0.98, i, label, ha='right', va='center', fontsize=10)
+ax[3].set_xlim(0, xlim)
+ax[3].set_title('Variable Permutation Importance')
+
+corr_mtx = x_vif.corr().round(2)
+np.fill_diagonal(corr_mtx.values, None)
+sns.heatmap(corr_mtx, annot=True, cmap='RdBu_r', center=0, vmin=-1, vmax=1, ax=ax[4])
+ax[4].set_title('Feature Correlation Map')
+ax[4].tick_params(axis='both', labelsize=10)
+
+
+plt.tight_layout(h_pad=3)
+plt.show()
+
+
+# feature impact plots
+def get_evar_avgs(evar_list, training_df, cat_cols):
+    avg_vals = []
+    for col in evar_list:
+        if col not in cat_cols:
+            avg_val = training_df[col].mean()
+        else:
+            avg_val = training_df[col].mode().values[0]
+        avg_vals.append(avg_val)
+    output = {col: val for col, val in zip(evar_list, avg_vals)}
+    return output
+            
+avg_evar_vals = get_evar_avgs(evars, x_train, cat_cols)
+
+
+n_axes = len(evars)
+n_plot_rows = int(np.ceil(n_axes/2))
+
+fig, axes = plt.subplots(n_plot_rows, 2, figsize=(12,n_plot_rows*4))
+axes = axes.flatten()
+plt.rcParams.update(
+    {'xtick.labelsize': 14, 'ytick.labelsize': 14, 'axes.labelsize': 16}
+)
+
+for a, col in enumerate(evars):
+
+    x_train_synth = x_train.copy()
+    other_evars = evars.copy()
+    other_evars.remove(col)
+    for other_col in other_evars:
+        x_train_synth[other_col] = avg_evar_vals[other_col]
+
+    x_train_synth_encoded = col_transformer.transform(x_train_synth)
+    x_train_synth['y_pred'] = model.predict(x_train_synth_encoded)
+    x_train_synth['price'] = y_train
+
+    sns.lineplot(x_train_synth, x=col, y='y_pred', ax=axes[a])# , label='pred')
+    axes[a].set_ylim(0, min(train_df.price.max()*1.1, x_train_synth.y_pred.max()*2))
+
+plt.tight_layout(h_pad=3)
+plt.show()
+```
+
+### Model Assumptions & Feature Significance
+
+With the exception of a few outliers, residuals exist within a consistent range across predicted values, they are normally distributed, and aside from the expected case of large & carat:large, there are no evident concerns of multicollinearity. The data, with included transformations, fits the assumptions of an OLS model. 
+
+Carat is clearly the dominant predictive feature here. Between analysis of the features' initial correlation plots with price and their independent effect plots, I would offer the following conclusion: 
+
+- Most diamonds weigh less than 2 carats. The price of those diamonds is closely related to their weight, with small impacts from clarity, color, and cut. The price of larger diamonds is more variable, less closely related to their weight, and more likely to be impacted by clarity, color, and cut.
+
+## Lessons Learned
+
+Overall, I found this to be a great exercise; it was the perfect refresher of basic regression analysis concepts I learned in school. It presented a few challanges and provided the desired opportunity to become more familiar with sci-kit learn and statsmodels. 
+
+I'll note that my work to replicate several aspects of pyrsm gave me a better appreciation for the work that must have gone into developing that package. Another example of this is how pyrsm's model functions inherently handle encoding of categorical variables. Here, I ended up using ColumnTransformer and OneHotEncoder from sci-kit learn to handle that, which worked perfectly fine, but was certainly an extra step. 
+
+I also ended up using FunctionTransformer within ColumnTransformer to handle taking the log of carat and TransformedTargetRegressor to handle taking the log of price. As I started thinking about how I might deploy this model, I realized that having inputs provided and outputs received in their original scale would be more efficient and clean. While learning how to use those functions, I decided that I'd like to learn more about sci-kit learn's Pipeline function as well. I think I'll make that a goal for one of my future projects.
+
+Speaking of future projects. I've also learned it may be more realistic to set out for completing one project every one-to-two months, rather than every month. That said, I know what I'd like to do next, and that's deploy this model via a simple Shiny web app where someone could provide information on a diamond and get a predicted fair price range in return. Developing interactive web apps via Shiny or similar tools was another skill I learned in school and look forward to refreshing!
+
+
+
+
+
+
+
+
+
+
