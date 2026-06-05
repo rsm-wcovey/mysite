@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Wesley Covey">
-<meta name="dcterms.date" content="2025-05-31">
+<meta name="dcterms.date" content="2026-05-31">
 
 <title>Wesley Covey - Refreshing Linear Regression with Diamonds</title>
 <style>
@@ -116,10 +116,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-
-
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-
 
 
 <link rel="stylesheet" href="../../../styles.css">
@@ -228,7 +225,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 31, 2025</p>
+      <p class="date">May 31, 2026</p>
     </div>
   </div>
   
@@ -279,7 +276,7 @@ View Descriptive Outputs
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="d6ade41a" class="cell" data-execution_count="2">
+<div id="43402c21" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>display(df.info())</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>display(df.head())</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>display(df.describe())</span>
@@ -687,7 +684,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Since we clearly have some ordinal categorical variables here, let’s define them as such and sort them properly. It’s been a few years since I’ve been diamond shopping, so I had to look up these clarity and color tiers, as well as the meaning of the table variable which is the ratio of the flat top surface to the total width.</p>
-<div id="709ee312" class="cell" data-execution_count="3">
+<div id="6ed93b08" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df.cut <span class="op">=</span> pd.Categorical(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    df.cut, categories<span class="op">=</span>[<span class="st">'Fair'</span>, <span class="st">'Good'</span>, <span class="st">'Very Good'</span>, <span class="st">'Premium'</span>, <span class="st">'Ideal'</span>], </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    ordered<span class="op">=</span><span class="va">True</span></span>
@@ -703,7 +700,7 @@ memory usage: 4.1+ MB</code></pre>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>df.clarity <span class="op">=</span> df.clarity.cat.remove_unused_categories()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With the categorical variables handled, I’d like to get some quick visual plots to better understand these variables’ distributions.</p>
-<div id="137e98c3" class="cell" data-execution_count="4">
+<div id="7b30c17e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_axes <span class="op">=</span> df.shape[<span class="dv">1</span>]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_plot_rows <span class="op">=</span> <span class="bu">int</span>(np.ceil(n_axes<span class="op">/</span><span class="dv">2</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -725,7 +722,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Notably, many of the variables demonstrate a roughly normal distribution, including color, clarity, depth, and table. However, both price and carat are strongly right-skewed. Carat exhibits an interesting stepped behavior with higher frequencies just near certain thresholds like 1.0, 1.5, or 2.0 carats. I imagine this is not random but the result of conscious efforts to achieve specific final diamond weights when being cut and finished.</p>
-<div id="e4b22c3a" class="cell" data-execution_count="5">
+<div id="c4076534" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>, <span class="dv">6</span>, <span class="fl">0.1</span>), labels<span class="op">=</span><span class="va">None</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sns.histplot(df.carat, bins<span class="op">=</span><span class="dv">300</span>)</span>
@@ -743,7 +740,7 @@ memory usage: 4.1+ MB</code></pre>
 <section id="cleaning" class="level3">
 <h3 class="anchored" data-anchor-id="cleaning">Cleaning</h3>
 <p>This dataset is described as containing round-cut diamonds, which should have roughly equal width and length. With more than 50k rows, it seems plausible that some irregularly shaped diamonds, like oval or heart, may be included. In order to examine this aspect and help identify potential erroneous data points, I’ll create a new variable, assessing whether the length is +/-3% different than the width. As plotted below, you can see the segregation of two groups, the majority which are roughly equal in dimension and a minority that aren’t.</p>
-<div id="ae7aea8b" class="cell" data-execution_count="6">
+<div id="245c443c" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'irregular'</span>] <span class="op">=</span> np.<span class="bu">abs</span>((df.x <span class="op">-</span> df.y) <span class="op">/</span> df.y) <span class="op">&gt;</span> <span class="fl">0.03</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(df, x<span class="op">=</span>df.x, y<span class="op">=</span>df.y, hue<span class="op">=</span><span class="st">'irregular'</span>)</span>
@@ -758,7 +755,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Easier to see in this plot than the initial histograms are several clearly erroneous sizes: several widths of 0 and few lengths more than 6x greater than their widths. In total, this amounts to only 10 rows, so I see no issue with simply dropping them.</p>
-<div id="95949786" class="cell" data-execution_count="7">
+<div id="9479b1f3" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'erroneous'</span>] <span class="op">=</span> (df.x <span class="op">==</span> <span class="dv">0</span>) <span class="op">|</span> (df.y <span class="op">&gt;</span> <span class="dv">20</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>erroneous <span class="op">=</span> df.copy().loc[df.erroneous]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>cleaned <span class="op">=</span> df.copy().loc[<span class="op">~</span>df.erroneous]</span>
@@ -777,7 +774,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 <p>We now see a much more logical pattern displayed, with most still being regularly shaped and a minority being irregular but plausibly so. Since there have been at least some data quality issues found thus far with x and y, it would be prudent to check the z values.</p>
 <p>In theory, these should be well related to the depth ratio variable. However, since that’s the ratio of height to width and some of these diamonds have irregular sizes, I cannot be certain in how the given depth values were produced. E.g. was width considered width, length, or some average of the two? For this reason, I’ll give those irregular diamonds a ‘pass’ here and focus on identifying the other outliers through a comparison of provided depth ratio and manually calculated depth ratio.</p>
-<div id="f6f0972c" class="cell" data-execution_count="8">
+<div id="ac13cbeb" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cleaned[<span class="st">'depth_ratio_x'</span>] <span class="op">=</span> cleaned.z <span class="op">/</span> cleaned.x <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cleaned[<span class="st">'depth_ratio_y'</span>] <span class="op">=</span> cleaned.z <span class="op">/</span> cleaned.y <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assign_depth_error(row):</span>
@@ -794,7 +791,7 @@ memory usage: 4.1+ MB</code></pre>
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Depth vs Z/Y</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Depth vs Z/X</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Proposed Erroneous Z Values</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="f46f1278" class="cell" data-execution_count="9">
+<div id="bb0993e6" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -805,7 +802,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="4687cb03" class="cell" data-execution_count="10">
+<div id="4f76544e" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -816,7 +813,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div id="7b306be9" class="cell" data-execution_count="11">
+<div id="22eb29ca" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -829,7 +826,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>With what is again a very small number of erroneous datapoints, more advanced imputation methods are likely not required here. To be on the safe side, I’ll compare the dropped rows to the remaining ones, checking for any patterns across the other variables. What we see below is a fairly even/random distribution, so no significant bias concern from dropping. Moreover, the x, y, and z histograms now appear aligned with each other, as we’d expect.</p>
-<div id="cf8c7a81" class="cell" data-execution_count="12">
+<div id="641bf968" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -842,7 +839,7 @@ memory usage: 4.1+ MB</code></pre>
 <section id="feature-engineering" class="level3">
 <h3 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h3>
 <p>With the data cleaned up, it’s time to check out the relationships between the response, price, and the potential model features.</p>
-<div id="f21f39a0" class="cell" data-execution_count="13">
+<div id="41fb905d" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -855,7 +852,7 @@ memory usage: 4.1+ MB</code></pre>
 <p>The boxplots of cut, color, and clarity all show the opposite of what I would have expected: generally lower median prices as you move along the categories from worst to best. I suspect this is less representative of their true relationships with price and more likely a result of the skewed price and carat distributions. I’ll look forward to seeing the plots of these variables’ independent effects on price later, a standard plotting option baked into pyrsm that I plan on reproducing.</p>
 <p>Another notable observation is that there’s slightly more variation in depth, and to a lesser extent, table, at the lower prices than there is at higher prices. This is consistent with what I had read about there being an ideal central range of ratios for these.</p>
 <p>Let’s continue on and examine some potential transformations of carat, price, or both.</p>
-<div id="f7802b15" class="cell" data-execution_count="14">
+<div id="467f9ede" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'log_price'</span>] <span class="op">=</span> np.log(cdf.price)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'sqrt_price'</span>] <span class="op">=</span> np.sqrt(cdf.price)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'log_carat'</span>] <span class="op">=</span> np.log(cdf.carat)</span>
@@ -879,7 +876,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Of the three, the log-log transformation seems to be the most linear, which stands to reason give that both variables are heavily skewed in the same direction. With so many data points though, I thought the scatterplots may be obscuring some latent pattern still, so I ran a line plots which indeed show that while the relationship is fairly linear up to about 2 carats, somewhere north of there the behavior changes with the line leveling off and becoming more variable. To capture these alternate behaviors at different carat sizes, I’ll create a dummy variable for carat&gt;2 and an interaction term between that and log_carat to pass to the model.</p>
-<div id="5324c7e9" class="cell" data-execution_count="15">
+<div id="436a0d83" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(cdf, x<span class="op">=</span><span class="st">'carat'</span>, y<span class="op">=</span><span class="st">'price'</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>])</span>
@@ -900,7 +897,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Two final transformations I’ll apply are to the table and depth variables. Since these are both ratios bounded between 0 and 1 with an optimal central range of values, I’ll convert them to an absolute z score instead.</p>
-<div id="605ea9ca" class="cell" data-execution_count="16">
+<div id="35b09174" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>depth_std <span class="op">=</span> np.std(cdf.depth)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>depth_mean <span class="op">=</span> np.mean(cdf.depth)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'depth_norm'</span>] <span class="op">=</span> <span class="bu">abs</span>(cdf.depth <span class="op">-</span> depth_mean)<span class="op">/</span>depth_std</span>
@@ -938,7 +935,7 @@ View Code
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="2b5dad5b" class="cell" data-execute="false" data-execution_count="17">
+<div id="6084e55b" class="cell" data-execute="false" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>evars <span class="op">=</span> [<span class="st">'carat'</span>, <span class="st">'large'</span>, <span class="st">'carat:large'</span>, <span class="st">'cut'</span>, <span class="st">'color'</span>, <span class="st">'clarity'</span>] </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rvar <span class="op">=</span> [<span class="st">'price'</span>]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1017,8 +1014,8 @@ View Code
 Dep. Variable:                  price   R-squared:                       0.983
 Model:                            OLS   Adj. R-squared:                  0.983
 Method:                 Least Squares   F-statistic:                 1.253e+05
-Date:                Sun, 31 May 2026   Prob (F-statistic):               0.00
-Time:                        20:49:09   Log-Likelihood:                 26059.
+Date:                Thu, 04 Jun 2026   Prob (F-statistic):               0.00
+Time:                        19:03:14   Log-Likelihood:                 26059.
 No. Observations:               43116   AIC:                        -5.208e+04
 Df Residuals:                   43095   BIC:                        -5.189e+04
 Df Model:                          20                                         
@@ -1106,15 +1103,15 @@ Test Data - R Squared: 0.982  RMSE: 0.134</code></pre>
 </div>
 </div>
 </div>
-<div id="71f62e56" class="cell" data-execution_count="18">
+<div id="62d9d66f" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                  price   R-squared:                       0.983
 Model:                            OLS   Adj. R-squared:                  0.983
 Method:                 Least Squares   F-statistic:                 1.253e+05
-Date:                Sun, 31 May 2026   Prob (F-statistic):               0.00
-Time:                        20:49:09   Log-Likelihood:                 26059.
+Date:                Thu, 04 Jun 2026   Prob (F-statistic):               0.00
+Time:                        19:03:15   Log-Likelihood:                 26059.
 No. Observations:               43116   AIC:                        -5.208e+04
 Df Residuals:                   43095   BIC:                        -5.189e+04
 Df Model:                          20                                         
@@ -1211,7 +1208,7 @@ View Code
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="6fcc1521" class="cell" data-execute="false" data-execution_count="19">
+<div id="fd20e56c" class="cell" data-execute="false" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model diagnostic plots</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">15</span>))</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> ax.flatten()</span>
@@ -1332,7 +1329,7 @@ View Code
 </div>
 </div>
 </div>
-<div id="b823b128" class="cell" data-execution_count="20">
+<div id="41e8b0d6" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
