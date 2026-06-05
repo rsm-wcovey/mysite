@@ -2,7 +2,7 @@
 title: "Refreshing Linear Regression with Diamonds"
 image: ../../../images/python-logo.png
 author: "Wesley Covey"
-date: 2025-05-31
+date: 2026-05-31
 categories: ["Python", "ML"]
 callout-appearance: minimal 
 ---
