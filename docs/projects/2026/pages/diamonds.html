@@ -276,7 +276,7 @@ View Descriptive Outputs
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="43402c21" class="cell" data-execution_count="2">
+<div id="c7280416" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>display(df.info())</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>display(df.head())</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>display(df.describe())</span>
@@ -684,7 +684,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Since we clearly have some ordinal categorical variables here, let’s define them as such and sort them properly. It’s been a few years since I’ve been diamond shopping, so I had to look up these clarity and color tiers, as well as the meaning of the table variable which is the ratio of the flat top surface to the total width.</p>
-<div id="6ed93b08" class="cell" data-execution_count="3">
+<div id="9105fc25" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df.cut <span class="op">=</span> pd.Categorical(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    df.cut, categories<span class="op">=</span>[<span class="st">'Fair'</span>, <span class="st">'Good'</span>, <span class="st">'Very Good'</span>, <span class="st">'Premium'</span>, <span class="st">'Ideal'</span>], </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    ordered<span class="op">=</span><span class="va">True</span></span>
@@ -700,7 +700,7 @@ memory usage: 4.1+ MB</code></pre>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>df.clarity <span class="op">=</span> df.clarity.cat.remove_unused_categories()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With the categorical variables handled, I’d like to get some quick visual plots to better understand these variables’ distributions.</p>
-<div id="7b30c17e" class="cell" data-execution_count="4">
+<div id="36b1e4bb" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_axes <span class="op">=</span> df.shape[<span class="dv">1</span>]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_plot_rows <span class="op">=</span> <span class="bu">int</span>(np.ceil(n_axes<span class="op">/</span><span class="dv">2</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -722,7 +722,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Notably, many of the variables demonstrate a roughly normal distribution, including color, clarity, depth, and table. However, both price and carat are strongly right-skewed. Carat exhibits an interesting stepped behavior with higher frequencies just near certain thresholds like 1.0, 1.5, or 2.0 carats. I imagine this is not random but the result of conscious efforts to achieve specific final diamond weights when being cut and finished.</p>
-<div id="c4076534" class="cell" data-execution_count="5">
+<div id="96975f70" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="dv">0</span>, <span class="dv">6</span>, <span class="fl">0.1</span>), labels<span class="op">=</span><span class="va">None</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sns.histplot(df.carat, bins<span class="op">=</span><span class="dv">300</span>)</span>
@@ -740,7 +740,7 @@ memory usage: 4.1+ MB</code></pre>
 <section id="cleaning" class="level3">
 <h3 class="anchored" data-anchor-id="cleaning">Cleaning</h3>
 <p>This dataset is described as containing round-cut diamonds, which should have roughly equal width and length. With more than 50k rows, it seems plausible that some irregularly shaped diamonds, like oval or heart, may be included. In order to examine this aspect and help identify potential erroneous data points, I’ll create a new variable, assessing whether the length is +/-3% different than the width. As plotted below, you can see the segregation of two groups, the majority which are roughly equal in dimension and a minority that aren’t.</p>
-<div id="245c443c" class="cell" data-execution_count="6">
+<div id="c1f174a9" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'irregular'</span>] <span class="op">=</span> np.<span class="bu">abs</span>((df.x <span class="op">-</span> df.y) <span class="op">/</span> df.y) <span class="op">&gt;</span> <span class="fl">0.03</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(df, x<span class="op">=</span>df.x, y<span class="op">=</span>df.y, hue<span class="op">=</span><span class="st">'irregular'</span>)</span>
@@ -755,7 +755,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Easier to see in this plot than the initial histograms are several clearly erroneous sizes: several widths of 0 and few lengths more than 6x greater than their widths. In total, this amounts to only 10 rows, so I see no issue with simply dropping them.</p>
-<div id="9479b1f3" class="cell" data-execution_count="7">
+<div id="07a8a613" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'erroneous'</span>] <span class="op">=</span> (df.x <span class="op">==</span> <span class="dv">0</span>) <span class="op">|</span> (df.y <span class="op">&gt;</span> <span class="dv">20</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>erroneous <span class="op">=</span> df.copy().loc[df.erroneous]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>cleaned <span class="op">=</span> df.copy().loc[<span class="op">~</span>df.erroneous]</span>
@@ -774,7 +774,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 <p>We now see a much more logical pattern displayed, with most still being regularly shaped and a minority being irregular but plausibly so. Since there have been at least some data quality issues found thus far with x and y, it would be prudent to check the z values.</p>
 <p>In theory, these should be well related to the depth ratio variable. However, since that’s the ratio of height to width and some of these diamonds have irregular sizes, I cannot be certain in how the given depth values were produced. E.g. was width considered width, length, or some average of the two? For this reason, I’ll give those irregular diamonds a ‘pass’ here and focus on identifying the other outliers through a comparison of provided depth ratio and manually calculated depth ratio.</p>
-<div id="ac13cbeb" class="cell" data-execution_count="8">
+<div id="8fd8d21a" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cleaned[<span class="st">'depth_ratio_x'</span>] <span class="op">=</span> cleaned.z <span class="op">/</span> cleaned.x <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cleaned[<span class="st">'depth_ratio_y'</span>] <span class="op">=</span> cleaned.z <span class="op">/</span> cleaned.y <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assign_depth_error(row):</span>
@@ -791,7 +791,7 @@ memory usage: 4.1+ MB</code></pre>
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Depth vs Z/Y</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Depth vs Z/X</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Proposed Erroneous Z Values</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="bb0993e6" class="cell" data-execution_count="9">
+<div id="b547c800" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -802,7 +802,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="4f76544e" class="cell" data-execution_count="10">
+<div id="27d9f467" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -813,7 +813,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div id="22eb29ca" class="cell" data-execution_count="11">
+<div id="1defe49b" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -826,7 +826,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>With what is again a very small number of erroneous datapoints, more advanced imputation methods are likely not required here. To be on the safe side, I’ll compare the dropped rows to the remaining ones, checking for any patterns across the other variables. What we see below is a fairly even/random distribution, so no significant bias concern from dropping. Moreover, the x, y, and z histograms now appear aligned with each other, as we’d expect.</p>
-<div id="641bf968" class="cell" data-execution_count="12">
+<div id="dce6612b" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -839,7 +839,7 @@ memory usage: 4.1+ MB</code></pre>
 <section id="feature-engineering" class="level3">
 <h3 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h3>
 <p>With the data cleaned up, it’s time to check out the relationships between the response, price, and the potential model features.</p>
-<div id="41fb905d" class="cell" data-execution_count="13">
+<div id="9d93afb9" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -852,7 +852,7 @@ memory usage: 4.1+ MB</code></pre>
 <p>The boxplots of cut, color, and clarity all show the opposite of what I would have expected: generally lower median prices as you move along the categories from worst to best. I suspect this is less representative of their true relationships with price and more likely a result of the skewed price and carat distributions. I’ll look forward to seeing the plots of these variables’ independent effects on price later, a standard plotting option baked into pyrsm that I plan on reproducing.</p>
 <p>Another notable observation is that there’s slightly more variation in depth, and to a lesser extent, table, at the lower prices than there is at higher prices. This is consistent with what I had read about there being an ideal central range of ratios for these.</p>
 <p>Let’s continue on and examine some potential transformations of carat, price, or both.</p>
-<div id="467f9ede" class="cell" data-execution_count="14">
+<div id="5a69251e" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'log_price'</span>] <span class="op">=</span> np.log(cdf.price)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'sqrt_price'</span>] <span class="op">=</span> np.sqrt(cdf.price)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'log_carat'</span>] <span class="op">=</span> np.log(cdf.carat)</span>
@@ -876,7 +876,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Of the three, the log-log transformation seems to be the most linear, which stands to reason give that both variables are heavily skewed in the same direction. With so many data points though, I thought the scatterplots may be obscuring some latent pattern still, so I ran a line plots which indeed show that while the relationship is fairly linear up to about 2 carats, somewhere north of there the behavior changes with the line leveling off and becoming more variable. To capture these alternate behaviors at different carat sizes, I’ll create a dummy variable for carat&gt;2 and an interaction term between that and log_carat to pass to the model.</p>
-<div id="436a0d83" class="cell" data-execution_count="15">
+<div id="b5462b4b" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(cdf, x<span class="op">=</span><span class="st">'carat'</span>, y<span class="op">=</span><span class="st">'price'</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>])</span>
@@ -897,7 +897,7 @@ memory usage: 4.1+ MB</code></pre>
 </div>
 </div>
 <p>Two final transformations I’ll apply are to the table and depth variables. Since these are both ratios bounded between 0 and 1 with an optimal central range of values, I’ll convert them to an absolute z score instead.</p>
-<div id="35b09174" class="cell" data-execution_count="16">
+<div id="f1091376" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>depth_std <span class="op">=</span> np.std(cdf.depth)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>depth_mean <span class="op">=</span> np.mean(cdf.depth)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>cdf[<span class="st">'depth_norm'</span>] <span class="op">=</span> <span class="bu">abs</span>(cdf.depth <span class="op">-</span> depth_mean)<span class="op">/</span>depth_std</span>
@@ -935,7 +935,7 @@ View Code
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="6084e55b" class="cell" data-execute="false" data-execution_count="17">
+<div id="b4ab3348" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>evars <span class="op">=</span> [<span class="st">'carat'</span>, <span class="st">'large'</span>, <span class="st">'carat:large'</span>, <span class="st">'cut'</span>, <span class="st">'color'</span>, <span class="st">'clarity'</span>] </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rvar <span class="op">=</span> [<span class="st">'price'</span>]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1008,110 +1008,19 @@ View Code
 <span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>vifs <span class="op">=</span> [<span class="bu">round</span>(variance_inflation_factor(x_vif.values, n), <span class="dv">2</span>) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(x_vif.shape[<span class="dv">1</span>])]</span>
 <span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>vif_df <span class="op">=</span> pd.DataFrame(vifs, columns<span class="op">=</span>[<span class="st">'VIF Score'</span>], index<span class="op">=</span>x_vif.columns).sort_values(<span class="st">'VIF Score'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>display(vif_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div id="5db9f56e" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-stdout">
 <pre><code>                            OLS Regression Results                            
 ==============================================================================
 Dep. Variable:                  price   R-squared:                       0.983
 Model:                            OLS   Adj. R-squared:                  0.983
 Method:                 Least Squares   F-statistic:                 1.253e+05
-Date:                Thu, 04 Jun 2026   Prob (F-statistic):               0.00
-Time:                        19:03:14   Log-Likelihood:                 26059.
-No. Observations:               43116   AIC:                        -5.208e+04
-Df Residuals:                   43095   BIC:                        -5.189e+04
-Df Model:                          20                                         
-Covariance Type:            nonrobust                                         
-==========================================================================================
-                             coef    std err          t      P&gt;|t|      [0.025      0.975]
-------------------------------------------------------------------------------------------
-intercept                  7.8783      0.006   1234.137      0.000       7.866       7.891
-onehot__cut_Good           0.0773      0.004     17.824      0.000       0.069       0.086
-onehot__cut_Ideal          0.1611      0.004     40.650      0.000       0.153       0.169
-onehot__cut_Premium        0.1385      0.004     34.669      0.000       0.131       0.146
-onehot__cut_Very Good      0.1148      0.004     28.434      0.000       0.107       0.123
-onehot__color_E           -0.0563      0.002    -24.037      0.000      -0.061      -0.052
-onehot__color_F           -0.0966      0.002    -40.754      0.000      -0.101      -0.092
-onehot__color_G           -0.1622      0.002    -69.887      0.000      -0.167      -0.158
-onehot__color_H           -0.2509      0.002   -102.221      0.000      -0.256      -0.246
-onehot__color_I           -0.3725      0.003   -134.914      0.000      -0.378      -0.367
-onehot__color_J           -0.5058      0.003   -147.969      0.000      -0.512      -0.499
-onehot__clarity_IF         1.0964      0.007    163.751      0.000       1.083       1.110
-onehot__clarity_SI1        0.5757      0.006    100.556      0.000       0.565       0.587
-onehot__clarity_SI2        0.4154      0.006     72.255      0.000       0.404       0.427
-onehot__clarity_VS1        0.7946      0.006    135.964      0.000       0.783       0.806
-onehot__clarity_VS2        0.7243      0.006    125.854      0.000       0.713       0.736
-onehot__clarity_VVS1       1.0037      0.006    162.092      0.000       0.992       1.016
-onehot__clarity_VVS2       0.9314      0.006    154.804      0.000       0.920       0.943
-log__carat                 1.8888      0.001   1447.384      0.000       1.886       1.891
-remainder__large           0.6703      0.028     23.903      0.000       0.615       0.725
-remainder__carat:large    -0.9323      0.037    -25.478      0.000      -1.004      -0.861
-==============================================================================
-Omnibus:                     3297.283   Durbin-Watson:                   1.995
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):            13411.927
-Skew:                           0.292   Prob(JB):                         0.00
-Kurtosis:                       5.669   Cond. No.                         97.4
-==============================================================================
-
-Notes:
-[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-==============================================================================
-
-Training Data - R Squared: 0.983  RMSE: 0.132
-Test Data - R Squared: 0.982  RMSE: 0.134</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">VIF Score</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">carat:large</td>
-<td>67.87</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">large</td>
-<td>67.27</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">cut</td>
-<td>6.20</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">clarity</td>
-<td>3.93</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">color</td>
-<td>3.75</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">carat</td>
-<td>3.58</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div id="62d9d66f" class="cell" data-execution_count="18">
-<div class="cell-output cell-output-stdout">
-<pre><code>                            OLS Regression Results                            
-==============================================================================
-Dep. Variable:                  price   R-squared:                       0.983
-Model:                            OLS   Adj. R-squared:                  0.983
-Method:                 Least Squares   F-statistic:                 1.253e+05
-Date:                Thu, 04 Jun 2026   Prob (F-statistic):               0.00
-Time:                        19:03:15   Log-Likelihood:                 26059.
+Date:                Fri, 05 Jun 2026   Prob (F-statistic):               0.00
+Time:                        18:37:03   Log-Likelihood:                 26059.
 No. Observations:               43116   AIC:                        -5.208e+04
 Df Residuals:                   43095   BIC:                        -5.189e+04
 Df Model:                          20                                         
@@ -1208,128 +1117,114 @@ View Code
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="fd20e56c" class="cell" data-execute="false" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model diagnostic plots</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">15</span>))</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> ax.flatten()</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(train_df, x<span class="op">=</span><span class="st">'log_y_pred'</span>, y<span class="op">=</span><span class="st">'log_price'</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(train_df.log_y_pred, train_df.log_y_pred, color<span class="op">=</span><span class="st">'black'</span>)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].xlabel <span class="op">=</span> <span class="st">'Predicted'</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].ylabel <span class="op">=</span> <span class="st">'Actual'</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">'Price: Predicted v Actual'</span>)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(train_df, x<span class="op">=</span><span class="st">'log_y_pred'</span>, y<span class="op">=</span><span class="st">'resid'</span>, ax<span class="op">=</span>ax[<span class="dv">1</span>])</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(train_df.log_y_pred, np.zeros(train_df.shape[<span class="dv">0</span>]), color<span class="op">=</span><span class="st">'black'</span>)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].xlabel <span class="op">=</span> <span class="st">'Predicted'</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].ylabel <span class="op">=</span> <span class="st">'Actual'</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">'Price: Predicted v Residuals'</span>)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>mean_resid <span class="op">=</span> train_df.resid.mean()</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>std_resid <span class="op">=</span> train_df.resid.std()</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>train_df[<span class="st">'resid_norm'</span>] <span class="op">=</span> train_df.resid.<span class="bu">apply</span>(</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> x: (x <span class="op">-</span> mean_resid) <span class="op">/</span> std_resid</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>sns.histplot(train_df, x<span class="op">=</span><span class="st">'resid_norm'</span>, bins<span class="op">=</span><span class="dv">100</span>, ax<span class="op">=</span>ax[<span class="dv">2</span>])</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].set_xlim(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].set_title(<span class="st">'Normalized Residual Distribution'</span>)</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>vimp <span class="op">=</span> permutation_importance(</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    model,</span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    x_train_encoded,</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    y_train,</span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    n_repeats<span class="op">=</span><span class="dv">10</span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>vimp_features <span class="op">=</span> col_transformer.get_feature_names_out()</span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>vimp_df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'feature'</span>: vimp_features,</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">'importances_mean'</span>: vimp.importances_mean</span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>vimp_df[<span class="st">'feature_transformer'</span>] <span class="op">=</span> vimp_df.feature.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.split(<span class="st">'_'</span>)[<span class="dv">0</span>])</span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>vimp_df[<span class="st">'feature_name'</span>] <span class="op">=</span> vimp_df.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.feature.split(<span class="st">'_'</span>)[<span class="dv">2</span>] <span class="cf">if</span> x.feature_transformer <span class="op">==</span> <span class="st">'onehot'</span> <span class="cf">else</span> x.feature.split(<span class="st">'__'</span>)[<span class="dv">1</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>vimp_df[<span class="st">'feature_value'</span>] <span class="op">=</span> vimp_df.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.feature.split(<span class="st">'_'</span>)[<span class="dv">3</span>] <span class="cf">if</span> x.feature_transformer <span class="op">==</span> <span class="st">'onehot'</span> <span class="cf">else</span> <span class="va">None</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>vimp_grp <span class="op">=</span> vimp_df.groupby(<span class="st">'feature_name'</span>).mean(<span class="st">'importances_mean'</span>).reset_index().sort_values(<span class="st">'importances_mean'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>sns.barplot(orient<span class="op">=</span><span class="st">'h'</span>, data<span class="op">=</span>vimp_grp, y<span class="op">=</span><span class="st">'feature_name'</span>, x<span class="op">=</span><span class="st">'importances_mean'</span>, ax<span class="op">=</span>ax[<span class="dv">3</span>])</span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].set_yticklabels([])</span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>xlim <span class="op">=</span> vimp_grp.importances_mean.<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.5</span></span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, label <span class="kw">in</span> <span class="bu">enumerate</span>(vimp_grp.feature_name):</span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">3</span>].text(xlim<span class="op">*</span><span class="fl">0.98</span>, i, label, ha<span class="op">=</span><span class="st">'right'</span>, va<span class="op">=</span><span class="st">'center'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].set_xlim(<span class="dv">0</span>, xlim)</span>
-<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].set_title(<span class="st">'Variable Permutation Importance'</span>)</span>
-<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>corr_mtx <span class="op">=</span> x_vif.corr().<span class="bu">round</span>(<span class="dv">2</span>)</span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>np.fill_diagonal(corr_mtx.values, <span class="va">None</span>)</span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>sns.heatmap(corr_mtx, annot<span class="op">=</span><span class="va">True</span>, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, center<span class="op">=</span><span class="dv">0</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, ax<span class="op">=</span>ax[<span class="dv">4</span>])</span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">4</span>].set_title(<span class="st">'Feature Correlation Map'</span>)</span>
-<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">4</span>].tick_params(axis<span class="op">=</span><span class="st">'both'</span>, labelsize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(h_pad<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a><span class="co"># feature impact plots</span></span>
-<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_evar_avgs(evar_list, training_df, cat_cols):</span>
-<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>    avg_vals <span class="op">=</span> []</span>
-<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> col <span class="kw">in</span> evar_list:</span>
-<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> cat_cols:</span>
-<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>            avg_val <span class="op">=</span> training_df[col].mean()</span>
-<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a>            avg_val <span class="op">=</span> training_df[col].mode().values[<span class="dv">0</span>]</span>
-<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a>        avg_vals.append(avg_val)</span>
-<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> {col: val <span class="cf">for</span> col, val <span class="kw">in</span> <span class="bu">zip</span>(evar_list, avg_vals)}</span>
-<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> output</span>
-<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a>avg_evar_vals <span class="op">=</span> get_evar_avgs(evars, x_train, cat_cols)</span>
-<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a>n_axes <span class="op">=</span> <span class="bu">len</span>(evars)</span>
-<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>n_plot_rows <span class="op">=</span> <span class="bu">int</span>(np.ceil(n_axes<span class="op">/</span><span class="dv">2</span>))</span>
-<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(n_plot_rows, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>,n_plot_rows<span class="op">*</span><span class="dv">4</span>))</span>
-<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
-<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update(</span>
-<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'xtick.labelsize'</span>: <span class="dv">14</span>, <span class="st">'ytick.labelsize'</span>: <span class="dv">14</span>, <span class="st">'axes.labelsize'</span>: <span class="dv">16</span>}</span>
-<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, col <span class="kw">in</span> <span class="bu">enumerate</span>(evars):</span>
-<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a>    x_train_synth <span class="op">=</span> x_train.copy()</span>
-<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a>    other_evars <span class="op">=</span> evars.copy()</span>
-<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a>    other_evars.remove(col)</span>
-<span id="cb16-91"><a href="#cb16-91" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> other_col <span class="kw">in</span> other_evars:</span>
-<span id="cb16-92"><a href="#cb16-92" aria-hidden="true" tabindex="-1"></a>        x_train_synth[other_col] <span class="op">=</span> avg_evar_vals[other_col]</span>
-<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a>    x_train_synth_encoded <span class="op">=</span> col_transformer.transform(x_train_synth)</span>
-<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a>    x_train_synth[<span class="st">'y_pred'</span>] <span class="op">=</span> model.predict(x_train_synth_encoded)</span>
-<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a>    x_train_synth[<span class="st">'price'</span>] <span class="op">=</span> y_train</span>
-<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a>    sns.lineplot(x_train_synth, x<span class="op">=</span>col, y<span class="op">=</span><span class="st">'y_pred'</span>, ax<span class="op">=</span>axes[a])<span class="co"># , label='pred')</span></span>
-<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a>    axes[a].set_ylim(<span class="dv">0</span>, <span class="bu">min</span>(train_df.price.<span class="bu">max</span>()<span class="op">*</span><span class="fl">1.1</span>, x_train_synth.y_pred.<span class="bu">max</span>()<span class="op">*</span><span class="dv">2</span>))</span>
-<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(h_pad<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="diamonds_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="diamonds_files/figure-html/cell-20-output-2.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="e91f0a5e" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model diagnostic plots</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">15</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> ax.flatten()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(train_df, x<span class="op">=</span><span class="st">'log_y_pred'</span>, y<span class="op">=</span><span class="st">'log_price'</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(train_df.log_y_pred, train_df.log_y_pred, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].xlabel <span class="op">=</span> <span class="st">'Predicted'</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].ylabel <span class="op">=</span> <span class="st">'Actual'</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">'Price: Predicted v Actual'</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(train_df, x<span class="op">=</span><span class="st">'log_y_pred'</span>, y<span class="op">=</span><span class="st">'resid'</span>, ax<span class="op">=</span>ax[<span class="dv">1</span>])</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(train_df.log_y_pred, np.zeros(train_df.shape[<span class="dv">0</span>]), color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].xlabel <span class="op">=</span> <span class="st">'Predicted'</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].ylabel <span class="op">=</span> <span class="st">'Actual'</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">'Price: Predicted v Residuals'</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>mean_resid <span class="op">=</span> train_df.resid.mean()</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>std_resid <span class="op">=</span> train_df.resid.std()</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>train_df[<span class="st">'resid_norm'</span>] <span class="op">=</span> train_df.resid.<span class="bu">apply</span>(</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> x: (x <span class="op">-</span> mean_resid) <span class="op">/</span> std_resid</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>sns.histplot(train_df, x<span class="op">=</span><span class="st">'resid_norm'</span>, bins<span class="op">=</span><span class="dv">100</span>, ax<span class="op">=</span>ax[<span class="dv">2</span>])</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].set_xlim(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].set_title(<span class="st">'Normalized Residual Distribution'</span>)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>vimp <span class="op">=</span> permutation_importance(</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    model,</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    x_train_encoded,</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    y_train,</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    n_repeats<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>vimp_features <span class="op">=</span> col_transformer.get_feature_names_out()</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>vimp_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'feature'</span>: vimp_features,</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">'importances_mean'</span>: vimp.importances_mean</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>vimp_df[<span class="st">'feature_transformer'</span>] <span class="op">=</span> vimp_df.feature.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.split(<span class="st">'_'</span>)[<span class="dv">0</span>])</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>vimp_df[<span class="st">'feature_name'</span>] <span class="op">=</span> vimp_df.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.feature.split(<span class="st">'_'</span>)[<span class="dv">2</span>] <span class="cf">if</span> x.feature_transformer <span class="op">==</span> <span class="st">'onehot'</span> <span class="cf">else</span> x.feature.split(<span class="st">'__'</span>)[<span class="dv">1</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>vimp_df[<span class="st">'feature_value'</span>] <span class="op">=</span> vimp_df.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.feature.split(<span class="st">'_'</span>)[<span class="dv">3</span>] <span class="cf">if</span> x.feature_transformer <span class="op">==</span> <span class="st">'onehot'</span> <span class="cf">else</span> <span class="va">None</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>vimp_grp <span class="op">=</span> vimp_df.groupby(<span class="st">'feature_name'</span>).mean(<span class="st">'importances_mean'</span>).reset_index().sort_values(<span class="st">'importances_mean'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>sns.barplot(orient<span class="op">=</span><span class="st">'h'</span>, data<span class="op">=</span>vimp_grp, y<span class="op">=</span><span class="st">'feature_name'</span>, x<span class="op">=</span><span class="st">'importances_mean'</span>, ax<span class="op">=</span>ax[<span class="dv">3</span>])</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].set_yticklabels([])</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>xlim <span class="op">=</span> vimp_grp.importances_mean.<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.5</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, label <span class="kw">in</span> <span class="bu">enumerate</span>(vimp_grp.feature_name):</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">3</span>].text(xlim<span class="op">*</span><span class="fl">0.98</span>, i, label, ha<span class="op">=</span><span class="st">'right'</span>, va<span class="op">=</span><span class="st">'center'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].set_xlim(<span class="dv">0</span>, xlim)</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].set_title(<span class="st">'Variable Permutation Importance'</span>)</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>corr_mtx <span class="op">=</span> x_vif.corr().<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>np.fill_diagonal(corr_mtx.values, <span class="va">None</span>)</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>sns.heatmap(corr_mtx, annot<span class="op">=</span><span class="va">True</span>, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, center<span class="op">=</span><span class="dv">0</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, ax<span class="op">=</span>ax[<span class="dv">4</span>])</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">4</span>].set_title(<span class="st">'Feature Correlation Map'</span>)</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">4</span>].tick_params(axis<span class="op">=</span><span class="st">'both'</span>, labelsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(h_pad<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="co"># feature impact plots</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_evar_avgs(evar_list, training_df, cat_cols):</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>    avg_vals <span class="op">=</span> []</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> col <span class="kw">in</span> evar_list:</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> cat_cols:</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>            avg_val <span class="op">=</span> training_df[col].mean()</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>            avg_val <span class="op">=</span> training_df[col].mode().values[<span class="dv">0</span>]</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>        avg_vals.append(avg_val)</span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> {col: val <span class="cf">for</span> col, val <span class="kw">in</span> <span class="bu">zip</span>(evar_list, avg_vals)}</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> output</span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>avg_evar_vals <span class="op">=</span> get_evar_avgs(evars, x_train, cat_cols)</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>n_axes <span class="op">=</span> <span class="bu">len</span>(evars)</span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>n_plot_rows <span class="op">=</span> <span class="bu">int</span>(np.ceil(n_axes<span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(n_plot_rows, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>,n_plot_rows<span class="op">*</span><span class="dv">4</span>))</span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update(</span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'xtick.labelsize'</span>: <span class="dv">14</span>, <span class="st">'ytick.labelsize'</span>: <span class="dv">14</span>, <span class="st">'axes.labelsize'</span>: <span class="dv">16</span>}</span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, col <span class="kw">in</span> <span class="bu">enumerate</span>(evars):</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>    x_train_synth <span class="op">=</span> x_train.copy()</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>    other_evars <span class="op">=</span> evars.copy()</span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>    other_evars.remove(col)</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> other_col <span class="kw">in</span> other_evars:</span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>        x_train_synth[other_col] <span class="op">=</span> avg_evar_vals[other_col]</span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>    x_train_synth_encoded <span class="op">=</span> col_transformer.transform(x_train_synth)</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>    x_train_synth[<span class="st">'y_pred'</span>] <span class="op">=</span> model.predict(x_train_synth_encoded)</span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>    x_train_synth[<span class="st">'price'</span>] <span class="op">=</span> y_train</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>    sns.lineplot(x_train_synth, x<span class="op">=</span>col, y<span class="op">=</span><span class="st">'y_pred'</span>, ax<span class="op">=</span>axes[a])<span class="co"># , label='pred')</span></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>    axes[a].set_ylim(<span class="dv">0</span>, <span class="bu">min</span>(train_df.price.<span class="bu">max</span>()<span class="op">*</span><span class="fl">1.1</span>, x_train_synth.y_pred.<span class="bu">max</span>()<span class="op">*</span><span class="dv">2</span>))</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(h_pad<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div id="41e8b0d6" class="cell" data-execution_count="20">
+<div id="dc4bf064" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
