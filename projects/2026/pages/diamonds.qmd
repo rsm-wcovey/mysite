@@ -309,7 +309,7 @@ Below is my final model and the additional code I wrote to successfully replicat
 :::: {.callout-note collapse="true"}
 #### View Code
 ```{python}
-#| execute: False
+#| eval: False
 evars = ['carat', 'large', 'carat:large', 'cut', 'color', 'clarity'] 
 rvar = ['price']
 
@@ -466,7 +466,7 @@ display(vif_df)
 :::: {.callout-note collapse="true"}
 #### View Code
 ```{python}
-#| execute: False
+#| eval: False
 # model diagnostic plots
 fig, ax = plt.subplots(3, 2, figsize=(12, 15))
 ax = ax.flatten()
