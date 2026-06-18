@@ -198,8 +198,9 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 #| standalone: true
 #| echo: false
 #| components: [viewer]
-#| viewerHeight: 800
+#| viewerHeight: 1200
 
+from shiny import App, render, ui, reactive
 import pandas as pd 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -211,8 +212,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 from scipy import stats
+from pyodide.http import pyfetch
 import joblib
-from shiny import App, render, ui, reactive
+import io
 
 mysite_palette = ['#375a7f', "#ff879b", '#189cd0', "#c46151", "#18bc9c", "#54011a", '#2c3e50']
 plt.rcParams['axes.prop_cycle'] = cycler(color=mysite_palette) 
@@ -221,453 +223,173 @@ cut_cats=['Fair', 'Good', 'Very Good', 'Premium', 'Ideal']
 color_cats=['J', 'I', 'H', 'G', 'F', 'E', 'D']
 clarity_cats=['I3', 'I2', 'I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF']
 
-mpipe = joblib.load('../data/mpipe.pkl')
-sm_model = sm.load('../data/sm_model.pkl')
+try:
+    response_mpipe = await pyfetch('https://github.com/rsm-wcovey/mysite/blob/main/projects/2026/data/mpipe.pkl')
+    mpipe = joblib.load(io.BytesIO(await response_mpipe.bytes()))
 
+    response_sm = await pyfetch('https://github.com/rsm-wcovey/mysite/blob/main/projects/2026/data/sm_model.pkl')
+    sm_model = sm.load(io.BytesIO(await response_sm.bytes()))
+
+except Exception as e:
+    print(f"Error: {e}")
 
 
 
 app_ui = ui.page_fluid(
-  ui.div(
-    ui.input_slider('sims', 'Select simulation size:', 1, 100000, value=10000, step=1, width='100%'),
-    style='position: fixed; top: 0; left: 0; width: 100%; background: white; z-index: 999; border-bottom: 2px solid #000000; text-align: center; height: 100px; padding-top: 2px;'
-  ),
-  ui.div(
     ui.card(
-        ui.card_header('Simulation Results'),
-        ui.output_ui('summary_text'),
-        ui.div(
-          ui.div(ui.output_plot('flow_plot', height='300px'), style='flex: 1; min-width: 300px;'),
-          ui.div(ui.output_plot('wait_plot', height='300px'), style='flex: 1; min-width: 300px;'),
-          style='display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;'
-        )
-    ),
-
-    ui.div(
-      ui.card(
-        ui.card_header('Cashier Statuses'),
-        ui.output_data_frame('cashiers_df'),
-        style='flex: 1; min-width: 320px;'
-      ),
-      ui.card(
-        ui.card_header('Customers With Cashiers'),
-        ui.output_data_frame('with_cashier_df'),
-        style='flex: 1; min-width: 320px;'
-      ),
-      style='''
-        display: flex;
-        flex-wrap: wrap; 
-        justify-content: space-between;
-        gap: 1rem;
-      ''' 
-    ),
-
-    ui.card(
-      ui.card_header('ATM Status'),
-      ui.div(
-        ui.div(ui.output_ui('atm'), style='flex: 1; min-width: 200px;'),
-        ui.div(ui.output_ui('at_atm'), style='flex: 1; min-width: 200px;'),
-        style='display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;'
-      )
-    ),
-
-    ui.div(
-      ui.card(
-        ui.card_header('Queue for Cashier'),
-        ui.div(ui.output_data_frame('cashier_queue_df'), style='width: 100%;'),
-        style='flex: 1; min-width: 280px; max-height: 300px;'
-      ),
-      ui.card(
-        ui.card_header('Queue for ATM'),
-        ui.div(ui.output_data_frame('atm_queue_df'), style='width: 100%;'),
-        style='flex: 1; min-width: 280px; max-height: 300px;'
-      ),
-      style='''
-        display: flex;
-        flex-wrap: wrap; 
-        justify-content: space-between;
-        gap: 1rem;
-      ''' 
+        ui.card_header('Enter Diamond Specifications', style='text-align: center;'),
+        ui.card_body(
+            ui.layout_columns(
+                ui.card(
+                    ui.div(
+                        ui.input_slider('carat', 'Carat', min=0.1, max=5, step=0.1, value=1, ticks=True, width='100%'), 
+                        style='height: 120px;'
+                    ),
+                    ui.div(
+                        ui.input_radio_buttons('color', 'Color', color_cats, width='100%', inline=True),
+                        style='height: 120px;'
+                    ),
+                    style="width: 100%; height: 300px;"
+                ),
+                ui.card(
+                    ui.div(
+                        ui.input_radio_buttons('cut', 'Cut', cut_cats, width='100%', inline=True),
+                        style='height: 120px;'
+                    ),
+                    ui.div(
+                        ui.input_radio_buttons('clarity', 'Clarity', clarity_cats, width='100%', inline=True),
+                        style='height: 120px;'
+                    ),
+                    style="width: 100%; height: 300px;" 
+                )
+            )
+        ),
+        style="display: flex; justify-content: center;"
     ),
     ui.card(
-      ui.card_header('Completed Customers'),
-      ui.output_data_frame('completed_df'),
-      style='height: 410px; width: 100%;'
+        ui.card_header('Predicted Price'),
+        ui.card_body(
+            ui.output_ui('print_price', style='font-size: 22px; font-weight: bold; color: #189cd0'),
+            ui.output_plot('ci_plot'),
+            ui.output_ui('ci_summary'),
+            ui.input_slider('percent', 'Confidence', min=0.01, max=0.99, value=0.80, step=0.01, width='100%')
+        ),
+        style='text-align: center; height: 500px'
     ),
-
-
-    style='margin-top: 110px;'
-  )
-  
+    ui.tags.style(
+        """
+        body {
+            background-color: #2c3e50;
+            color: #ffffff;           
+        }
+        """
+    )
 )
 
+
 def server(input, output, session):
+
+    @reactive.Calc
+    def generate_input_df():
+        carat = input.carat()
+        cut = input.cut()
+        color = input.color()
+        clarity = input.clarity()
+
+        large = int((carat &gt; 2))
+        log_carat = np.log(carat)
+        carat_large = log_carat * large
+        if clarity in ['I3', 'I2']:
+            clarity = 'I1'
+
+        x_vals = pd.DataFrame({
+            'carat': carat,
+            'cut': cut,
+            'color': color,
+            'clarity': clarity,
+            'large': large,
+            'carat:large': carat_large
+        }, index=[0])
+        return x_vals
+
+    @reactive.Calc
+    def predict_price():
+        x_vals = generate_input_df()
+        y_pred = mpipe.predict(x_vals)
+        pred_val = y_pred[0][0]
+        return pred_val
     
-  # define reactive function
-  @reactive.Calc
-  def sim_flow_time():
+    @reactive.Calc
+    def generate_ci_vals():
+        input_df = generate_input_df()
+        percent = input.percent()
 
-    def pop_cust(lst, person):
-      for i, d in enumerate(lst):
-        if d.get('cashier') == person:
-          return lst.pop(i)
-                
-      return {'flow': None, 'wait': None}
+        col_transformer = mpipe[:-1]
+        x_vals_encoded = col_transformer.transform(input_df)
+        
+        if type(x_vals_encoded) != np.ndarray:
+            x_vals_encoded = x_vals_encoded.toarray()
+        xc = sm.add_constant(x_vals_encoded, has_constant='add')
+        xc_feature_names = ['intercept'] + list(col_transformer.get_feature_names_out())
+        xc_df = pd.DataFrame(xc, columns=xc_feature_names)
 
-    def find_cashier_or_enter_queue(cust_num, now, flow_time, wait_time, ATM_cust = False):
-      instant = False
-      for person in cashiers:
-        if cashiers[person]['occupied'] == False:
-          cashiers[person]['occupied'] = True
-          cashier_serv_time = np.random.triangular(cmn, cmd, cmx)
-          cashiers[person]['time_left'] = cashier_serv_time
-          cashiers[person]['served'] += 1
-          instant = True
-          flow_time += cashier_serv_time
-          service = {'id': cust_num, 'cashier': person, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': ATM_cust}
-          with_cashier.append(service)
-          break
-      if instant == False:
-        waiting = {'id': cust_num, 'q_entry': now, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': ATM_cust}
-        cashier_queue.append(waiting)
-        cashier_queue_lens.append(len(cashier_queue))
+        sm_pred = (sm_model.get_prediction(xc_df).summary_frame(alpha=(1-percent)))
 
-    def use_atm_or_enter_queue(cust_num, now, flow_time, wait_time):
-      if ATM['occupied'] == False:
-        ATM['occupied'] = True
-        atm_serv_time = np.random.triangular(amn, amd, amx)
-        ATM['time_left'] = atm_serv_time
-        ATM['served'] += 1
+        sm_log_mean = sm_pred['mean'].values[0]
+        sm_log_ci_low = sm_pred['obs_ci_lower'].values[0]
+        sm_log_ci_up = sm_pred['obs_ci_upper'].values[0]
+        sm_log_se = (sm_log_ci_up - sm_log_mean) / stats.norm.ppf(1-((1-percent)/2))
 
-        flow_time += atm_serv_time
-        usage = {'id': cust_num, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': True}
-        at_atm.append(usage)
-                
-      else:
-        waiting = {'id': cust_num, 'q_entry': now, 'flow': flow_time, 'wait': wait_time}
-        atm_queue.append(waiting)
-        atm_queue_lens.append(len(atm_queue))
+        sm_mean = np.exp(sm_log_mean)
+        sm_ci_low = np.exp(sm_log_ci_low)
+        sm_ci_up = np.exp(sm_log_ci_up)
+        plot_vals = [sm_ci_low, sm_mean, sm_ci_up]
 
-    # input parameters
-    simulations = input.sims()
-    lam = 0.75
-    avg_int_time = 1 / lam
+        z = np.arange(-4, 4, 0.01)
+        pred_vals = np.exp(sm_log_mean + (sm_log_se * z))
+        prob = stats.lognorm.pdf(pred_vals, s=sm_log_se, scale=sm_mean)
+        plot_probs = stats.lognorm.pdf(plot_vals, s=sm_log_se, scale=sm_mean)
 
-    # parameters from prompt
-    cmn = 3
-    cmd = 5
-    cmx = 20
+        ci_vals = {
+            'pred_vals': pred_vals, 
+            'prob': prob,
+            'plot_vals': plot_vals,
+            'plot_probs': plot_probs
+        }
+        return ci_vals
 
-    amn = 1
-    amd = 2
-    amx = 4
-
-    direct_to_cashier = 0.50
-    from_atm_to_cashier = 0.30
-
-    # initialize lists and variables for collecting simulation data
-    flow_times = []
-    wait_times = []
-    cashier_queue_lens = [] 
-    atm_queue_lens = [] 
-    completed = []
-
-    cashiers = {
-      'A': {'occupied': False, 'time_left': 0, 'served': 0},
-      'B': {'occupied': False, 'time_left': 0, 'served': 0},
-      'C': {'occupied': False, 'time_left': 0, 'served': 0},
-      'D': {'occupied': False, 'time_left': 0, 'served': 0},
-      'E': {'occupied': False, 'time_left': 0, 'served': 0}
-    }
-    ATM = {'occupied': False, 'time_left': 0, 'served': 0}
-
-    total_time = 0
-    cust_num = 0
-
-    cashier_queue = []
-    with_cashier = []
-
-    atm_queue = []
-    at_atm = []
-
-    # Simulation - each simulation is a new customer entering the bank
-    for _ in range(simulations):
-      flow_time = 0
-      wait_time = 0
-
-      since_last_cust = np.random.exponential(avg_int_time)
-
-      # break up time since last customer into chunks of minimum service time (cashier or ATM) 
-      # cycle through cashiers &amp; atm to catch up on in-progress customers
-      dm = divmod(since_last_cust, min(cmn, amn))
-      catch_up = [1] * int(dm[0]) + [round(dm[1], 4)]
-      for chunk in catch_up:
-
-        total_time += chunk
-
-        sorted_items = sorted(cashiers.items(), key=lambda item: item[1]["time_left"])
-        cashiers = dict(sorted_items)
-
-        for person in cashiers:
-          if cashiers[person]['occupied'] == True:
-            cashiers[person]['time_left'] -= chunk
-            if cashiers[person]['time_left'] &lt;= 0:
-              leaving = pop_cust(with_cashier, person)
-              flow_times.append(leaving['flow'])
-              wait_times.append(leaving['wait'])
-              completed.append(leaving)
-
-              if len(cashier_queue) &gt; 0:
-                retro = -cashiers[person]['time_left']
-                cashier_serv_time = np.random.triangular(cmn, cmd, cmx)
-
-                next = cashier_queue.pop(0)
-                cq_time = (total_time - retro - next['q_entry'])
-                wait_time = cq_time + next['wait']
-                flow_time = cashier_serv_time + cq_time + next['flow']
-                service = {'id': next['id'], 'cashier': person, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': next['ATM_cust']}
-                with_cashier.append(service)
-
-                cashiers[person]['time_left'] = cashier_serv_time - retro
-                cashiers[person]['served'] += 1
-              else:
-                cashiers[person]['occupied'] = False
-                cashiers[person]['time_left'] = 0
-
-          else:
-            if len(cashier_queue) &gt; 0:
-              cashier_serv_time = np.random.triangular(cmn, cmd, cmx)
-
-              next = cashier_queue.pop(0)
-              cq_time = (total_time - next['q_entry'])
-              wait_time = cq_time + next['wait']
-              flow_time = cashier_serv_time + cq_time + next['flow']
-              service = {'id': next['id'], 'cashier': person, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': next['ATM_cust']}
-              with_cashier.append(service)
-
-              cashiers[person]['time_left'] = cashier_serv_time
-              cashiers[person]['served'] += 1
-            else:
-              cashiers[person]['occupied'] = False
-              cashiers[person]['time_left'] = 0
-
-        if ATM['occupied'] == True:
-          ATM['time_left'] -= chunk
-          if ATM['time_left'] &lt;= 0:
-            moving = at_atm.pop(0)
-            decision_2 = np.random.rand()  # go to cashier or leave
-            retro = -ATM['time_left']
-                    
-            if decision_2 &lt; from_atm_to_cashier:  # go to cashier
-              now = total_time - retro
-              find_cashier_or_enter_queue(moving['id'], now, moving['flow'], moving['wait'], ATM_cust = True)
-          
-            else:                                 # leave
-              flow_times.append(moving['flow'])
-              wait_times.append(moving['wait'])
-              completed.append(moving)
-
-            if len(atm_queue) &gt; 0:
-              atm_serv_time = np.random.triangular(amn, amd, amx)
-
-              next = atm_queue.pop(0)
-              aq_time = (total_time - retro - next['q_entry'])
-              wait_time = aq_time + next['wait']
-              flow_time = atm_serv_time + aq_time + next['flow']
-              usage = {'id': next['id'], 'flow': flow_time, 'wait': wait_time, 'ATM_cust': True}
-              at_atm.append(usage)
-              ATM['time_left'] = atm_serv_time - retro
-              ATM['served'] += 1
-            else:
-              ATM['occupied'] = False
-              ATM['time_left'] = 0
-        else:
-          if len(atm_queue) &gt; 0:
-            atm_serv_time = np.random.triangular(amn, amd, amx)
-
-            next = atm_queue.pop(0)
-            aq_time = (total_time - next['q_entry'])
-            wait_time = aq_time + next['wait']
-            flow_time = atm_serv_time + aq_time + next['flow']
-            usage = {'id': next['id'], 'flow': flow_time, 'wait': wait_time}
-            at_atm.append(usage)
-            ATM['time_left'] = atm_serv_time
-            ATM['served'] += 1
-          else:
-            ATM['occupied'] = False
-            ATM['time_left'] = 0
-                
-        # now that we've caught up, handle newly entered customer
-      cust_num += 1
-      flow_time = 0
-      wait_time = 0
-      decision_1 = np.random.rand()  # go to cashier or ATM
-            
-      if decision_1 &lt; direct_to_cashier:
-        find_cashier_or_enter_queue(cust_num, total_time, flow_time, wait_time)
-
-      else:
-        use_atm_or_enter_queue(cust_num, total_time, flow_time, wait_time)
-
-    return {
-      'completed_df': pd.DataFrame(completed).fillna('').reset_index(drop=True),
-      'cashiers_df': pd.DataFrame(cashiers).T.reset_index().rename(columns={'index':'cashier'}).reset_index(drop=True).sort_values('cashier'),
-      'with_cashier_df': pd.DataFrame(with_cashier).reset_index(drop=True).sort_values('id'),
-      'cashier_queue_df': pd.DataFrame(cashier_queue).reset_index(drop=True),
-      'atm_queue_df': pd.DataFrame(atm_queue).reset_index(drop=True),
-      'cashier_queue_lens': cashier_queue_lens,
-      'atm_queue_lens': atm_queue_lens,
-      'flow_times': flow_times,
-      'wait_times': wait_times,
-      'mean_flow_time': np.mean(flow_times),
-      'mean_wait_time': np.mean(wait_times),
-      'exceed_30': np.mean(np.array(flow_times) &gt; 30),
-      'atm': ATM,
-      'at_atm': at_atm
-    }
-
-
-  # define ui outputs
-  @output
-  @render.ui
-  def summary_text():
-    sim_outputs = sim_flow_time()
-    mean_flow_time = sim_outputs['mean_flow_time']
-    mean_wait_time = sim_outputs['mean_wait_time']
-    exceed_30 = sim_outputs['exceed_30']
-    cashier_queue_lens = sim_outputs['cashier_queue_lens']
-    atm_queue_lens = sim_outputs['atm_queue_lens']
-    return ui.markdown(
-      f'''
-      - Average Flow time: &lt;b&gt;{mean_flow_time:.2f} minutes&lt;/b&gt;
-      - Average Wait time: &lt;b&gt;{mean_wait_time:.2f} minutes&lt;/b&gt;
-      - Probability of flow time exceeding 30 minutes: &lt;b&gt;{exceed_30*100:.2f}%&lt;/b&gt;
-      - Average Cashier Queue Length: &lt;b&gt;{np.mean(cashier_queue_lens):.2f} customers&lt;/b&gt;
-      - Average ATM Queue Length: &lt;b&gt;{np.mean(atm_queue_lens):.2f} customers&lt;/b&gt;
-      '''
-    )
-
-  @output
-  @render.plot
-  def flow_plot():
-    sim_outputs = sim_flow_time()
-    flow_times = sim_outputs['flow_times']
-    mean_flow_time = sim_outputs['mean_flow_time']
-
-    fig, ax = plt.subplots(1, 1, figsize=(10,5))
-    ax.hist(flow_times, bins = 120, color='#375a7f')
-    ax.set_title('Flow Time Distribution')
-    ax.set_xlim(0, 100)
-    ax.axvline(x = mean_flow_time, color='r', linestyle='--', linewidth=1) 
-    y_max = ax.get_ylim()[1]
-    ax.text(mean_flow_time * 1.05, y_max * 0.95, f'Mean: {mean_flow_time:.4f}', rotation=90, verticalalignment='top')
+    @output
+    @render.ui
+    def print_price():
+        val = predict_price()
+        return ui.markdown(f'${val:,.2f}')
     
-    return fig
+    @output
+    @render.plot
+    def ci_plot():
+        ci_vals = generate_ci_vals()
+        pred_vals = ci_vals['pred_vals']
+        prob = ci_vals['prob']
+        plot_vals = ci_vals['plot_vals']
+        plot_probs = ci_vals['plot_probs']
 
-  @output
-  @render.plot
-  def wait_plot():
-    sim_outputs = sim_flow_time()
-    wait_times = sim_outputs['wait_times']
-    mean_wait_time = sim_outputs['mean_wait_time']
+        plt.figure(figsize=(6,4))
+        sns.lineplot(x=pred_vals, y=prob)
+        plt.fill_between(pred_vals, prob, where=(pred_vals &gt;= plot_vals[0]) &amp; (pred_vals &lt;= plot_vals[2]), alpha=0.3)
+        plt.yticks([])
+        plt.xticks(plot_vals, labels=[f'${v:,.0f}' for v in plot_vals])
+        plt.tick_params('x', rotation=45)
+        plt.vlines([plot_vals], ymin=0, ymax=[plot_probs], color=['gray', 'black', 'gray'], linestyles='--')
 
-    fig, ax = plt.subplots(1, 1, figsize=(10,5))
-    ax.hist(wait_times, bins = 120, color='#375a7f')
-    ax.set_title('Wait Time Distribution')
-    ax.set_xlim(0, 100)
-    ax.axvline(x = mean_wait_time, color='r', linestyle='--', linewidth=1) 
-    y_max = ax.get_ylim()[1]
-    ax.text(mean_wait_time * 1.05, y_max * 0.95, f'Mean: {mean_wait_time:.4f}', rotation=90, verticalalignment='top')
-
-    return fig
-
-  @output
-  @render.data_frame
-  def cashiers_df():
-    sim_outputs = sim_flow_time()
-    df = sim_outputs['cashiers_df']
-    df['time_left'] = np.round(df['time_left'].astype('float'), 2)
-    return df.round(2)
-
-  @output
-  @render.data_frame
-  def with_cashier_df():
-    sim_outputs = sim_flow_time()
-    df = sim_outputs['with_cashier_df']
-    if df.shape[0] &gt; 0:
-      return df.round(2)
-    else:
-      return pd.DataFrame({"Null": ["No customers currently with cashiers"]})
-
-  @output
-  @render.ui
-  def atm():
-    sim_outputs = sim_flow_time()
-    atm = sim_outputs['atm']
-    return ui.markdown(
-      f'''
-      ATM:
-      - Served: &lt;b&gt;{atm['served']} customers&lt;/b&gt;
-      - Occupied: &lt;b&gt;{atm['occupied']}&lt;/b&gt;
-      - Time Left (current customer): &lt;b&gt;{atm['time_left']:.2f} minutes&lt;/b&gt;
-      '''
-    )
-
-  @output
-  @render.ui
-  def at_atm():
-    sim_outputs = sim_flow_time()
-    at_atm_list = sim_outputs['at_atm']
-    if len(at_atm_list) &gt; 0:
-      at_atm = sim_outputs['at_atm'][0]
-      return ui.markdown(
-        f'''
-        Customer at ATM:
-        - Id: &lt;b&gt;{at_atm['id']}&lt;/b&gt;
-        - Flow Time (so far): &lt;b&gt;{at_atm['flow']:.2f} minutes&lt;/b&gt;
-        - Wait Time (so far): &lt;b&gt;{at_atm['wait']:.2f} minutes&lt;/b&gt;
-        '''
-      )
-    else:
-      return 'No customer at ATM'
-      
-  @output
-  @render.data_frame
-  def cashier_queue_df():
-    sim_outputs = sim_flow_time()
-    df = sim_outputs['cashier_queue_df']
-    if df.shape[0] &gt; 0:
-      df = df[['id', 'q_entry', 'ATM_cust']]
-      df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
-      return df.round(2)
-    else:
-      return pd.DataFrame({"Null": ["No customers in queue"]})
-
-  @output
-  @render.data_frame
-  def atm_queue_df():
-    sim_outputs = sim_flow_time()
-    df = sim_outputs['atm_queue_df']
-    if df.shape[0] &gt; 0:
-      df = df[['id', 'q_entry']]
-      df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
-      return df.round(2)
-    else:
-      return pd.DataFrame({"Null": ["No customers in queue"]})
-
-  @output
-  @render.data_frame
-  def completed_df():
-    sim_outputs = sim_flow_time()
-    df = sim_outputs['completed_df']
-    if df.shape[0] &gt; 0:
-      return df.round(2)
-    else:
-      return pd.DataFrame({"Null": ["No customers have left the bank"]})
+    @output
+    @render.ui
+    def ci_summary():
+        percent = input.percent()
+        plot_vals = generate_ci_vals()['plot_vals']
+        return ui.markdown(f'At the {(percent*100):.0f}% confidence level, the price should fall between: ${plot_vals[0]:,.2f} - ${plot_vals[2]:,.2f}')
 
 
-app = App(app_ui, server)
-</code></pre>
+app = App(app_ui, server)</code></pre>
 
 
 

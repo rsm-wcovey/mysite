@@ -1,0 +1,12 @@
+{
+  "hash": "267b816eac72cb007df5dc796ae297e4",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Deployed Diamond Price Predictor\"\nimage: ../../../images/shiny-solo.png\nauthor: \"Wesley Covey\"\ndate: 2026-06-18\ncategories: [\"Python\", \"ML\", \"Shiny\"]\ncallout-appearance: minimal \n---\n\nGreat project\n\n- Sklearn's Pipeline\n- Deploying a model with serialization\n- Refresher on Shiny\n- Pros and Cons of sklearn and statsmodels - confidence interval\n- lognormal distribution\n\n\n\n",
+    "supporting": [
+      "diamonds_app_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
