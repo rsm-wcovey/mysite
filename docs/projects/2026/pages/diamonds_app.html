@@ -223,11 +223,13 @@ cut_cats=['Fair', 'Good', 'Very Good', 'Premium', 'Ideal']
 color_cats=['J', 'I', 'H', 'G', 'F', 'E', 'D']
 clarity_cats=['I3', 'I2', 'I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF']
 
+gh_root = 'https://raw.githubusercontent.com/rsm-wcovey/mysite/main/'
+
 try:
-    response_mpipe = await pyfetch('https://github.com/rsm-wcovey/mysite/blob/main/projects/2026/data/mpipe.pkl')
+    response_mpipe = pyfetch(f'{gh_root}projects/2026/data/mpipe.pkl')
     mpipe = joblib.load(io.BytesIO(await response_mpipe.bytes()))
 
-    response_sm = await pyfetch('https://github.com/rsm-wcovey/mysite/blob/main/projects/2026/data/sm_model.pkl')
+    response_sm = pyfetch(f'{gh_root}projects/2026/data/sm_model.pkl')
     sm_model = sm.load(io.BytesIO(await response_sm.bytes()))
 
 except Exception as e:
