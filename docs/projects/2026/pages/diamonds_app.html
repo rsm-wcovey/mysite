@@ -227,10 +227,10 @@ gh_root = 'https://raw.githubusercontent.com/rsm-wcovey/mysite/main/'
 
 try:
     response_mpipe = pyfetch(f'{gh_root}projects/2026/data/mpipe.pkl')
-    mpipe = joblib.load(io.BytesIO(await response_mpipe.bytes()))
+    mpipe = joblib.load(io.BytesIO(response_mpipe.bytes()))
 
     response_sm = pyfetch(f'{gh_root}projects/2026/data/sm_model.pkl')
-    sm_model = sm.load(io.BytesIO(await response_sm.bytes()))
+    sm_model = sm.load(io.BytesIO(response_sm.bytes()))
 
 except Exception as e:
     print(f"Error: {e}")
