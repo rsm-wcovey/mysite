@@ -1,0 +1,27 @@
+---
+title: Example 1
+image: ../../images/python-logo.png
+date: 2025-04-05
+---
+
+```{=html}
+<script src="../../code/hupwc.js" ></script>
+```
+
+
+<div id="protected-content" style="display: none;">
+
+Example dataframe below:
+
+```{python}
+import pandas as pd
+
+df = pd.DataFrame({
+    "A": [1, 2, 3],
+    "B": [4, 5, 6]
+})
+
+print(df)
+```
+
+</div>

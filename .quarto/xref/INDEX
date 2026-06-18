@@ -79,5 +79,8 @@
   },
   "projects/2026/notebooks/diamonds.ipynb": {
     "diamonds.html": "10c96b91"
+  },
+  "projects/2026/pages/diamonds_app.qmd": {
+    "diamonds_app.html": "857085dd"
   }
 }

@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wesley Covey">
+<meta name="dcterms.date" content="2026-06-18">
+
+<title>Wesley Covey - Deployed Diamond Price Predictor</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../images/favicon3.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<meta name="shinylive:serviceworker_dir" content="../../..">
+<script src="../../../site_libs/quarto-contrib/shinylive-0.10.4/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="../../../site_libs/quarto-contrib/shinylive-0.10.4/shinylive/run-python-blocks.js" type="module"></script>
+<link href="../../../site_libs/quarto-contrib/shinylive-0.10.4/shinylive/shinylive.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G4T8NLHWX1"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Wesley Covey</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> <i class="bi bi-house" role="img">
+</i> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../resume.html"> <i class="bi bi-file-text" role="img">
+</i> 
+<span class="menu-text">Resume</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../projects.html"> <i class="bi bi-folder2-open" role="img">
+</i> 
+<span class="menu-text">Portfolio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../bonus.html"> <i class="bi bi-gem" role="img">
+</i> 
+<span class="menu-text">Bonus</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Deployed Diamond Price Predictor</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Python</div>
+    <div class="quarto-category">ML</div>
+    <div class="quarto-category">Shiny</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Wesley Covey </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 18, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Great project</p>
+<ul>
+<li>Sklearn’s Pipeline</li>
+<li>Deploying a model with serialization</li>
+<li>Refresher on Shiny</li>
+<li>Pros and Cons of sklearn and statsmodels - confidence interval</li>
+<li>lognormal distribution</li>
+</ul>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| echo: false
+#| components: [viewer]
+#| viewerHeight: 800
+
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+from cycler import cycler
+import seaborn as sns
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+from scipy import stats
+import joblib
+from shiny import App, render, ui, reactive
+
+mysite_palette = ['#375a7f', "#ff879b", '#189cd0', "#c46151", "#18bc9c", "#54011a", '#2c3e50']
+plt.rcParams['axes.prop_cycle'] = cycler(color=mysite_palette) 
+
+cut_cats=['Fair', 'Good', 'Very Good', 'Premium', 'Ideal']
+color_cats=['J', 'I', 'H', 'G', 'F', 'E', 'D']
+clarity_cats=['I3', 'I2', 'I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF']
+
+mpipe = joblib.load('../data/mpipe.pkl')
+sm_model = sm.load('../data/sm_model.pkl')
+
+
+
+
+app_ui = ui.page_fluid(
+  ui.div(
+    ui.input_slider('sims', 'Select simulation size:', 1, 100000, value=10000, step=1, width='100%'),
+    style='position: fixed; top: 0; left: 0; width: 100%; background: white; z-index: 999; border-bottom: 2px solid #000000; text-align: center; height: 100px; padding-top: 2px;'
+  ),
+  ui.div(
+    ui.card(
+        ui.card_header('Simulation Results'),
+        ui.output_ui('summary_text'),
+        ui.div(
+          ui.div(ui.output_plot('flow_plot', height='300px'), style='flex: 1; min-width: 300px;'),
+          ui.div(ui.output_plot('wait_plot', height='300px'), style='flex: 1; min-width: 300px;'),
+          style='display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;'
+        )
+    ),
+
+    ui.div(
+      ui.card(
+        ui.card_header('Cashier Statuses'),
+        ui.output_data_frame('cashiers_df'),
+        style='flex: 1; min-width: 320px;'
+      ),
+      ui.card(
+        ui.card_header('Customers With Cashiers'),
+        ui.output_data_frame('with_cashier_df'),
+        style='flex: 1; min-width: 320px;'
+      ),
+      style='''
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: space-between;
+        gap: 1rem;
+      ''' 
+    ),
+
+    ui.card(
+      ui.card_header('ATM Status'),
+      ui.div(
+        ui.div(ui.output_ui('atm'), style='flex: 1; min-width: 200px;'),
+        ui.div(ui.output_ui('at_atm'), style='flex: 1; min-width: 200px;'),
+        style='display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;'
+      )
+    ),
+
+    ui.div(
+      ui.card(
+        ui.card_header('Queue for Cashier'),
+        ui.div(ui.output_data_frame('cashier_queue_df'), style='width: 100%;'),
+        style='flex: 1; min-width: 280px; max-height: 300px;'
+      ),
+      ui.card(
+        ui.card_header('Queue for ATM'),
+        ui.div(ui.output_data_frame('atm_queue_df'), style='width: 100%;'),
+        style='flex: 1; min-width: 280px; max-height: 300px;'
+      ),
+      style='''
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: space-between;
+        gap: 1rem;
+      ''' 
+    ),
+    ui.card(
+      ui.card_header('Completed Customers'),
+      ui.output_data_frame('completed_df'),
+      style='height: 410px; width: 100%;'
+    ),
+
+
+    style='margin-top: 110px;'
+  )
+  
+)
+
+def server(input, output, session):
+    
+  # define reactive function
+  @reactive.Calc
+  def sim_flow_time():
+
+    def pop_cust(lst, person):
+      for i, d in enumerate(lst):
+        if d.get('cashier') == person:
+          return lst.pop(i)
+                
+      return {'flow': None, 'wait': None}
+
+    def find_cashier_or_enter_queue(cust_num, now, flow_time, wait_time, ATM_cust = False):
+      instant = False
+      for person in cashiers:
+        if cashiers[person]['occupied'] == False:
+          cashiers[person]['occupied'] = True
+          cashier_serv_time = np.random.triangular(cmn, cmd, cmx)
+          cashiers[person]['time_left'] = cashier_serv_time
+          cashiers[person]['served'] += 1
+          instant = True
+          flow_time += cashier_serv_time
+          service = {'id': cust_num, 'cashier': person, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': ATM_cust}
+          with_cashier.append(service)
+          break
+      if instant == False:
+        waiting = {'id': cust_num, 'q_entry': now, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': ATM_cust}
+        cashier_queue.append(waiting)
+        cashier_queue_lens.append(len(cashier_queue))
+
+    def use_atm_or_enter_queue(cust_num, now, flow_time, wait_time):
+      if ATM['occupied'] == False:
+        ATM['occupied'] = True
+        atm_serv_time = np.random.triangular(amn, amd, amx)
+        ATM['time_left'] = atm_serv_time
+        ATM['served'] += 1
+
+        flow_time += atm_serv_time
+        usage = {'id': cust_num, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': True}
+        at_atm.append(usage)
+                
+      else:
+        waiting = {'id': cust_num, 'q_entry': now, 'flow': flow_time, 'wait': wait_time}
+        atm_queue.append(waiting)
+        atm_queue_lens.append(len(atm_queue))
+
+    # input parameters
+    simulations = input.sims()
+    lam = 0.75
+    avg_int_time = 1 / lam
+
+    # parameters from prompt
+    cmn = 3
+    cmd = 5
+    cmx = 20
+
+    amn = 1
+    amd = 2
+    amx = 4
+
+    direct_to_cashier = 0.50
+    from_atm_to_cashier = 0.30
+
+    # initialize lists and variables for collecting simulation data
+    flow_times = []
+    wait_times = []
+    cashier_queue_lens = [] 
+    atm_queue_lens = [] 
+    completed = []
+
+    cashiers = {
+      'A': {'occupied': False, 'time_left': 0, 'served': 0},
+      'B': {'occupied': False, 'time_left': 0, 'served': 0},
+      'C': {'occupied': False, 'time_left': 0, 'served': 0},
+      'D': {'occupied': False, 'time_left': 0, 'served': 0},
+      'E': {'occupied': False, 'time_left': 0, 'served': 0}
+    }
+    ATM = {'occupied': False, 'time_left': 0, 'served': 0}
+
+    total_time = 0
+    cust_num = 0
+
+    cashier_queue = []
+    with_cashier = []
+
+    atm_queue = []
+    at_atm = []
+
+    # Simulation - each simulation is a new customer entering the bank
+    for _ in range(simulations):
+      flow_time = 0
+      wait_time = 0
+
+      since_last_cust = np.random.exponential(avg_int_time)
+
+      # break up time since last customer into chunks of minimum service time (cashier or ATM) 
+      # cycle through cashiers &amp; atm to catch up on in-progress customers
+      dm = divmod(since_last_cust, min(cmn, amn))
+      catch_up = [1] * int(dm[0]) + [round(dm[1], 4)]
+      for chunk in catch_up:
+
+        total_time += chunk
+
+        sorted_items = sorted(cashiers.items(), key=lambda item: item[1]["time_left"])
+        cashiers = dict(sorted_items)
+
+        for person in cashiers:
+          if cashiers[person]['occupied'] == True:
+            cashiers[person]['time_left'] -= chunk
+            if cashiers[person]['time_left'] &lt;= 0:
+              leaving = pop_cust(with_cashier, person)
+              flow_times.append(leaving['flow'])
+              wait_times.append(leaving['wait'])
+              completed.append(leaving)
+
+              if len(cashier_queue) &gt; 0:
+                retro = -cashiers[person]['time_left']
+                cashier_serv_time = np.random.triangular(cmn, cmd, cmx)
+
+                next = cashier_queue.pop(0)
+                cq_time = (total_time - retro - next['q_entry'])
+                wait_time = cq_time + next['wait']
+                flow_time = cashier_serv_time + cq_time + next['flow']
+                service = {'id': next['id'], 'cashier': person, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': next['ATM_cust']}
+                with_cashier.append(service)
+
+                cashiers[person]['time_left'] = cashier_serv_time - retro
+                cashiers[person]['served'] += 1
+              else:
+                cashiers[person]['occupied'] = False
+                cashiers[person]['time_left'] = 0
+
+          else:
+            if len(cashier_queue) &gt; 0:
+              cashier_serv_time = np.random.triangular(cmn, cmd, cmx)
+
+              next = cashier_queue.pop(0)
+              cq_time = (total_time - next['q_entry'])
+              wait_time = cq_time + next['wait']
+              flow_time = cashier_serv_time + cq_time + next['flow']
+              service = {'id': next['id'], 'cashier': person, 'flow': flow_time, 'wait': wait_time, 'ATM_cust': next['ATM_cust']}
+              with_cashier.append(service)
+
+              cashiers[person]['time_left'] = cashier_serv_time
+              cashiers[person]['served'] += 1
+            else:
+              cashiers[person]['occupied'] = False
+              cashiers[person]['time_left'] = 0
+
+        if ATM['occupied'] == True:
+          ATM['time_left'] -= chunk
+          if ATM['time_left'] &lt;= 0:
+            moving = at_atm.pop(0)
+            decision_2 = np.random.rand()  # go to cashier or leave
+            retro = -ATM['time_left']
+                    
+            if decision_2 &lt; from_atm_to_cashier:  # go to cashier
+              now = total_time - retro
+              find_cashier_or_enter_queue(moving['id'], now, moving['flow'], moving['wait'], ATM_cust = True)
+          
+            else:                                 # leave
+              flow_times.append(moving['flow'])
+              wait_times.append(moving['wait'])
+              completed.append(moving)
+
+            if len(atm_queue) &gt; 0:
+              atm_serv_time = np.random.triangular(amn, amd, amx)
+
+              next = atm_queue.pop(0)
+              aq_time = (total_time - retro - next['q_entry'])
+              wait_time = aq_time + next['wait']
+              flow_time = atm_serv_time + aq_time + next['flow']
+              usage = {'id': next['id'], 'flow': flow_time, 'wait': wait_time, 'ATM_cust': True}
+              at_atm.append(usage)
+              ATM['time_left'] = atm_serv_time - retro
+              ATM['served'] += 1
+            else:
+              ATM['occupied'] = False
+              ATM['time_left'] = 0
+        else:
+          if len(atm_queue) &gt; 0:
+            atm_serv_time = np.random.triangular(amn, amd, amx)
+
+            next = atm_queue.pop(0)
+            aq_time = (total_time - next['q_entry'])
+            wait_time = aq_time + next['wait']
+            flow_time = atm_serv_time + aq_time + next['flow']
+            usage = {'id': next['id'], 'flow': flow_time, 'wait': wait_time}
+            at_atm.append(usage)
+            ATM['time_left'] = atm_serv_time
+            ATM['served'] += 1
+          else:
+            ATM['occupied'] = False
+            ATM['time_left'] = 0
+                
+        # now that we've caught up, handle newly entered customer
+      cust_num += 1
+      flow_time = 0
+      wait_time = 0
+      decision_1 = np.random.rand()  # go to cashier or ATM
+            
+      if decision_1 &lt; direct_to_cashier:
+        find_cashier_or_enter_queue(cust_num, total_time, flow_time, wait_time)
+
+      else:
+        use_atm_or_enter_queue(cust_num, total_time, flow_time, wait_time)
+
+    return {
+      'completed_df': pd.DataFrame(completed).fillna('').reset_index(drop=True),
+      'cashiers_df': pd.DataFrame(cashiers).T.reset_index().rename(columns={'index':'cashier'}).reset_index(drop=True).sort_values('cashier'),
+      'with_cashier_df': pd.DataFrame(with_cashier).reset_index(drop=True).sort_values('id'),
+      'cashier_queue_df': pd.DataFrame(cashier_queue).reset_index(drop=True),
+      'atm_queue_df': pd.DataFrame(atm_queue).reset_index(drop=True),
+      'cashier_queue_lens': cashier_queue_lens,
+      'atm_queue_lens': atm_queue_lens,
+      'flow_times': flow_times,
+      'wait_times': wait_times,
+      'mean_flow_time': np.mean(flow_times),
+      'mean_wait_time': np.mean(wait_times),
+      'exceed_30': np.mean(np.array(flow_times) &gt; 30),
+      'atm': ATM,
+      'at_atm': at_atm
+    }
+
+
+  # define ui outputs
+  @output
+  @render.ui
+  def summary_text():
+    sim_outputs = sim_flow_time()
+    mean_flow_time = sim_outputs['mean_flow_time']
+    mean_wait_time = sim_outputs['mean_wait_time']
+    exceed_30 = sim_outputs['exceed_30']
+    cashier_queue_lens = sim_outputs['cashier_queue_lens']
+    atm_queue_lens = sim_outputs['atm_queue_lens']
+    return ui.markdown(
+      f'''
+      - Average Flow time: &lt;b&gt;{mean_flow_time:.2f} minutes&lt;/b&gt;
+      - Average Wait time: &lt;b&gt;{mean_wait_time:.2f} minutes&lt;/b&gt;
+      - Probability of flow time exceeding 30 minutes: &lt;b&gt;{exceed_30*100:.2f}%&lt;/b&gt;
+      - Average Cashier Queue Length: &lt;b&gt;{np.mean(cashier_queue_lens):.2f} customers&lt;/b&gt;
+      - Average ATM Queue Length: &lt;b&gt;{np.mean(atm_queue_lens):.2f} customers&lt;/b&gt;
+      '''
+    )
+
+  @output
+  @render.plot
+  def flow_plot():
+    sim_outputs = sim_flow_time()
+    flow_times = sim_outputs['flow_times']
+    mean_flow_time = sim_outputs['mean_flow_time']
+
+    fig, ax = plt.subplots(1, 1, figsize=(10,5))
+    ax.hist(flow_times, bins = 120, color='#375a7f')
+    ax.set_title('Flow Time Distribution')
+    ax.set_xlim(0, 100)
+    ax.axvline(x = mean_flow_time, color='r', linestyle='--', linewidth=1) 
+    y_max = ax.get_ylim()[1]
+    ax.text(mean_flow_time * 1.05, y_max * 0.95, f'Mean: {mean_flow_time:.4f}', rotation=90, verticalalignment='top')
+    
+    return fig
+
+  @output
+  @render.plot
+  def wait_plot():
+    sim_outputs = sim_flow_time()
+    wait_times = sim_outputs['wait_times']
+    mean_wait_time = sim_outputs['mean_wait_time']
+
+    fig, ax = plt.subplots(1, 1, figsize=(10,5))
+    ax.hist(wait_times, bins = 120, color='#375a7f')
+    ax.set_title('Wait Time Distribution')
+    ax.set_xlim(0, 100)
+    ax.axvline(x = mean_wait_time, color='r', linestyle='--', linewidth=1) 
+    y_max = ax.get_ylim()[1]
+    ax.text(mean_wait_time * 1.05, y_max * 0.95, f'Mean: {mean_wait_time:.4f}', rotation=90, verticalalignment='top')
+
+    return fig
+
+  @output
+  @render.data_frame
+  def cashiers_df():
+    sim_outputs = sim_flow_time()
+    df = sim_outputs['cashiers_df']
+    df['time_left'] = np.round(df['time_left'].astype('float'), 2)
+    return df.round(2)
+
+  @output
+  @render.data_frame
+  def with_cashier_df():
+    sim_outputs = sim_flow_time()
+    df = sim_outputs['with_cashier_df']
+    if df.shape[0] &gt; 0:
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers currently with cashiers"]})
+
+  @output
+  @render.ui
+  def atm():
+    sim_outputs = sim_flow_time()
+    atm = sim_outputs['atm']
+    return ui.markdown(
+      f'''
+      ATM:
+      - Served: &lt;b&gt;{atm['served']} customers&lt;/b&gt;
+      - Occupied: &lt;b&gt;{atm['occupied']}&lt;/b&gt;
+      - Time Left (current customer): &lt;b&gt;{atm['time_left']:.2f} minutes&lt;/b&gt;
+      '''
+    )
+
+  @output
+  @render.ui
+  def at_atm():
+    sim_outputs = sim_flow_time()
+    at_atm_list = sim_outputs['at_atm']
+    if len(at_atm_list) &gt; 0:
+      at_atm = sim_outputs['at_atm'][0]
+      return ui.markdown(
+        f'''
+        Customer at ATM:
+        - Id: &lt;b&gt;{at_atm['id']}&lt;/b&gt;
+        - Flow Time (so far): &lt;b&gt;{at_atm['flow']:.2f} minutes&lt;/b&gt;
+        - Wait Time (so far): &lt;b&gt;{at_atm['wait']:.2f} minutes&lt;/b&gt;
+        '''
+      )
+    else:
+      return 'No customer at ATM'
+      
+  @output
+  @render.data_frame
+  def cashier_queue_df():
+    sim_outputs = sim_flow_time()
+    df = sim_outputs['cashier_queue_df']
+    if df.shape[0] &gt; 0:
+      df = df[['id', 'q_entry', 'ATM_cust']]
+      df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers in queue"]})
+
+  @output
+  @render.data_frame
+  def atm_queue_df():
+    sim_outputs = sim_flow_time()
+    df = sim_outputs['atm_queue_df']
+    if df.shape[0] &gt; 0:
+      df = df[['id', 'q_entry']]
+      df.rename(columns={'q_entry':'q_entry_time'}, inplace=True)
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers in queue"]})
+
+  @output
+  @render.data_frame
+  def completed_df():
+    sim_outputs = sim_flow_time()
+    df = sim_outputs['completed_df']
+    if df.shape[0] &gt; 0:
+      return df.round(2)
+    else:
+      return pd.DataFrame({"Null": ["No customers have left the bank"]})
+
+
+app = App(app_ui, server)
+</code></pre>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = true;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
