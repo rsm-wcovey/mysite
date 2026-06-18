@@ -184,14 +184,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 </header>
 
 
-<p>Great project</p>
-<ul>
-<li>Sklearn’s Pipeline</li>
-<li>Deploying a model with serialization</li>
-<li>Refresher on Shiny</li>
-<li>Pros and Cons of sklearn and statsmodels - confidence interval</li>
-<li>lognormal distribution</li>
-</ul>
+<p>Preview</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -224,8 +217,8 @@ color_cats=['J', 'I', 'H', 'G', 'F', 'E', 'D']
 clarity_cats=['I3', 'I2', 'I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF']
 
 
-mpipe = reactive.value(None)
-sm_model = reactive.value(None)
+mpipe = reactive.Value(None)
+sm_model = reactive.Value(None)
 
 
 app_ui = ui.page_fluid(
@@ -268,7 +261,7 @@ app_ui = ui.page_fluid(
             ui.input_slider('percent', 'Confidence', min=0.01, max=0.99, value=0.80, step=0.01, width='100%')
         ),
         style='text-align: center; height: 500px'
-    )
+    ),
     ui.tags.style(
         """
         body {
@@ -319,7 +312,7 @@ def server(input, output, session):
     @reactive.Calc
     def predict_price():
         x_vals = generate_input_df()
-        y_pred = mpipe.predict(x_vals)
+        y_pred = mpipe().predict(x_vals)
         pred_val = y_pred[0][0]
         return pred_val
     
@@ -328,7 +321,7 @@ def server(input, output, session):
         input_df = generate_input_df()
         percent = input.percent()
 
-        col_transformer = mpipe[:-1]
+        col_transformer = mpipe()[:-1]
         x_vals_encoded = col_transformer.transform(input_df)
         
         if type(x_vals_encoded) != np.ndarray:
@@ -337,7 +330,7 @@ def server(input, output, session):
         xc_feature_names = ['intercept'] + list(col_transformer.get_feature_names_out())
         xc_df = pd.DataFrame(xc, columns=xc_feature_names)
 
-        sm_pred = (sm_model.get_prediction(xc_df).summary_frame(alpha=(1-percent)))
+        sm_pred = (sm_model().get_prediction(xc_df).summary_frame(alpha=(1-percent)))
 
         sm_log_mean = sm_pred['mean'].values[0]
         sm_log_ci_low = sm_pred['obs_ci_lower'].values[0]
@@ -392,10 +385,6 @@ def server(input, output, session):
         plot_vals = generate_ci_vals()['plot_vals']
         return ui.markdown(f'At the {(percent*100):.0f}% confidence level, the price should fall between: ${plot_vals[0]:,.2f} - ${plot_vals[2]:,.2f}')
 
-    @output
-    @render.ui
-    def pf_error():
-        return ui.markdown(pfe)
 
 app = App(app_ui, server)</code></pre>
 
