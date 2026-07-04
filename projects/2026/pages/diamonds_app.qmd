@@ -2,7 +2,7 @@
 title: "Deployed Diamond Price Predictor"
 image: ../../../images/shiny-solo.png
 author: "Wesley Covey"
-date: 2026-06-18
+date: 2026-07-03
 categories: ["Python", "ML", "Shiny"]
 format:
   html:
@@ -13,14 +13,24 @@ filters:
 callout-appearance: minimal 
 ---
 
-Preview
+## Introduction
+This project is a follow-on from my previous project in which I trained an OLS model to predict diamond prices based on a variety of diamond characteristics. For further context, you can view that project here:
+    <a href='https://www.wesleycovey.com/projects/2026/pages/diamond.html'>Refreshing Linear Regression with Diamonds</a>
 
+That last project was indeed a great refresher of predictive modeling concepts, but I wanted to expand from it with a focus on model deployment while also refreshing my skills with shiny for python. Here, I sought to deploy my OLS model in a reactive shiny app to generate predictions on any combination of input characteristics. 
 
-```{shinylive-python}
-#| standalone: true
-#| echo: false
-#| components: [viewer]
-#| viewerHeight: 800
+### Project Goals
+- Deploy my model in an interactive format
+- Refresh my skills with shiny
+- Familiarize myself with sklearn's Pipeline
+ 
+## Deployed Price Predictor
+
+:::: {.callout-note collapse="true"}
+#### View Code
+
+```{python}
+#| eval: false
 
 from shiny import App, render, ui, reactive
 import pandas as pd 
@@ -58,24 +68,24 @@ app_ui = ui.page_fluid(
                 ui.card(
                     ui.div(
                         ui.input_slider('carat', 'Carat', min=0.1, max=5, step=0.1, value=1, ticks=True, width='100%'), 
-                        style='height: 120px;'
+                        style='height: 100px;'
                     ),
                     ui.div(
                         ui.input_radio_buttons('color', 'Color', color_cats, width='100%', inline=True),
-                        style='height: 120px;'
+                        style='height: 100px;'
                     ),
                     style="width: 100%; height: 300px;"
                 ),
                 ui.card(
                     ui.div(
                         ui.input_radio_buttons('cut', 'Cut', cut_cats, width='100%', inline=True),
-                        style='height: 120px;'
+                        style='height: 100px;'
                     ),
                     ui.div(
                         ui.input_radio_buttons('clarity', 'Clarity', clarity_cats, width='100%', inline=True),
-                        style='height: 120px;'
+                        style='height: 100px;'
                     ),
-                    style="width: 100%; height: 300px;" 
+                    style="width: 100%; height: 260px;" 
                 )
             )
         ),
@@ -85,8 +95,8 @@ app_ui = ui.page_fluid(
         ui.card_header('Predicted Price'),
         ui.card_body(
             ui.output_ui('print_price', style='font-size: 22px; font-weight: bold; color: #189cd0'),
-            ui.output_plot('ci_plot'),
             ui.output_ui('ci_summary'),
+            ui.output_plot('ci_plot'),
             ui.input_slider('percent', 'Confidence', min=0.01, max=0.99, value=0.80, step=0.01, width='100%')
         ),
         style='text-align: center; height: 500px'
@@ -219,6 +229,260 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
+::::
+
+```{shinylive-python}
+#| standalone: true
+#| echo: false
+#| components: [viewer]
+#| viewerHeight: 800
+
+from shiny import App, render, ui, reactive
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+from cycler import cycler
+import seaborn as sns
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+from scipy import stats
+from pyodide.http import pyfetch
+import joblib
+import io
+
+mysite_palette = ['#375a7f', "#ff879b", '#189cd0', "#c46151", "#18bc9c", "#54011a", '#2c3e50']
+plt.rcParams['axes.prop_cycle'] = cycler(color=mysite_palette) 
+
+cut_cats=['Fair', 'Good', 'Very Good', 'Premium', 'Ideal']
+color_cats=['J', 'I', 'H', 'G', 'F', 'E', 'D']
+clarity_cats=['I3', 'I2', 'I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF']
+
+
+mpipe = reactive.Value(None)
+sm_model = reactive.Value(None)
+
+
+app_ui = ui.page_fluid(
+    ui.card(
+        ui.card_header('Enter Diamond Specifications', style='text-align: center;'),
+        ui.card_body(
+            ui.layout_columns(
+                ui.card(
+                    ui.div(
+                        ui.input_slider('carat', 'Carat', min=0.1, max=5, step=0.1, value=1, ticks=True, width='100%'), 
+                        style='height: 100px;'
+                    ),
+                    ui.div(
+                        ui.input_radio_buttons('color', 'Color', color_cats, width='100%', inline=True),
+                        style='height: 100px;'
+                    ),
+                    style="width: 100%; height: 300px;"
+                ),
+                ui.card(
+                    ui.div(
+                        ui.input_radio_buttons('cut', 'Cut', cut_cats, width='100%', inline=True),
+                        style='height: 100px;'
+                    ),
+                    ui.div(
+                        ui.input_radio_buttons('clarity', 'Clarity', clarity_cats, width='100%', inline=True),
+                        style='height: 100px;'
+                    ),
+                    style="width: 100%; height: 260px;" 
+                )
+            )
+        ),
+        style="display: flex; justify-content: center;"
+    ),
+    ui.card(
+        ui.card_header('Predicted Price'),
+        ui.card_body(
+            ui.output_ui('print_price', style='font-size: 22px; font-weight: bold; color: #189cd0'),
+            ui.output_ui('ci_summary'),
+            ui.output_plot('ci_plot'),
+            ui.input_slider('percent', 'Confidence', min=0.01, max=0.99, value=0.80, step=0.01, width='100%')
+        ),
+        style='text-align: center; height: 500px'
+    ),
+    ui.tags.style(
+        """
+        body {
+            background-color: #2c3e50;
+            color: #ffffff;     
+            margin-top: 25px;      
+        }
+        """
+    )
+)
+
+
+def server(input, output, session):
+
+    @reactive.effect
+    async def fetch_model_pickles():
+        gh_root = 'https://raw.githubusercontent.com/rsm-wcovey/mysite/main/'
+
+        response_mpipe = await pyfetch(f'{gh_root}projects/2026/data/mpipe.pkl')
+        mpipe.set(joblib.load(io.BytesIO(await response_mpipe.bytes())))
+
+        response_sm = await pyfetch(f'{gh_root}projects/2026/data/sm_model.pkl')
+        sm_model.set(sm.load(io.BytesIO(await response_sm.bytes())))
+
+
+    @reactive.Calc
+    def generate_input_df():
+        carat = input.carat()
+        cut = input.cut()
+        color = input.color()
+        clarity = input.clarity()
+
+        large = int((carat > 2))
+        log_carat = np.log(carat)
+        carat_large = log_carat * large
+        if clarity in ['I3', 'I2']:
+            clarity = 'I1'
+
+        x_vals = pd.DataFrame({
+            'carat': carat,
+            'cut': cut,
+            'color': color,
+            'clarity': clarity,
+            'large': large,
+            'carat:large': carat_large
+        }, index=[0])
+        return x_vals
+
+    @reactive.Calc
+    def predict_price():
+        x_vals = generate_input_df()
+        y_pred = mpipe().predict(x_vals)
+        pred_val = y_pred[0][0]
+        return pred_val
+    
+    @reactive.Calc
+    def generate_ci_vals():
+        input_df = generate_input_df()
+        percent = input.percent()
+
+        col_transformer = mpipe()[:-1]
+        x_vals_encoded = col_transformer.transform(input_df)
+        
+        if type(x_vals_encoded) != np.ndarray:
+            x_vals_encoded = x_vals_encoded.toarray()
+        xc = sm.add_constant(x_vals_encoded, has_constant='add')
+        xc_feature_names = ['intercept'] + list(col_transformer.get_feature_names_out())
+        xc_df = pd.DataFrame(xc, columns=xc_feature_names)
+
+        sm_pred = (sm_model().get_prediction(xc_df).summary_frame(alpha=(1-percent)))
+
+        sm_log_mean = sm_pred['mean'].values[0]
+        sm_log_ci_low = sm_pred['obs_ci_lower'].values[0]
+        sm_log_ci_up = sm_pred['obs_ci_upper'].values[0]
+        sm_log_se = (sm_log_ci_up - sm_log_mean) / stats.norm.ppf(1-((1-percent)/2))
+
+        sm_mean = np.exp(sm_log_mean)
+        sm_ci_low = np.exp(sm_log_ci_low)
+        sm_ci_up = np.exp(sm_log_ci_up)
+        plot_vals = [sm_ci_low, sm_mean, sm_ci_up]
+
+        z = np.arange(-4, 4, 0.01)
+        pred_vals = np.exp(sm_log_mean + (sm_log_se * z))
+        prob = stats.lognorm.pdf(pred_vals, s=sm_log_se, scale=sm_mean)
+        plot_probs = stats.lognorm.pdf(plot_vals, s=sm_log_se, scale=sm_mean)
+
+        ci_vals = {
+            'pred_vals': pred_vals, 
+            'prob': prob,
+            'plot_vals': plot_vals,
+            'plot_probs': plot_probs
+        }
+        return ci_vals
+
+    @output
+    @render.ui
+    def print_price():
+        val = predict_price()
+        return ui.markdown(f'${val:,.2f}')
+    
+    @output
+    @render.plot
+    def ci_plot():
+        ci_vals = generate_ci_vals()
+        pred_vals = ci_vals['pred_vals']
+        prob = ci_vals['prob']
+        plot_vals = ci_vals['plot_vals']
+        plot_probs = ci_vals['plot_probs']
+
+        plt.figure(figsize=(6,4))
+        sns.lineplot(x=pred_vals, y=prob)
+        plt.fill_between(pred_vals, prob, where=(pred_vals >= plot_vals[0]) & (pred_vals <= plot_vals[2]), alpha=0.3)
+        plt.yticks([])
+        plt.xticks(plot_vals, labels=[f'${v:,.0f}' for v in plot_vals])
+        plt.tick_params('x', rotation=45)
+        plt.vlines([plot_vals], ymin=0, ymax=[plot_probs], color=['gray', 'black', 'gray'], linestyles='--')
+
+    @output
+    @render.ui
+    def ci_summary():
+        percent = input.percent()
+        plot_vals = generate_ci_vals()['plot_vals']
+        return ui.markdown(f'At the {(percent*100):.0f}% confidence level, the price should fall between: ${plot_vals[0]:,.2f} - ${plot_vals[2]:,.2f}')
+
+
+app = App(app_ui, server)
+```
+
+
+### Pipeline & Serialization
+In the last project, I learned more about sklearn including several of its transformer objects, how they work, and that there was a way to chain them together with Pipeline. Though I didn't explore the latter much when training the model, it seemed particularly valuable for deployment. Turns out, it's not very complex, but it was interesting to see how the different transformers' outputs can successively feed into the next as an input, dynamically applying .transform() or .fit_transform() based on the method called against the outer Pipeline object. 
+
+After piping together my ColumnTransformer and TransformedTargetRegressor, the next question was, "what do I do with this?" In school, we focused mostly on learning how to train and evaluate models but didn't extend much into deployment. If we were to do something like this back then, we probably would have pasted the entire code into the shiny app, requiring that the model is "retrained" every single time a new prediction is called. Obviously, this seemed extremely inefficient and impractical; I figured that in a professional environment, there must be better ways. After a bit of research, I learned that for deploying a simple model in an interactive app like this, I can serialize the python object into a .pkl file, which can later be read-in and used elsewhere.
+
+(Side note: at the same time that I've been working on this project, at work, I've been getting into MS Azure, learning about it and setting up a basic foundation for us to begin leveraging its services. It seems like another good deployment option for machine learning model would be via Azure Functions so it could accessed by an API call.)
+
+```{python}
+#| eval: False
+
+# column transfomer from model training
+col_transformer = ColumnTransformer(
+    transformers=[
+        ('onehot', OneHotEncoder(drop='first'), cat_cols),
+        ('log', FunctionTransformer(np.log, feature_names_out="one-to-one"), ['carat'])
+    ],
+    remainder='passthrough'
+)
+
+# transformed target regressor from model training
+model = TransformedTargetRegressor(
+    regressor=LinearRegression(),
+    func=np.log,
+    inverse_func=np.exp
+) 
+
+# piping the sklearn objects together and serializing with joblib
+import joblib
+mpipe = Pipeline([
+    ('feature_transform', col_transformer),
+    ('target_regressor', model)
+])
+joblib.dump(mpipe, '../data/mpipe.pkl')
+```
+
+One final piece I had to handle was how the .pkl is read-in. When developing the app.py locally, reading it in from the relative file path worked fine, but I hadn't initially considered the difference when embedding in a quarto page. Unlike regular python code blocks in quarto, a shinylive-python code block doesn't execute locally when the page is rendered, it executes client-side via pyodide. So, I pushed the .pkl to github first and used pyfetch to call it into the shinylive-python code block.
+
+### Confidence Interval
+Rather than providing only a point-estimate, I thought it would be better to also include an adjustable confidence interval. Unfortunately, I couldn't find any way to do this with sklearn, but since I already incorporated statsmodels for generating coefficients in the last project, it was easy enough to use its .summary_frame() method here. 
+
+Similarly to the sklearn model, I serialized my statsmodels model into a .pkl file with statsmodels' built-in .save() method, pushed it to github, and called it into my shiny app with pyfetch. From there, you can see the code I used to generate a dynamic confidence interval and plot it visually on a log-normal distrubtion. 
+
+## Lessons Learned
+The big lessons I took away from this project were, as discussed, on Pipeline and model serialization. Aside from that, it was a good refresher on shiny, both in terms of the ui options and the decorator syntax inside the server object. 
+
+I did experience a few additional hiccups, like initially failing to set carat_large as the product of log_carat and large from the user inputs, instead setting it equal to carat * large. After I ran the first version of the shiny app, I experimented with various different input combinations to see how the predicted prices changed and ensure it functioned as expected. Well, it didn't. It would in most respects, but when it came to carat, selecting a larger diamond would initially lead to increased prices but eventually would lead to smaller and smaller prices, even at massive carat sizes. After reviewing the code, I found my error and re-tested, much happier the second time around. 
+
+Moving forward from here, I'd be interested in digging further into neural networks and tree-based models. We learned about these in school, both in concept and in practice, but I'd like to get a better understanding of them and the best use cases for them. 
 
 
 
