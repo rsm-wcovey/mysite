@@ -15,7 +15,7 @@ callout-appearance: minimal
 
 ## Introduction
 This project is a follow-on from my previous project in which I trained an OLS model to predict diamond prices based on a variety of diamond characteristics. For further context, you can view that project here:
-    <a href='https://www.wesleycovey.com/projects/2026/pages/diamond.html'>Refreshing Linear Regression with Diamonds</a>
+    <a href='https://www.wesleycovey.com/projects/2026/pages/diamonds.html'>Refreshing Linear Regression with Diamonds</a>
 
 That last project was indeed a great refresher of predictive modeling concepts, but I wanted to expand from it with a focus on model deployment while also refreshing my skills with shiny for python. Here, I sought to deploy my OLS model in a reactive shiny app to generate predictions on any combination of input characteristics. 
 

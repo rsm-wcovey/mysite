@@ -235,7 +235,7 @@ gtag('config', 'G-G4T8NLHWX1', { 'anonymize_ip': true});
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This project is a follow-on from my previous project in which I trained an OLS model to predict diamond prices based on a variety of diamond characteristics. For further context, you can view that project here: <a href="https://www.wesleycovey.com/projects/2026/pages/diamond.html">Refreshing Linear Regression with Diamonds</a></p>
+<p>This project is a follow-on from my previous project in which I trained an OLS model to predict diamond prices based on a variety of diamond characteristics. For further context, you can view that project here: <a href="https://www.wesleycovey.com/projects/2026/pages/diamonds.html">Refreshing Linear Regression with Diamonds</a></p>
 <p>That last project was indeed a great refresher of predictive modeling concepts, but I wanted to expand from it with a focus on model deployment while also refreshing my skills with shiny for python. Here, I sought to deploy my OLS model in a reactive shiny app to generate predictions on any combination of input characteristics.</p>
 <section id="project-goals" class="level3">
 <h3 class="anchored" data-anchor-id="project-goals">Project Goals</h3>
@@ -260,7 +260,7 @@ View Code
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="25d45c87" class="cell" data-execution_count="1">
+<div id="e6b2921b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, render, ui, reactive</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -668,7 +668,7 @@ app = App(app_ui, server)</code></pre>
 <p>In the last project, I learned more about sklearn including several of its transformer objects, how they work, and that there was a way to chain them together with Pipeline. Though I didn’t explore the latter much when training the model, it seemed particularly valuable for deployment. Turns out, it’s not very complex, but it was interesting to see how the different transformers’ outputs can successively feed into the next as an input, dynamically applying .transform() or .fit_transform() based on the method called against the outer Pipeline object.</p>
 <p>After piping together my ColumnTransformer and TransformedTargetRegressor, the next question was, “what do I do with this?” In school, we focused mostly on learning how to train and evaluate models but didn’t extend much into deployment. If we were to do something like this back then, we probably would have pasted the entire code into the shiny app, requiring that the model is “retrained” every single time a new prediction is called. Obviously, this seemed extremely inefficient and impractical; I figured that in a professional environment, there must be better ways. After a bit of research, I learned that for deploying a simple model in an interactive app like this, I can serialize the python object into a .pkl file, which can later be read-in and used elsewhere.</p>
 <p>(Side note: at the same time that I’ve been working on this project, at work, I’ve been getting into MS Azure, learning about it and setting up a basic foundation for us to begin leveraging its services. It seems like another good deployment option for machine learning model would be via Azure Functions so it could accessed by an API call.)</p>
-<div id="a2cc3438" class="cell" data-execution_count="2">
+<div id="31965009" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># column transfomer from model training</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>col_transformer <span class="op">=</span> ColumnTransformer(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
