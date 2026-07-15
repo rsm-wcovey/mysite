@@ -2,7 +2,7 @@
 title: "Deployed Diamond Price Predictor"
 image: ../../../images/shiny-solo.png
 author: "Wesley Covey"
-date: 2026-07-03
+date: 2026-07-02
 categories: ["Python", "ML", "Shiny"]
 format:
   html:
