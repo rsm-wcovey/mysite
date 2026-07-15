@@ -41,13 +41,15 @@ B.S. in Economics | 2018 - 2023
 ## <i class="bi bi-briefcase" style="padding-right: 8px;"></i> Experience
 
 Academy Securities  
-Vice President, Data Engineering & Analytics | 2025 - Present  
-Operations Analyst | 2023 - 2025
 
-United States Marine Corps  
-Lead Business Analyst / Operations Manager | 2022 - 2023
-Senior Business Analyst | 2017 - 2022
-Junior Business Analyst | 2015 - 2017
+- Vice President, Data Engineering & Analytics | 2025 - Present  
+- Operations Analyst | 2023 - 2025
+
+United States Marine Corps 
+ 
+- Lead Business Analyst / Operations Manager | 2022 - 2023
+- Senior Business Analyst | 2017 - 2022
+- Junior Business Analyst | 2015 - 2017
 :::
 
 ::: {.site-footer-text}
